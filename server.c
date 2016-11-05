@@ -37,6 +37,7 @@ void MyClientConnected(int id, clientInfo startInfo){
 void MyClientMoved(int id, mov_msg mov){
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	printf("Client %d moved: %c\n", id, mov.msg);
+	sendTxtToClient(clients[id].sockid, "ok");
 }
 
 void startGame(){

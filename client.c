@@ -17,19 +17,18 @@ int main () {
 
 	sendInfoToServer(info); // primeira mensagem é sempre clientInfo
 
-	while (!comecar && !falha) { // depois só mensagem de texto até o jogo começar
+	while (comecar == 0) { // depois só mensagem de texto até o jogo começar
 		if (readTxtFromServer(msg) > 0) {
-			if (/*for mensagem de comecar o jogo*/)
+			if (msg[0] == 'o')
 				comecar = 1;
-			else if (/*for mensagem de erro na conexão*/)
+			else if (msg[0] != 'o')
 				falha = 1;
 			
 			printf("%s\n", msg);
 		}
-	}
 
-	if (falha) {
-		exit(1);
+		if (falha)
+			exit(1);
 	}
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
@@ -43,6 +42,7 @@ int main () {
 					break;
 				case 1:
 					// ...
+					break;
 			}
 		}
 

@@ -10,12 +10,12 @@ void connectToServer(const char *server_IP){
 	else
 		inet_aton(server_IP, &server_address.sin_addr); // lembra de tirar o .s_addr
 
-	printf("Connectig...\n");
+	printf("Connecting...\n");
 	int connection_status = connect(network_socket, (struct sockaddr *) &server_address, sizeof(server_address));
 	if(connection_status==0){
 		printf("Connected\n");
 	}else if(connection_status==-1){
-		printf("ERROR! Connection was not succefull\n");
+		printf("ERROR! Connection was not successful\n");
 		exit(1);
 	}
 
