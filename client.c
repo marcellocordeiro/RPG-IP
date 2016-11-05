@@ -7,15 +7,7 @@ int main () {
 	upd_msg updt;
 	mov_msg mov;
 
-	connectToServer(NULL); //NULL == localhost
-
-	printf("Digite seu nome: ");
-	scanf(" %[^\n]", info.nome);
-
-	printf("Digite o mapa que deseja utilizar: \n");
-	scanf("%d", &info.mapa);
-
-	sendInfoToServer(info); // primeira mensagem é sempre clientInfo
+	menu(&info);
 
 	while (comecar == 0) { // depois só mensagem de texto até o jogo começar
 		if (readTxtFromServer(msg) > 0) {
