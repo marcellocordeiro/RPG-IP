@@ -13,14 +13,14 @@ int main () {
 		if (readTxtFromServer(msg) > 0) {
 			if (msg[0] == 'o')
 				comecar = 1;
-			else if (msg[0] != 'o')
-				falha = 1;
+			//else if (msg[0] != 'o')
+			//	falha = 1;
 			
 			printf("%s\n", msg);
 		}
 
-		if (falha)
-			exit(1);
+		//if (falha)
+		//	exit(1);
 	}
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)

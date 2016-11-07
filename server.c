@@ -7,6 +7,8 @@ void MyBroadcast(void);// um exemplo de como mandar uma mensagem para todos os u
 
 int main () {
 	srand(time(NULL)); // seed pra usar o rand durante o jogo
+	mov_msg movv;
+	int sd, id;
 
 	clientMoved = MyClientMoved;
 	clientConnected = MyClientConnected;
@@ -24,7 +26,30 @@ int main () {
 		// se foi alguém se comunicando...
 		wasClient();
 
+		/*
+		for(id = 0; id < MAX_CLIENTS; ++id){
+			sd = clients[id].sockid;
+			if(sd > 0 && id == 0){
+				readMovFromClient(sd, &movv);
+				printf("--%c--\n", movv.msg);
+			}
+		}
+		*/
+
 		//broadcasting das modificações do mapa
+		/*if(game_status == 1) {
+			for (id = 0; id < MAX_CLIENTS; i++) {
+				sd = clients[id].sockid;
+				if(sd > 0){
+					readTxtFromClient(sd, confirm);
+
+					if (id == 0 && confirm[0] == 'c')
+						game_status = 2;
+				}
+			}
+
+		}
+*/
 		if(game_status == 2)
 			broadcast();
 	}
@@ -32,12 +57,12 @@ int main () {
 
 void MyClientConnected(int id, clientInfo startInfo){
 	printf("Client %s connected, id = %d, map = %d\n", startInfo.nome, id, startInfo.mapa);
+	sendTxtToClient(clients[id].sockid, "ok");
 }
 
 void MyClientMoved(int id, mov_msg mov){
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	printf("Client %d moved: %c\n", id, mov.msg);
-	sendTxtToClient(clients[id].sockid, "ok");
 }
 
 void startGame(){
