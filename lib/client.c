@@ -6,6 +6,11 @@
 #define opcoesoptions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
 #define colseta 22 // coluna da seta >
 
+#define up 'w'
+#define down 's'
+#define left 'a'
+#define right 'd'
+
 enum {
 	MAIN,
 	OPTIONS
@@ -51,21 +56,21 @@ void menu (clientInfo *info) {
 
 			mainmenu[navm[seta]][colseta] = ' '; // limpa a antiga posicao da seta
 
-			if (dir == 'w') // cima
+			if (dir == up) // cima
 				seta--;
-			else if (dir == 's') // baixo
+			else if (dir == down) // baixo
 				seta++;
-			else if (dir == 'd' && seta == 0) { // comecar o jogo e conectar ao servidor
+			else if (dir == right && seta == 0) { // comecar o jogo e conectar ao servidor
 				connectToServer(ip);
 				sendInfoToServer(*info);
 
 				return; // sai do menu
 			}
-			else if (dir == 'd' && seta == 1) { // acessa o menu de opcoes
+			else if (dir == right && seta == 1) { // acessa o menu de opcoes
 				seta = 0;
 				tipomenu = OPTIONS;				
 			}
-			else if (dir == 'd' && seta == 2) // sai do jogo
+			else if (dir == right && seta == 2) // sai do jogo
 				exit(1);
 
 			seta = mod(seta, qtdmenu); // calcula sempre um valor permitido pelo vetor
@@ -81,26 +86,26 @@ void menu (clientInfo *info) {
 
 			options[navop[seta]][colseta] = ' '; // limpa...
 
-			if (dir == 'w') // cima
+			if (dir == up) // cima
 				seta--;
-			else if (dir == 's') // baixo
+			else if (dir == down) // baixo
 				seta++;
-			else if (dir == 'd' && seta == 0) { // trocar o nome o player
+			else if (dir == right && seta == 0) { // trocar o nome o player
 				printf("Digite seu nome: ");
 				scanf(" %[^\n]", (*info).nome);
 			}
-			else if (dir == 'd' && seta == 1) { // trocar o mapa do player
+			else if (dir == right && seta == 1) { // trocar o mapa do player
 				printf("Digite o mapa que deseja utilizar: ");
 				scanf("%d", &(*info).mapa);				
 			}
-			else if (dir == 'd' && seta == 2) { // trocar o ip do servidor
+			else if (dir == right && seta == 2) { // trocar o ip do servidor
 				printf("Digite o ip do servidor: ");
 				scanf("%s", ip);
 			}
-			else if (dir == 'd' && seta == 3) { // criar um mapa aleatorio
+			else if (dir == right && seta == 3) { // criar um mapa aleatorio
 				//createRandomMap();
 			}
-			else if (dir == 'd' && seta == 4) { // voltar para o menu principal
+			else if (dir == right && seta == 4) { // voltar para o menu principal
 				seta = 0;
 				tipomenu = MAIN;
 			}
