@@ -7,8 +7,6 @@ void MyBroadcast(char *str);// um exemplo de como mandar uma mensagem para todos
 
 int main () {
 	srand(time(NULL)); // seed pra usar o rand durante o jogo
-	mov_msg movv;
-	int sd, id;
 
 	clientMoved = MyClientMoved;
 	clientConnected = MyClientConnected;
@@ -41,7 +39,21 @@ void MyClientConnected(int id, clientInfo startInfo){
 void MyClientMoved(int id, mov_msg mov){
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	printf("Client %d moved: %c\n", id, mov.msg);
-	map_changes[pos_broad++].new = mov.msg;
+	map_changes[pos_broad].tipo = 0;
+	map_changes[pos_broad].new = mov.msg;
+	map_changes[pos_broad].x = clients[id].x;
+	map_changes[pos_broad].y = clients[id].y;
+	pos_broad++;
+
+	// assumindo que o movimento e legal
+	if (mov.msg == up)
+		clients[id].y++;
+	else if (mov.msg == down)
+		clients[id].y--;
+	else if (mov.msg == left)
+		clients[id].x--;
+	else if (mov.msg == right)
+		clients[id].x++;
 }
 
 void startGame(){

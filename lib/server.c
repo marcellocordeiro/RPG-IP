@@ -1,5 +1,10 @@
 #include "server.h"
 
+#define up 'w'
+#define down 's'
+#define left 'a'
+#define right 'd'
+
 void init(){
 	clients_connected = 0;
 	pos_broad = 0;

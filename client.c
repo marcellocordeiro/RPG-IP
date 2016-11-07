@@ -32,22 +32,21 @@ int main () {
 	while (jogando) {
 		while (readUpdFromServer(&updt) > 0) {// recebe todas mensagens
 			// qual o tipo do update, ex:
-			/*
 			switch (updt.tipo) {
 				case 0:
 					// update no mapa
+					printf("x = %d y = %d dir = %c\n", updt.x, updt.y, updt.new);
 					break;
 				case 1:
 					// ...
 					break;
 			}
-			*/
 
-			printf("%c ", updt.new);
+			//printf("%c ", updt.new);
 		}
 
 		mov.msg = getch();
-		if (mov.msg != -1) // retorna -1 se demorou muito e nada foi digitado.
+		if (mov.msg != -1 /* && movimentolegal*/) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
 	

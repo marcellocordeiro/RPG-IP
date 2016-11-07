@@ -19,6 +19,11 @@
 #define PORT 9003
 #define NAME_SIZE 40
 
+#define up 'w'
+#define down 's'
+#define left 'a'
+#define right 'd'
+
 struct mov_msg{
 	char msg;
 };
