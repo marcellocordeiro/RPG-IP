@@ -75,7 +75,7 @@ void menu (clientInfo *info) {
 			seta = mod(seta, qtdmenu); // calcula sempre um valor permitido pelo vetor
 			mainmenu[navm[seta]][colseta] = '>'; // coloca a seta na nova posicao do menu
 		}
-		else if (tipomenu == MAIN) { // menu de opcoes
+		else if (tipomenu == OPTIONS) { // menu de opcoes
 			for (i = 0; i < qtdlop; i++)
 				printf("%s\n", options[i]);
 
