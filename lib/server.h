@@ -56,6 +56,6 @@ void checkConn();
 void wasClient();
 void broadcast();
 void broadcastTxt(const char msg[], int s);
-void desconnectCleint(int id);
+void disconnectClient(int id);
 
 #endif

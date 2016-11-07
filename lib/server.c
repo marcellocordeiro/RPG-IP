@@ -152,7 +152,7 @@ void broadcastTxt(const char msg[], int s){
 }
 
 
-void disconnectCleint(int id){
+void disconnectClient(int id){
 	shutdown(clients[id].sockid, SHUT_RD);
 	clients[id].sockid = 0;
 }
