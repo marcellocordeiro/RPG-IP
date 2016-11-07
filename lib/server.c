@@ -105,6 +105,7 @@ void wasClient() {
 		if (FD_ISSET (sd, &read_fd_set)){
 			mov_msg new_mov;
 			if (readMovFromClient (sd, &new_mov) < 0){ //o usuário de desconectou.
+				printf("Client %d disconnected\n",  i);
 				close (sd);
 				FD_CLR (sd, &active_fd_set);
 				clients[i].sockid = 0;
