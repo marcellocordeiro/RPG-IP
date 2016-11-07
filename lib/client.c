@@ -6,6 +6,11 @@
 #define opcoesoptions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
 #define colseta 22 // coluna da seta >
 
+enum {
+	MAIN,
+	OPTIONS
+};
+
 int mod (int x, int m) { // calcula o mod corretamente
     return (x%m + m)%m;
 }
@@ -15,7 +20,7 @@ void menu (clientInfo *info) {
 	FILE *opf = fopen("data/options.txt", "r");
 	char ip[20];
 
-	int i, seta = 0, qtdlm = 0, qtdlop = 0, tipomenu = 1; // seta: posicao da seta; qtdlm e qtdlop: quantidade de linhas de cada menu; tipomenu: menu principal ou de opcoes
+	int i, seta = 0, qtdlm = 0, qtdlop = 0, tipomenu = MAIN; // seta: posicao da seta; qtdlm e qtdlop: quantidade de linhas de cada menu; tipomenu: menu principal ou de opcoes
 	char mainmenu[100][100], options[100][100];
 	char navm[] = {opcoesmenu}, navop[] = {opcoesoptions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
@@ -24,6 +29,7 @@ void menu (clientInfo *info) {
 	mov.msg = 'c';
 
 	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
+	connectToServer(ip);
 	strcpy((*info).nome, "default"); // nome padrao
 	(*info).mapa = 1; // mapa padrao
 
@@ -39,7 +45,7 @@ void menu (clientInfo *info) {
 	while (1) {
 		system("clear"); // limpa o terminal
 
-		if (tipomenu == 1) { // menu principal
+		if (tipomenu == MAIN) { // menu principal
 			for (i = 0; i < qtdlm; i++)
 				printf("%s\n", mainmenu[i]); // mostra o menu
 
@@ -54,13 +60,14 @@ void menu (clientInfo *info) {
 			else if (dir == 's') // baixo
 				seta++;
 			else if (dir == 'd' && seta == 0) { // comecar o jogo e conectar ao servidor
+				sendInfoToServer(*info);
 				sendMovToServer(mov);				
 
 				return; // sai do menu
 			}
 			else if (dir == 'd' && seta == 1) { // acessa o menu de opcoes
 				seta = 0;
-				tipomenu = 2;				
+				tipomenu = OPTIONS;				
 			}
 			else if (dir == 'd' && seta == 2) // sai do jogo
 				exit(1);
@@ -68,7 +75,7 @@ void menu (clientInfo *info) {
 			seta = mod(seta, qtdmenu); // calcula sempre um valor permitido pelo vetor
 			mainmenu[navm[seta]][colseta] = '>'; // coloca a seta na nova posicao do menu
 		}
-		else if (tipomenu == 2) { // menu de opcoes
+		else if (tipomenu == MAIN) { // menu de opcoes
 			for (i = 0; i < qtdlop; i++)
 				printf("%s\n", options[i]);
 
@@ -102,7 +109,7 @@ void menu (clientInfo *info) {
 			}
 			else if (dir == 'd' && seta == 4) { // voltar para o menu principal
 				seta = 0;
-				tipomenu = 1;
+				tipomenu = MAIN;
 			}
 
 			seta = mod(seta, qtdop); // ...
