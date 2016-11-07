@@ -34,7 +34,8 @@ int main () {
 
 void MyClientConnected(int id, clientInfo startInfo){
 	printf("Client %s connected, id = %d, map = %d\n", startInfo.nome, id, startInfo.mapa);
-	//sendTxtToClient(clients[id].sockid, "ok");
+	if (id == 0)
+		game_status = 1;
 }
 
 void MyClientMoved(int id, mov_msg mov){
