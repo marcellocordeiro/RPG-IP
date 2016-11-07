@@ -18,8 +18,10 @@ int main () {
 			
 			printf("%s\n", msg);
 		}
-		printf("2\n");
-
+		//printf("2\n");
+		mov.msg = getch();
+		if (mov.msg != -1)
+			sendMovToServer(mov);
 		//if (falha)
 		//	exit(1);
 	}

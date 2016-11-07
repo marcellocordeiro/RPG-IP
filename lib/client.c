@@ -29,7 +29,6 @@ void menu (clientInfo *info) {
 	mov.msg = 'c';
 
 	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
-	connectToServer(ip);
 	strcpy((*info).nome, "default"); // nome padrao
 	(*info).mapa = 1; // mapa padrao
 
@@ -60,8 +59,9 @@ void menu (clientInfo *info) {
 			else if (dir == 's') // baixo
 				seta++;
 			else if (dir == 'd' && seta == 0) { // comecar o jogo e conectar ao servidor
+				connectToServer(ip);
 				sendInfoToServer(*info);
-				sendMovToServer(mov);				
+				//sendMovToServer(mov);
 
 				return; // sai do menu
 			}
@@ -98,10 +98,10 @@ void menu (clientInfo *info) {
 				scanf("%d", &(*info).mapa);				
 			}
 			else if (dir == 'd' && seta == 2) { // trocar o ip do servidor
-				printf("Digite o ip do servidor: ");
-				scanf("%s", ip);
+				//printf("Digite o ip do servidor: ");
+				//scanf("%s", ip);
 
-				connectToServer(ip); // NULL == localhost
+				//connectToServer(ip); // NULL == localhost
 				sendInfoToServer(*info); // primeira mensagem é sempre clientInfo
 			}
 			else if (dir == 'd' && seta == 3) { // criar um mapa aleatorio

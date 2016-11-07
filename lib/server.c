@@ -91,6 +91,7 @@ void checkConn() {
 					clients[i].sockid = new;
 					clientConnected(i, startInfo);
 					++clients_connected;
+					game_status = 1;
 					break;
 				}
 			}
