@@ -16,6 +16,40 @@ enum {
 	OPTIONS
 };
 
+int islegal (int x, int y, char c) {
+	linhas = 20;
+	colunas = 20;
+	
+	switch (c) {
+		case up:
+			if (x - 1 == 0)
+				return 0;
+
+			break;
+		case down:
+			if (x + 1 == linhas - 1)
+				return 0;
+
+			break;
+		case left:
+			if (y - 1 == 0)
+				return 0;
+
+			break;
+		case right:
+			if (y + 1 == colunas - 1)
+				return 0;
+
+			break;
+		default:
+			return 0;
+
+			break;
+	}
+
+	return 1;
+}
+
 int mod (int x, int m) { // calcula o mod corretamente
     return (x%m + m)%m;
 }

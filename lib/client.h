@@ -1,6 +1,7 @@
 #include "default.h"
 
-char matriz[20][20];
+char matriz[50][50];
+int linhas, colunas;
 
 int network_socket;
 struct sockaddr_in server_address;

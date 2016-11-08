@@ -43,16 +43,27 @@ int main () {
 
 					matriz[updt.x][updt.y] = ' ';
 
-					if (updt.new == up)
+					if (updt.new == up) {
 						matriz[updt.x - 1][updt.y] = updt.id + '0';
-					else if (updt.new == down)
+						x = updt.x - 1;
+					}
+					else if (updt.new == down){
 						matriz[updt.x + 1][updt.y] = updt.id + '0';
-					else if (updt.new == left)
+						x = updt.x + 1;
+					}
+					else if (updt.new == left) {
 						matriz[updt.x][updt.y - 1] = updt.id + '0';
-					else if (updt.new == right)
+						y = updt.y - 1;
+					}
+					else if (updt.new == right) {
 						matriz[updt.x][updt.y + 1] = updt.id + '0';
-					else
+						y = updt.y + 1;
+					}
+					else {
 						matriz[updt.x][updt.y] = updt.id + '0';
+						x = updt.x;
+						y = updt.y;
+					}
 
 					for (i = 0; i < 20; i++) {
 						for (j = 0; j < 20; j++)
@@ -71,7 +82,7 @@ int main () {
 		}
 
 		mov.msg = getch();
-		if (mov.msg != -1 /*&& islegal(mov.msg)*/) // retorna -1 se demorou muito e nada foi digitado.
+		if (mov.msg != -1 && islegal(x, y, mov.msg)) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
 	
