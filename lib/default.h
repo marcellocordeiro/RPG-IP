@@ -16,7 +16,7 @@
 #include <arpa/inet.h>
 
 #define BUFFER_SIZE 512
-#define PORT 9003
+#define PORT 9004
 #define NAME_SIZE 40
 
 #define up 'w'
@@ -29,7 +29,7 @@ struct mov_msg{
 };
 
 struct upd_msg{//Mensagem de atualização do jogo
-	int tipo, vida;
+	int tipo, id, vida;
 	int x, y;
 	char new;
 };

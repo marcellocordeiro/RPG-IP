@@ -1,13 +1,19 @@
 #include "lib/client.h"
 
+char matriz[20][20];
+
 int main () {
 	clientInfo info;
 	char msg[BUFFER_SIZE];
-	int falha = 0, comecar = 0, jogando = 1;
+	int falha = 0, comecar = 0, jogando = 1, i, j;
 	upd_msg updt;
 	mov_msg mov;
 
 	menu(&info);
+	//memset(matriz, ' ', sizeof (matriz));
+	for (i = 0; i < 20; i++)
+		for (j = 0; j < 20; j++)
+			matriz[i][j] = ' ';
 
 	while (comecar == 0) { // depois só mensagem de texto até o jogo começar
 		if (readTxtFromServer(msg) > 0) {
@@ -35,7 +41,26 @@ int main () {
 			switch (updt.tipo) {
 				case 0:
 					// update no mapa
-					printf("x = %d y = %d dir = %c\n", updt.x, updt.y, updt.new);
+					system("clear");
+
+					if (updt.new == up)
+						matriz[updt.x + 1][updt.y] = ' ';
+					else if (updt.new == down)
+						matriz[updt.x - 1][updt.y] = ' ';
+					else if (updt.new == left)
+						matriz[updt.x][updt.y + 1] = ' ';
+					else if (updt.new == right)
+						matriz[updt.x][updt.y - 1] = ' ';
+					
+					matriz[updt.x][updt.y] = updt.id + '0';
+
+					for (i = 0; i < 20; i++) {
+						for (j = 0; j < 20; j++)
+							printf("[%c]", matriz[i][j]);
+
+						printf("\n");
+					}
+					
 					break;
 				case 1:
 					// ...

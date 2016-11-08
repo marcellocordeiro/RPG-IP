@@ -43,17 +43,18 @@ void MyClientMoved(int id, mov_msg mov){
 	map_changes[pos_broad].new = mov.msg;
 	map_changes[pos_broad].x = clients[id].x;
 	map_changes[pos_broad].y = clients[id].y;
+	map_changes[pos_broad].id = id;
 	pos_broad++;
 
 	// assumindo que o movimento e legal
 	if (mov.msg == up)
-		clients[id].y++;
-	else if (mov.msg == down)
-		clients[id].y--;
-	else if (mov.msg == left)
 		clients[id].x--;
-	else if (mov.msg == right)
+	else if (mov.msg == down)
 		clients[id].x++;
+	else if (mov.msg == left)
+		clients[id].y--;
+	else if (mov.msg == right)
+		clients[id].y++;
 }
 
 void startGame(){
