@@ -43,16 +43,18 @@ int main () {
 					// update no mapa
 					system("clear");
 
+					matriz[updt.x][updt.y] = ' ';
+
 					if (updt.new == up)
-						matriz[updt.x + 1][updt.y] = ' ';
+						matriz[updt.x - 1][updt.y] = updt.id + '0';
 					else if (updt.new == down)
-						matriz[updt.x - 1][updt.y] = ' ';
+						matriz[updt.x + 1][updt.y] = updt.id + '0';
 					else if (updt.new == left)
-						matriz[updt.x][updt.y + 1] = ' ';
+						matriz[updt.x][updt.y - 1] = updt.id + '0';
 					else if (updt.new == right)
-						matriz[updt.x][updt.y - 1] = ' ';
-					
-					matriz[updt.x][updt.y] = updt.id + '0';
+						matriz[updt.x][updt.y + 1] = updt.id + '0';
+					else
+						matriz[updt.x][updt.y] = updt.id + '0';
 
 					for (i = 0; i < 20; i++) {
 						for (j = 0; j < 20; j++)

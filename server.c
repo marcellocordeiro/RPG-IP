@@ -55,6 +55,7 @@ void MyClientMoved(int id, mov_msg mov){
 		clients[id].y--;
 	else if (mov.msg == right)
 		clients[id].y++;
+
 }
 
 void startGame(){
