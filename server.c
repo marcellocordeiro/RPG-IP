@@ -32,8 +32,13 @@ int main () {
 
 void MyClientConnected(int id, clientInfo startInfo){
 	printf("Client %s connected, id = %d, map = %d\n", startInfo.nome, id, startInfo.mapa);
-	if (id == 0)
-		game_status = 1;
+	game_status = 1;
+
+	if (id == 0) {
+		map_changes[pos_broad].tipo = 6;
+		map_changes[pos_broad].id = startInfo.mapa;
+		pos_broad++;
+	}
 }
 
 void MyClientMoved(int id, mov_msg mov){

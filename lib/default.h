@@ -42,6 +42,7 @@ struct upd_msg{//Mensagem de atualização do jogo
 	= 3 mensagem para avisar que saiu de batalha
 	= 4 mensagem para avisar que morreu
 	= 5 mensagem para avisar que venceu
+	= 6 mensagem para dizer qual o mapa que vai ser jogado - id = num do mapa
 */
 
 struct clientInfo{

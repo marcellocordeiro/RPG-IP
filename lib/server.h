@@ -8,7 +8,7 @@
 struct player{
 	int x, y;
 	// int informações do game, hp, ataque, defesa, pontos...;
-	int vida, ataque, defesa, turn;
+	int vida, vida_max, ataque, defesa, turn;
 	int sockid, fight, whofight;
 	char nome[NAME_SIZE];
 };

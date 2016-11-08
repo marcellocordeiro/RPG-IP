@@ -28,7 +28,7 @@ int main () {
 
 		mov.msg = getch();
 		if (mov.msg != -1)
-			sendMovToServer(mov);	
+			sendMovToServer(mov);
 	}
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
@@ -73,8 +73,9 @@ int main () {
 					}
 					
 					break;
-				case 10:
-					
+				case 6:
+					info.mapa = updt.id;
+					//printf("%d\n", info.mapa);
 					break;
 			}
 
