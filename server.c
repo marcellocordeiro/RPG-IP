@@ -59,9 +59,21 @@ void MyClientMoved(int id, mov_msg mov){
 }
 
 void startGame(){
+	int id;
 	printf("Client 0 confirmed, the game will start now...\n");
 	MyBroadcast("1  - O jogo vai comecar");
 	game_status = 2;
+
+	for(id = 0; id < clients_connected; id++) {
+		clients[id].x = rand()%10;
+		clients[id].y = rand()%10;
+		map_changes[pos_broad].tipo = 0;
+		map_changes[pos_broad].x = clients[id].x;
+		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].new = -1;
+		pos_broad++;
+	}
 	// avisar para os clientes que o jogo vai começar
 	// enviar algumas informações, como mapa, status inicial do cliente, etc..
 }

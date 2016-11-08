@@ -1,11 +1,9 @@
 #include "lib/client.h"
 
-char matriz[20][20];
-
 int main () {
 	clientInfo info;
 	char msg[BUFFER_SIZE];
-	int falha = 0, comecar = 0, jogando = 1, i, j;
+	int falha = 0, comecar = 0, jogando = 1, i, j, x = 0, y = 0;
 	upd_msg updt;
 	mov_msg mov;
 
@@ -64,8 +62,8 @@ int main () {
 					}
 					
 					break;
-				case 1:
-					// ...
+				case 10:
+					
 					break;
 			}
 
@@ -73,7 +71,7 @@ int main () {
 		}
 
 		mov.msg = getch();
-		if (mov.msg != -1 /* && movimentolegal*/) // retorna -1 se demorou muito e nada foi digitado.
+		if (mov.msg != -1 /*&& islegal(mov.msg)*/) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
 	
