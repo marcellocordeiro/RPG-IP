@@ -52,26 +52,29 @@ void MyClientMoved(int id, mov_msg mov){
 	pos_broad++;
 
 	// assumindo que o movimento e legal
-	if (mov.msg == up)
+	if (mov.msg == up) {
 		clients[id].x--;
-	else if (mov.msg == down)
+	}
+	else if (mov.msg == down){
 		clients[id].x++;
-	else if (mov.msg == left)
+	}
+	else if (mov.msg == left){
 		clients[id].y--;
-	else if (mov.msg == right)
+	}
+	else if (mov.msg == right){
 		clients[id].y++;
-
+	}
 }
 
 void startGame(){
 	int id;
 	printf("Client 0 confirmed, the game will start now...\n");
-	MyBroadcast("1  - O jogo vai comecar");
+	MyBroadcast("O JOGO VAI COMEÇAR"); // avisar para os clientes que o jogo vai começar
 	game_status = 2;
 
-	for(id = 0; id < clients_connected; id++) {
-		clients[id].x = rand()%10;
-		clients[id].y = rand()%10;
+	for(id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
+		clients[id].x = rand()%10 + 1;	//	clients[id].x = rand()%(field.linha) + 1;
+		clients[id].y = rand()%10 + 1;  //	clients[id].y = rand()%(field.linha) + 1;
 		map_changes[pos_broad].tipo = 0;
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
@@ -79,8 +82,8 @@ void startGame(){
 		map_changes[pos_broad].new = -1;
 		pos_broad++;
 	}
-	// avisar para os clientes que o jogo vai começar
-	// enviar algumas informações, como mapa, status inicial do cliente, etc..
+	
+	
 }
 
 void MyBroadcast(char *str){
