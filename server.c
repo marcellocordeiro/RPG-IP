@@ -52,18 +52,15 @@ void MyClientMoved(int id, mov_msg mov){
 	pos_broad++;
 
 	// assumindo que o movimento e legal
-	if (mov.msg == up) {
+	if (mov.msg == up)
 		clients[id].x--;
-	}
-	else if (mov.msg == down){
+	else if (mov.msg == down)
 		clients[id].x++;
-	}
-	else if (mov.msg == left){
+	else if (mov.msg == left)
 		clients[id].y--;
-	}
-	else if (mov.msg == right){
+	else if (mov.msg == right)
 		clients[id].y++;
-	}
+	
 }
 
 void startGame(){
