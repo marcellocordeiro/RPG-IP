@@ -24,6 +24,15 @@
 #define left 'a'
 #define right 'd'
 
+#define KNRM  "\x1B[0m"
+#define KRED  "\x1B[31m"
+#define KGRN  "\x1B[32m"
+#define KYEL  "\x1B[33m"
+#define KBLU  "\x1B[34m"
+#define KMAG  "\x1B[35m"
+#define KCYN  "\x1B[36m"
+#define KWHT  "\x1B[37m"
+
 struct mov_msg{
 	char msg;
 };
@@ -32,17 +41,18 @@ struct upd_msg{//Mensagem de atualização do jogo
 	int tipo, id, vida;
 	int x, y;
 	char new;
+	char sprite;
 };
 
 /*
 	tipo
-	= 0 atualiza o mapa, (x,y) é a  posição, e new é o novo char
+	= 0 atualiza o mapa, (x,y) é a  posição, e new é o novo char. Se new == -1,  vida é a quantidade de clientes conectados
 	= 1 mesagem para avisar que vai entrar em batalha/atualiza status do oponente vida é a vida do oponente, x é o ataque, y é a defesa
 	= 2 atualiza a meus status, vida é a minha nova vida, x é meu novo ataque, y é minha nova defesa
 	= 3 mensagem para avisar que saiu de batalha
 	= 4 mensagem para avisar que morreu
 	= 5 mensagem para avisar que venceu
-	= 6 mensagem para dizer qual o mapa que vai ser jogado - id = num do mapa
+	= 6 mensagem para dizer qual o mapa que vai ser jogado (id = num do mapa)
 */
 
 struct clientInfo{

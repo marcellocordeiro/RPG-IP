@@ -11,6 +11,7 @@ struct player{
 	int vida, vida_max, ataque, defesa, turn;
 	int sockid, fight, whofight;
 	char nome[NAME_SIZE];
+	char sprite;
 };
 /*
 	fight
@@ -44,6 +45,7 @@ void (*clientConnected)(int, clientInfo);
 void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
+char *color(int id);
 
 int makeSocket(uint16_t);
 int readMovFromClient(int filedes, mov_msg *message);

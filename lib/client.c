@@ -16,6 +16,46 @@ enum {
 	OPTIONS
 };
 
+char *color(int id) {
+	switch (id){
+		case 0:
+			return KBLU;
+			break;
+		case 1:
+			return KYEL;
+			break;
+		case 2:
+			return KCYN;
+			break;
+	}
+}
+
+void printcchar (char *color,char c) {	
+	printf("%s%c", color, c);
+	printf("%s", KNRM);
+}
+
+void drawall (updt_player *hero, int qnt_clients, MAP f/*,MOB monster*/){
+	int i, j, k, flag;
+	for(i = 0; i < f.linha; i++){
+		for(j = 0; j < f.coluna; j++){
+			for (k = 0; k < qnt_clients && !flag; k++) {
+				if(i == hero[k].x && j == hero[k].y) {
+					printcchar(hero[k].color,hero[k].sprite); //player
+					flag = 1;
+				}
+			}
+
+			if (flag == 0)
+				printcchar(KGRN,f.mapa[i][j]); //' ' ou '*'
+			else
+				flag = 0;
+		}
+		printf("\n");
+
+	}
+}
+
 int islegal (int x, int y, char c) {
 	switch (c) {
 		case up:
