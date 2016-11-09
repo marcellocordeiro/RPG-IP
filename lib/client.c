@@ -17,9 +17,6 @@ enum {
 };
 
 int islegal (int x, int y, char c) {
-	linhas = 20;
-	colunas = 20;
-	
 	switch (c) {
 		case up:
 			if (x - 1 == 0)
@@ -27,7 +24,7 @@ int islegal (int x, int y, char c) {
 
 			break;
 		case down:
-			if (x + 1 == linhas - 1)
+			if (x + 1 == field.linha - 1)
 				return 0;
 
 			break;
@@ -37,7 +34,7 @@ int islegal (int x, int y, char c) {
 
 			break;
 		case right:
-			if (y + 1 == colunas - 1)
+			if (y + 1 == field.coluna - 1)
 				return 0;
 
 			break;
