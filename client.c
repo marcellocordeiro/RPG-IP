@@ -55,13 +55,15 @@ int main () {
 	printf(" %s\n", msg);
 	for (i = 0; i < 3; i++)
 		printf("\t");
-	printf("pressione qualquer tecla para começar...\n");
-	for (i = 0; i < 12; i++) 
+	//printf("pressione qualquer tecla para começar...\n");
+	for (i = 0; i < 12 + 1; i++) 
 		printf("\n");
 
-	do { // MELHORAR!
-		c = getch();
-	} while(c == -1);
+	//do { // MELHORAR!
+	//	c = getch();
+	//} while(c == -1);
+
+	delay(2);
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.

@@ -1,5 +1,36 @@
 #include "server.h"
 
+int islegal (int x, int y, char c) {
+	switch (c) {
+		case up:
+			if (x - 1 == 0)
+				return 0;
+
+			break;
+		case down:
+			if (x + 1 == map.linha - 1)
+				return 0;
+
+			break;
+		case left:
+			if (y - 1 == 0)
+				return 0;
+
+			break;
+		case right:
+			if (y + 1 == map.coluna - 1)
+				return 0;
+
+			break;
+		default:
+			return 0;
+
+			break;
+	}
+
+	return 1;
+}
+
 void init(){
 	clients_connected = 0;
 	pos_broad = 0;

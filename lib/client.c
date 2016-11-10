@@ -5,6 +5,11 @@ enum {
 	OPTIONS
 };
 
+void delay (unsigned int secs) {
+    secs += time(0);
+    while (time(0) < secs);
+}
+
 char* color (int id) {
 	switch (id) {
 		case 0:
@@ -27,19 +32,20 @@ void printcchar (char *color, char c) {
 	printf("%s", KNRM);
 }
 
-void drawall (updt_player *hero, int qnt_clients, MAP f){
+void drawall (updt_player *hero, int qnt_clients, MAP f) {
 	int i, j, k, flag;
-	for(i = 0; i < f.linha; i++){
-		for(j = 0; j < f.coluna; j++){
+	
+	for(i = 0; i < f.linha; i++) {
+		for(j = 0; j < f.coluna; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == hero[k].x && j == hero[k].y) {
-					printcchar(hero[k].color,hero[k].sprite);
+					printcchar(hero[k].color, hero[k].sprite);
 					flag = 1;
 				}
 			}
 
 			if (flag == 0)
-				printcchar(KGRN,f.mapa[i][j]);
+				printcchar(KGRN, f.mapa[i][j]);
 			else
 				flag = 0;
 		}

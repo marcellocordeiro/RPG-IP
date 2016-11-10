@@ -5,6 +5,9 @@
 
 #define MAX_CLIENTS 3
 
+FILE *fpmap;
+MAP map;
+
 struct player{
 	int x, y;
 	// int informações do game, hp, ataque, defesa, pontos...;
@@ -45,7 +48,7 @@ void (*clientConnected)(int, clientInfo);
 void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
-char *color(int id);
+int islegal(int x, int y, char c);
 
 int makeSocket(uint16_t);
 int readMovFromClient(int filedes, mov_msg *message);
