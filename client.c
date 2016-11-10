@@ -104,10 +104,10 @@ int main () {
 							players[i].y = y;
 						}
 
-						printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
-						printf("players[%d].x: %d\n", i, players[i].x);
-						printf("players[%d].y: %d\n", i, players[i].y);
+						//printf("players[%d].sprite: %c\n", i, players[i].sprite);
+						//printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
+						//printf("players[%d].x: %d\n", i, players[i].x);
+						//printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
 					drawall(players, qnt_clients, field);
