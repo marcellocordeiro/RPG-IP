@@ -147,8 +147,8 @@ void startGame(){
 	game_status = 2;
 
 	for (id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
-		clients[id].x = rand()%(map.linha - 2) + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;
-		clients[id].y = rand()%(map.coluna - 2) + 1;  //	clients[id].y = rand()%(field.linha) + 1;
+		clients[id].x = rand()%(map.linha - 2) + 1;
+		clients[id].y = rand()%(map.coluna - 2) + 1;
 		clients[id].sprite = '^';
 
 		map_changes[pos_broad].tipo = 0;
@@ -162,33 +162,21 @@ void startGame(){
 		pos_broad++;
 	}
 
-	monsters[0].x = 4;
-	monsters[0].y = 4;
-	monsters[0].sprite = 'm';
-	monsters[0].fight = 0;
-
-	map_changes[pos_broad].tipo = 7;
-	map_changes[pos_broad].x = monsters[0].x;
-	map_changes[pos_broad].y = monsters[0].y;
-	map_changes[pos_broad].id = 0;
-	map_changes[pos_broad].new = -1;
-	map_changes[pos_broad].sprite = monsters[0].sprite;
-	map_changes[pos_broad].ismonster = 1;
-
-	/*for (i = 0; i < map.qnt_monsters; i++) {
-		monsters[i].x = rand()%(map.linha - 2) + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;
-		monsters[i].y = rand()%(map.coluna - 2) + 1;  //	clients[id].y = rand()%(field.linha) + 1;
-		monsters[id].sprite = 'm';
+	for (i = 0; i < map.qnt_monsters; i++) {
+		monsters[i].x = rand()%(map.linha - 2) + 1;
+		monsters[i].y = rand()%(map.coluna - 2) + 1;
+		monsters[i].sprite = 'm';
+		monsters[i].fight = 0;
 
 		map_changes[pos_broad].tipo = 0;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].x = monsters[i].x;
+		map_changes[pos_broad].y = monsters[i].y;
+		map_changes[pos_broad].id = i;
 		map_changes[pos_broad].new = -2;
-		map_changes[pos_broad].sprite = clients[id].sprite;
-		map_changes[pos_broad].vida = clients_connected;
+		map_changes[pos_broad].sprite = clients[i].sprite;
+		map_changes[pos_broad].ismonster = 1;
 		pos_broad++;
-	}*/
+	}
 }
 
 void MyBroadcast(char *s){

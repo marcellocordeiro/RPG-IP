@@ -57,10 +57,6 @@ int main () {
 
 	delay(2);
 
-
-	for (i = 0; i < field.qnt_monsters; i++)
-		monsters[i].color = KGRY;
-
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
 	while (jogando) {
@@ -74,7 +70,7 @@ int main () {
 					x = updt.x;
 					y = updt.y;
 
-					if (updt.new == -1 && updt.id == 0 ) { //informações iniciais
+					if (updt.new == -1 && updt.id == 0) { //informações iniciais
 						qnt_clients = updt.vida;
 
 						for (i = 0; i < qnt_clients; i++)
@@ -135,6 +131,9 @@ int main () {
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);
 
 					fclose(fpmap);
+
+					for (i = 0; i < field.qnt_monsters; i++)
+						monsters[i].color = KGRY;
 
 					/////////////////////////////////
 					//field.mapa[5][5] = 'm'; // debug
