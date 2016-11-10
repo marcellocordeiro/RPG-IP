@@ -79,7 +79,7 @@ void MyClientMoved (int id, mov_msg mov) {
 	// assumindo que o movimento e legal
 	if (mov.msg == up) {
 		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if (x - 1 == monsters[i].x && y == monsters[i].y)
+			if (x - 1 == monsters[i].x && y == monsters[i].y && clients[id].sprite == '^')
 				found = 1;
 	
 		if (found == 0)
@@ -90,7 +90,7 @@ void MyClientMoved (int id, mov_msg mov) {
 	}
 	else if (mov.msg == down) {
 		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if (x + 1 == monsters[i].x && y == monsters[i].y)
+			if (x + 1 == monsters[i].x && y == monsters[i].y && clients[id].sprite == 'v')
 				found = 1;
 
 		if (found == 0)
@@ -101,7 +101,7 @@ void MyClientMoved (int id, mov_msg mov) {
 	}
 	else if (mov.msg == left) {
 		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if (x == monsters[i].x && y - 1 == monsters[i].y)
+			if (x == monsters[i].x && y - 1 == monsters[i].y && clients[id].sprite == '<')
 				found = 1;
 
 		if (found == 0)
@@ -112,7 +112,7 @@ void MyClientMoved (int id, mov_msg mov) {
 	}
 	else if (mov.msg == right) {
 		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if (x == monsters[i].x && y + 1 == monsters[i].y)
+			if (x == monsters[i].x && y + 1 == monsters[i].y && clients[id].sprite == '>')
 				found = 1;
 
 		if (found == 0)
@@ -175,6 +175,8 @@ void startGame(){
 		map_changes[pos_broad].sprite = monsters[i].sprite;
 		map_changes[pos_broad].ismonster = 1;
 		pos_broad++;
+
+		//printf("monsters[%d]:\nx:  %d y: %d  sprite: %c\n", i, monsters[i].x, monsters[i].y, monsters[i].sprite);
 	}
 }
 

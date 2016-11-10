@@ -33,7 +33,7 @@ void printcchar (char *color, char c) {
 }
 
 void drawall () {
-	int i, j, k, flag, flag1;
+	int i, j, k, flag = 0;
 	
 	for(i = 0; i < field.linha; i++) {
 		for(j = 0; j < field.coluna; j++) {
@@ -47,8 +47,7 @@ void drawall () {
 
 			for (k = 0; k < field.qnt_monsters && !flag; k++) {
 				if(i == monsters[k].x && j == monsters[k].y) {
-					printcchar(KGRY, monsters[k].sprite);
-					field.mapa[i][j] = ' ';
+					printcchar(monsters[k].color, monsters[k].sprite);
 					flag = 1;
 				}
 			}

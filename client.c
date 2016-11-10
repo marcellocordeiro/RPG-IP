@@ -47,15 +47,10 @@ int main () {
 	printf(" %s\n", msg);
 	for (i = 0; i < 3; i++)
 		printf("\t");
-	//printf("pressione qualquer tecla para começar...\n");
-	for (i = 0; i < 12 + 1; i++) 
+	for (i = 0; i < 13; i++) 
 		printf("\n");
 
-	//do { // MELHORAR!
-	//	c = getch();
-	//} while(c == -1);
-
-	delay(2);
+	//delay(2);
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
@@ -92,7 +87,7 @@ int main () {
 					}
 
 					//atualizando as posições de cada player
-					for (i = 0; i < qnt_clients && updt.ismonster; i++) {
+					for (i = 0; i < field.qnt_monsters && updt.ismonster; i++) {
 						if (updt.id == i) {
 							monsters[i].sprite = updt.sprite;
 							monsters[i].x = x;
@@ -107,6 +102,9 @@ int main () {
 
 					drawall();
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
+
+					//for (i = 0; i < field.qnt_monsters && updt.ismonster; i++)
+					//	printf("monsters[%d]:\nx:  %d y: %d  sprite: %c\n", i, monsters[i].x, monsters[i].y, monsters[i].sprite);
 					
 					break;
 				case 1:
@@ -125,7 +123,6 @@ int main () {
 						exit(1);
 					}
 					fscanf(fpmap, "%d %d %d", &field.linha, &field.coluna, &field.qnt_monsters);
-					//field.qnt_monsters = 1;
 
 					for(i = 0; i < field.linha; i++)
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);
@@ -133,7 +130,7 @@ int main () {
 					fclose(fpmap);
 
 					for (i = 0; i < field.qnt_monsters; i++)
-						monsters[i].color = KGRY;
+						monsters[i].color = KWHT;
 
 					break;
 			}
