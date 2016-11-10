@@ -77,7 +77,12 @@ int main () {
 
 					x = updt.x;
 					y = updt.y;
-
+					
+					/*
+						Corrigir essa parte tanto aqui como no server
+																		*/
+					
+					/*
 					if (updt.new == up)
 						x--;
 					else if (updt.new == down)
@@ -86,6 +91,7 @@ int main () {
 						y--;
 					else if (updt.new == right)
 						y++;
+					*/
 
 					//field.mapa[x][y] = updt.sprite;
 
@@ -114,6 +120,11 @@ int main () {
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
 					
 					break;
+				case 1:
+					system("clear");
+					printf("Battle\n");
+
+					break;
 				case 6: //primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					//lê o arquivo do mapa escolhido e o salva na matriz
 					sprintf(nome_mapa, "%s%d.txt", nome_mapa, updt.id);
@@ -130,6 +141,10 @@ int main () {
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);
 
 					fclose(fpmap);
+
+					/////////////////////////////////
+					field.mapa[5][5] = 'm'; // debug
+					///////////////////////////////
 
 					break;
 			}
