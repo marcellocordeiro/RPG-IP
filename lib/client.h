@@ -12,7 +12,7 @@ typedef struct {
 	char *color;
 	int x;
 	int y;
-}updt_player; // MUDAR NOME!!
+} updt_player; // MUDAR NOME!!
 
 MAP field;
 

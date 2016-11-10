@@ -24,6 +24,12 @@
 #define left 'a'
 #define right 'd'
 
+#define qtdmenu 3 // quantidade de opcoes no menu principal
+#define opcoesmenu 20, 22, 24 // linhas de cada opcao do menu principal
+#define qtdop 5 // quantidade de opcoes no menu de opcoes
+#define opcoesoptions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
+#define colseta 22 // coluna da seta >
+
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"

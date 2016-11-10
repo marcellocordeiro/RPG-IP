@@ -1,10 +1,5 @@
 #include "server.h"
 
-#define up 'w'
-#define down 's'
-#define left 'a'
-#define right 'd'
-
 void init(){
 	clients_connected = 0;
 	pos_broad = 0;
@@ -156,7 +151,6 @@ void broadcastTxt(const char msg[], int s){
 		}
 	}
 }
-
 
 void disconnectClient(int id){
 	shutdown(clients[id].sockid, SHUT_RD);

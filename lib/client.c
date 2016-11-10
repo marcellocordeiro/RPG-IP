@@ -1,58 +1,50 @@
 #include "client.h"
 
-#define qtdmenu 3 // quantidade de opcoes no menu principal
-#define opcoesmenu 20, 22, 24 // linhas de cada opcao do menu principal
-#define qtdop 5 // quantidade de opcoes no menu de opcoes
-#define opcoesoptions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
-#define colseta 22 // coluna da seta >
-
-#define up 'w'
-#define down 's'
-#define left 'a'
-#define right 'd'
-
 enum {
 	MAIN,
 	OPTIONS
 };
 
-char *color(int id) {
-	switch (id){
+char* color (int id) {
+	switch (id) {
 		case 0:
 			return KBLU;
+
 			break;
 		case 1:
 			return KYEL;
+
 			break;
 		case 2:
 			return KCYN;
+
 			break;
 	}
 }
 
-void printcchar (char *color,char c) {	
+void printcchar (char *color, char c) {	
 	printf("%s%c", color, c);
 	printf("%s", KNRM);
 }
 
-void drawall (updt_player *hero, int qnt_clients, MAP f/*,MOB monster*/){
+void drawall (updt_player *hero, int qnt_clients, MAP f){
 	int i, j, k, flag;
 	for(i = 0; i < f.linha; i++){
 		for(j = 0; j < f.coluna; j++){
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == hero[k].x && j == hero[k].y) {
-					printcchar(hero[k].color,hero[k].sprite); //player
+					printcchar(hero[k].color,hero[k].sprite);
 					flag = 1;
 				}
 			}
 
 			if (flag == 0)
-				printcchar(KGRN,f.mapa[i][j]); //' ' ou '*'
+				printcchar(KGRN,f.mapa[i][j]);
 			else
 				flag = 0;
 		}
-		printf("\n");
 
+		printf("\n");
 	}
 }
 

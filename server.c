@@ -12,8 +12,6 @@ int main () {
 	clientConnected = MyClientConnected;
 	clientConfirmed = startGame;
 
-	//int flag = 0;
-
 	init();
 
 	while (1) {
@@ -85,7 +83,7 @@ void startGame(){
 	int id;
 
 	printf("Client 0 confirmed, the game will start now...\n");
-	MyBroadcast("O JOGO VAI COMEÇAR"); // avisar para os clientes que o jogo vai começar
+	broadcastTxt("O JOGO VAI COMEÇAR", -1); // avisar para os clientes que o jogo vai começar
 	game_status = 2;
 
 	for(id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..

@@ -27,7 +27,7 @@ int main () {
 
 	menu(&info);
 
-	while (id == -1) { // receber o id do client
+	while (id == -1) // receber o id do client
 		if (readTxtFromServer(msg) > 0)
 			id = msg[0] - '0';
 
@@ -89,7 +89,7 @@ int main () {
 
 					//field.mapa[x][y] = updt.sprite;
 
-					if (updt.new == -1 && updt.id == 0){ //informações iniciais
+					if (updt.new == -1 && updt.id == 0) { //informações iniciais
 						qnt_clients = updt.vida;
 
 						for (i = 0; i < qnt_clients; i++)
@@ -103,6 +103,7 @@ int main () {
 							players[i].x = x;
 							players[i].y = y;
 						}
+
 						printf("players[%d].sprite: %c\n", i, players[i].sprite);
 						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
 						printf("players[%d].x: %d\n", i, players[i].x);
