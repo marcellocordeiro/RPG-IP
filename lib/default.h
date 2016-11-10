@@ -39,10 +39,13 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
+#define MAX_CLIENTS 3
+#define MAX_MONSTERS 10
+
 struct MAP {
 	int linha;
 	int coluna;
-	int monstros;
+	int qnt_monsters;
 	char mapa[100][100];
 };
 

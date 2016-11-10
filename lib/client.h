@@ -9,6 +9,9 @@ typedef struct {
 
 MAP field;
 
+updt_player players[MAX_CLIENTS];
+updt_player monsters[MAX_MONSTERS];
+
 int network_socket;
 struct sockaddr_in server_address;
 

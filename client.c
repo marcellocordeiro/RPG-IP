@@ -13,15 +13,8 @@ int main () {
 	int indice;
 	char c;
 	///mapa
-	FILE *fpmap, *fpbat; //ponteiros para os arquivos do mapa e da tela de batalha
-	MAP battleframe;
-	int inbattle = 0;
-	int flag = 0;
+	FILE *fpmap; //ponteiro para o arquivo do mapa
 	char nome_mapa[16];
-
-	///player
-	//char *color;
-	updt_player players[10];
 
 	strcpy(nome_mapa, "data/mapa");
 
@@ -137,7 +130,7 @@ int main () {
 						printf("ERRO: MAPA NÃO ENCONTRADO\n");
 						exit(1);
 					}
-					fscanf(fpmap, "%d %d %d", &field.linha, &field.coluna, &field.monstros);
+					fscanf(fpmap, "%d %d %d", &field.linha, &field.coluna, &field.qnt_monsters);
 
 					for(i = 0; i < field.linha; i++)
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);

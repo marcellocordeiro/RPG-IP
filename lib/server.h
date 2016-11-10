@@ -3,9 +3,6 @@
 
 #include "default.h"
 
-#define MAX_CLIENTS 3
-#define MAX_MONSTERS 10
-
 FILE *fpmap;
 MAP map;
 
@@ -36,7 +33,6 @@ player clients[MAX_CLIENTS]; // vetor com clientes connectados e suas informa√ß√
 int clients_connected; // quantidade de clientes connectados
 
 player monsters[MAX_MONSTERS];
-int qnt_monsters;
 
 int game_status; 
 /* 
