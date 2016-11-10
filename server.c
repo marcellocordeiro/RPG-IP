@@ -57,7 +57,6 @@ void MyClientConnected (int id, clientInfo startInfo) {
 			}
 
 		fscanf(fpmap, "%d %d %d", &map.linha, &map.coluna, &map.qnt_monsters);
-		map.qnt_monsters = 1;///////////////////////////////////////////////////////
 		fclose(fpmap);
 	}
 }
@@ -173,7 +172,7 @@ void startGame(){
 		map_changes[pos_broad].y = monsters[i].y;
 		map_changes[pos_broad].id = i;
 		map_changes[pos_broad].new = -2;
-		map_changes[pos_broad].sprite = clients[i].sprite;
+		map_changes[pos_broad].sprite = monsters[i].sprite;
 		map_changes[pos_broad].ismonster = 1;
 		pos_broad++;
 	}

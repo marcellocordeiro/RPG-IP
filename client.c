@@ -125,7 +125,7 @@ int main () {
 						exit(1);
 					}
 					fscanf(fpmap, "%d %d %d", &field.linha, &field.coluna, &field.qnt_monsters);
-					field.qnt_monsters = 1;
+					//field.qnt_monsters = 1;
 
 					for(i = 0; i < field.linha; i++)
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);
@@ -134,10 +134,6 @@ int main () {
 
 					for (i = 0; i < field.qnt_monsters; i++)
 						monsters[i].color = KGRY;
-
-					/////////////////////////////////
-					//field.mapa[5][5] = 'm'; // debug
-					///////////////////////////////
 
 					break;
 			}
