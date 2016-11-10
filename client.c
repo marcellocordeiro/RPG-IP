@@ -95,6 +95,11 @@ int main () {
 
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
+
+						monsters[0].color = KGRY;
+
+						//for (i = 0; i < field.qnt_monsters; i++)
+						//	monsters[i].color = KGRY;
 					}
 
 					//atualizando as posições de cada player
