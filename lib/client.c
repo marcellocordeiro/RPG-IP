@@ -32,14 +32,22 @@ void printcchar (char *color, char c) {
 	printf("%s", KNRM);
 }
 
-void drawall (updt_player *hero, int qnt_clients) {
-	int i, j, k, flag;
+void drawall () {
+	int i, j, k, flag, flag1;
 	
 	for(i = 0; i < field.linha; i++) {
 		for(j = 0; j < field.coluna; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
-				if(i == hero[k].x && j == hero[k].y) {
-					printcchar(hero[k].color, hero[k].sprite);
+				if(i == players[k].x && j == players[k].y) {
+					printcchar(players[k].color, players[k].sprite);
+					field.mapa[i][j] = ' ';
+					flag = 1;
+				}
+			}
+
+			for (k = 0; k < field.qnt_monsters && !flag; k++) {
+				if(i == monsters[k].x && j == monsters[k].y) {
+					printcchar(KGRY, monsters[k].sprite);
 					field.mapa[i][j] = ' ';
 					flag = 1;
 				}
@@ -47,8 +55,10 @@ void drawall (updt_player *hero, int qnt_clients) {
 
 			if (flag == 0)
 				printcchar(KGRN, field.mapa[i][j]);
-			else
+			else {
 				flag = 0;
+			}
+			
 		}
 
 		printf("\n");

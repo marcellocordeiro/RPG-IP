@@ -9,7 +9,6 @@ int main () {
 
 	//variaveis
 	int id = -1;
-	int qnt_clients;
 	int indice;
 	char c;
 	///mapa
@@ -58,6 +57,10 @@ int main () {
 
 	delay(2);
 
+
+	for (i = 0; i < field.qnt_monsters; i++)
+		monsters[i].color = KGRY;
+
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
 	while (jogando) {
@@ -68,42 +71,18 @@ int main () {
 					// update no mapa
 					system("clear");
 
-					//field.mapa[updt.x][updt.y] = ' ';
-
 					x = updt.x;
 					y = updt.y;
-					
-					/*
-						Corrigir essa parte tanto aqui como no server
-																		*/
-					
-					/*
-					if (updt.new == up)
-						x--;
-					else if (updt.new == down)
-						x++;
-					else if (updt.new == left)
-						y--;
-					else if (updt.new == right)
-						y++;
-					*/
 
-					//field.mapa[x][y] = updt.sprite;
-
-					if (updt.new == -1 && updt.id == 0) { //informações iniciais
+					if (updt.new == -1 && updt.id == 0 ) { //informações iniciais
 						qnt_clients = updt.vida;
 
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
-
-						monsters[0].color = KGRY;
-
-						//for (i = 0; i < field.qnt_monsters; i++)
-						//	monsters[i].color = KGRY;
 					}
 
 					//atualizando as posições de cada player
-					for (i = 0; i < qnt_clients; i++) {
+					for (i = 0; i < qnt_clients && !updt.ismonster; i++) {
 						if (updt.id == i) {
 							players[i].sprite = updt.sprite;
 							players[i].x = x;
@@ -116,7 +95,21 @@ int main () {
 						//printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
-					drawall(players, qnt_clients);
+					//atualizando as posições de cada player
+					for (i = 0; i < qnt_clients && updt.ismonster; i++) {
+						if (updt.id == i) {
+							monsters[i].sprite = updt.sprite;
+							monsters[i].x = x;
+							monsters[i].y = y;
+						}
+
+						//printf("players[%d].sprite: %c\n", i, players[i].sprite);
+						//printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
+						//printf("players[%d].x: %d\n", i, players[i].x);
+						//printf("players[%d].y: %d\n", i, players[i].y);
+					}
+
+					drawall();
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
 					
 					break;
@@ -136,6 +129,7 @@ int main () {
 						exit(1);
 					}
 					fscanf(fpmap, "%d %d %d", &field.linha, &field.coluna, &field.qnt_monsters);
+					field.qnt_monsters = 1;
 
 					for(i = 0; i < field.linha; i++)
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);
@@ -143,7 +137,7 @@ int main () {
 					fclose(fpmap);
 
 					/////////////////////////////////
-					field.mapa[5][5] = 'm'; // debug
+					//field.mapa[5][5] = 'm'; // debug
 					///////////////////////////////
 
 					break;

@@ -59,6 +59,7 @@ struct upd_msg {//Mensagem de atualização do jogo
 	int x, y;
 	char new;
 	char sprite;
+	int ismonster;
 };
 
 /*

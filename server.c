@@ -158,6 +158,7 @@ void startGame(){
 		map_changes[pos_broad].new = -1;
 		map_changes[pos_broad].sprite = clients[id].sprite;
 		map_changes[pos_broad].vida = clients_connected;
+		map_changes[pos_broad].ismonster = 0;
 		pos_broad++;
 	}
 
@@ -166,12 +167,13 @@ void startGame(){
 	monsters[0].sprite = 'm';
 	monsters[0].fight = 0;
 
-	map_changes[pos_broad].tipo = 0;
+	map_changes[pos_broad].tipo = 7;
 	map_changes[pos_broad].x = monsters[0].x;
 	map_changes[pos_broad].y = monsters[0].y;
 	map_changes[pos_broad].id = 0;
-	map_changes[pos_broad].new = -2;
+	map_changes[pos_broad].new = -1;
 	map_changes[pos_broad].sprite = monsters[0].sprite;
+	map_changes[pos_broad].ismonster = 1;
 
 	/*for (i = 0; i < map.qnt_monsters; i++) {
 		monsters[i].x = rand()%(map.linha - 2) + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;

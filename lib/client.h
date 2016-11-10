@@ -12,6 +12,8 @@ MAP field;
 updt_player players[MAX_CLIENTS];
 updt_player monsters[MAX_MONSTERS];
 
+int qnt_clients;
+
 int network_socket;
 struct sockaddr_in server_address;
 
@@ -19,7 +21,7 @@ void delay (unsigned int secs);
 
 char *color(int id);
 void printcchar(char *color,char c);
-void drawall(updt_player *hero, int qnt_clients);
+void drawall();
 
 int islegal(int x, int y, char c);
 
