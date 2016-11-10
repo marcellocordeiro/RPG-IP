@@ -38,6 +38,7 @@
 #define KMAG  "\x1B[35m"
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
+#define KGRY  "\x1B[90m"
 
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10

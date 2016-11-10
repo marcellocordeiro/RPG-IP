@@ -57,6 +57,7 @@ void MyClientConnected (int id, clientInfo startInfo) {
 			}
 
 		fscanf(fpmap, "%d %d %d", &map.linha, &map.coluna, &map.qnt_monsters);
+		map.qnt_monsters = 1;///////////////////////////////////////////////////////
 		fclose(fpmap);
 	}
 }
@@ -65,6 +66,9 @@ void MyClientMoved (int id, mov_msg mov) {
 	int i, found = 0, x, y;
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
+
+	x = clients[id].x;
+	y = clients[id].y;
 
 	if (clients[id].fight != 0) {
 		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
