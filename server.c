@@ -117,7 +117,7 @@ void MyClientMoved(int id, mov_msg mov){
 		clients[id].fight = 1;
 		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 	}
-	else {
+	else { // podre
 		map_changes[pos_broad].x = clients[id].x;
 	map_changes[pos_broad].y = clients[id].y;
 		map_changes[pos_broad].sprite = clients[id].sprite;

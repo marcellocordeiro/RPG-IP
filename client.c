@@ -71,7 +71,7 @@ int main () {
 			switch (updt.tipo) {
 				case 0:
 					// update no mapa
-				//	system("clear");
+					system("clear");
 
 					//field.mapa[updt.x][updt.y] = ' ';
 
@@ -81,6 +81,7 @@ int main () {
 					/*
 						Corrigir essa parte tanto aqui como no server
 																		*/
+					
 					/*
 					if (updt.new == up)
 						x--;
@@ -91,6 +92,7 @@ int main () {
 					else if (updt.new == right)
 						y++;
 					*/
+
 					//field.mapa[x][y] = updt.sprite;
 
 					if (updt.new == -1 && updt.id == 0) { //informações iniciais
@@ -114,7 +116,7 @@ int main () {
 						//printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
-					//drawall(players, qnt_clients, field);
+					drawall(players, qnt_clients, field);
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
 					
 					break;
