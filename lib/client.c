@@ -16,7 +16,7 @@ char* color (int id) {
 
 			break;
 		case 2:
-			return KCYN;
+			return KMAG;
 
 			break;
 	}

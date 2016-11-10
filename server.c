@@ -48,35 +48,83 @@ void MyClientConnected(int id, clientInfo startInfo){
 }
 
 void MyClientMoved(int id, mov_msg mov){
+	int i, found = 0, x, y;
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
+
+	player monsters[10];
+	monsters[0].x = 5;
+	monsters[0].y = 5;
+	int qnt_monsters = 1;
 
 	map_changes[pos_broad].tipo = 0;
 	map_changes[pos_broad].new = mov.msg;
 	map_changes[pos_broad].x = clients[id].x;
 	map_changes[pos_broad].y = clients[id].y;
 	map_changes[pos_broad].id = id;
+	
+	x = clients[id].x;
+	y = clients[id].y;
+
+	if (clients[id].fight == 1) {
+		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
+	}
 
 	// assumindo que o movimento e legal
 	if (mov.msg == up) {
-		clients[id].x--;
-		clients[id].sprite = '^';
+		for (i = 0; i < qnt_monsters && !found; i++)
+			if (x - 1 == monsters[i].x && y == monsters[i].y)
+				found = 1;
+	
+		if (found == 0) {
+			clients[id].x--;
+			clients[id].sprite = '^';
+		}
 	}
-	else if (mov.msg == down){
-		clients[id].x++;
-		clients[id].sprite = 'v';
+	else if (mov.msg == down) {
+		for (i = 0; i < qnt_monsters && !found; i++)
+			if (x + 1 == monsters[i].x && y == monsters[i].y)
+				found = 1;
+
+		if (found == 0) {
+			clients[id].x++;
+			clients[id].sprite = 'v';
+		}
 	}
-	else if (mov.msg == left){
-		clients[id].y--;
-		clients[id].sprite = '<';
+	else if (mov.msg == left) {
+		for (i = 0; i < qnt_monsters && !found; i++)
+			if (x == monsters[i].x && y - 1 == monsters[i].y)
+				found = 1;
+
+		if (found == 0) {
+			clients[id].y--;
+			clients[id].sprite = '<';
+		}
 	}
-	else if (mov.msg == right){
-		clients[id].y++;
-		clients[id].sprite = '>';
+	else if (mov.msg == right) {
+		for (i = 0; i < qnt_monsters && !found; i++)
+			if (x == monsters[i].x && y + 1 == monsters[i].y)
+				found = 1;
+
+		if (found == 0) {
+			clients[id].y++;
+			clients[id].sprite = '>';
+		}
 	}
 
-	map_changes[pos_broad].sprite = clients[id].sprite;
-	pos_broad++;
+	if (found == 1 || clients[id].fight == 1) {
+		map_changes[pos_broad].tipo = 1;
+		clients[id].fight = 1;
+		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+	}
+	else {
+		map_changes[pos_broad].x = clients[id].x;
+	map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].sprite = clients[id].sprite;
+		pos_broad++;
+	}
+
+
 }
 
 void startGame(){

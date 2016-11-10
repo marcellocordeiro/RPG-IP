@@ -71,13 +71,17 @@ int main () {
 			switch (updt.tipo) {
 				case 0:
 					// update no mapa
-					system("clear");
+				//	system("clear");
 
 					//field.mapa[updt.x][updt.y] = ' ';
 
 					x = updt.x;
 					y = updt.y;
-
+					
+					/*
+						Corrigir essa parte tanto aqui como no server
+																		*/
+					/*
 					if (updt.new == up)
 						x--;
 					else if (updt.new == down)
@@ -86,7 +90,7 @@ int main () {
 						y--;
 					else if (updt.new == right)
 						y++;
-
+					*/
 					//field.mapa[x][y] = updt.sprite;
 
 					if (updt.new == -1 && updt.id == 0) { //informações iniciais
@@ -104,15 +108,20 @@ int main () {
 							players[i].y = y;
 						}
 
-						printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
-						printf("players[%d].x: %d\n", i, players[i].x);
-						printf("players[%d].y: %d\n", i, players[i].y);
+						//printf("players[%d].sprite: %c\n", i, players[i].sprite);
+						//printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
+						//printf("players[%d].x: %d\n", i, players[i].x);
+						//printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
-					drawall(players, qnt_clients, field);
+					//drawall(players, qnt_clients, field);
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
 					
+					break;
+				case 1:
+					system("clear");
+					printf("Battle\n");
+
 					break;
 				case 6: //primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					//lê o arquivo do mapa escolhido e o salva na matriz
@@ -130,6 +139,10 @@ int main () {
 						fscanf(fpmap, " %[^\n]", field.mapa[i]);
 
 					fclose(fpmap);
+
+					/////////////////////////////////
+					field.mapa[5][5] = 'm'; // debug
+					///////////////////////////////
 
 					break;
 			}
