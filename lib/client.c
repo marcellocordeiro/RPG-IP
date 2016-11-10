@@ -32,20 +32,21 @@ void printcchar (char *color, char c) {
 	printf("%s", KNRM);
 }
 
-void drawall (updt_player *hero, int qnt_clients, MAP f) {
+void drawall (updt_player *hero, int qnt_clients) {
 	int i, j, k, flag;
 	
-	for(i = 0; i < f.linha; i++) {
-		for(j = 0; j < f.coluna; j++) {
+	for(i = 0; i < field.linha; i++) {
+		for(j = 0; j < field.coluna; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == hero[k].x && j == hero[k].y) {
 					printcchar(hero[k].color, hero[k].sprite);
+					field.mapa[i][j] = ' ';
 					flag = 1;
 				}
 			}
 
 			if (flag == 0)
-				printcchar(KGRN, f.mapa[i][j]);
+				printcchar(KGRN, field.mapa[i][j]);
 			else
 				flag = 0;
 		}

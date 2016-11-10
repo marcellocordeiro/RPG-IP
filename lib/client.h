@@ -16,7 +16,7 @@ void delay (unsigned int secs);
 
 char *color(int id);
 void printcchar(char *color,char c);
-void drawall(updt_player *hero, int qnt_clients, MAP f/*,MOB monster*/);
+void drawall(updt_player *hero, int qnt_clients);
 
 int islegal(int x, int y, char c);
 

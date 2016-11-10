@@ -118,7 +118,7 @@ int main () {
 						//printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
-					drawall(players, qnt_clients, field);
+					drawall(players, qnt_clients);
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
 					
 					break;

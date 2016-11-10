@@ -26,7 +26,7 @@ int main () {
 
 		//broadcasting das modificações do mapa
 		if(game_status == 2)
-			broadcast();		
+			broadcast();
 	}
 }
 
@@ -66,25 +66,14 @@ void MyClientMoved (int id, mov_msg mov) {
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
 
-	player monsters[10];
-	monsters[0].x = 5;
-	monsters[0].y = 5;
-	int qnt_monsters = 1;
-
-	map_changes[pos_broad].tipo = 0;
-	map_changes[pos_broad].new = mov.msg;
-	map_changes[pos_broad].x = clients[id].x;
-	map_changes[pos_broad].y = clients[id].y;
-	map_changes[pos_broad].id = id;
 	
-	x = clients[id].x;
-	y = clients[id].y;
-
-	if (clients[id].fight == 1) {
+	
+	
+	if (clients[id].fight != 0) {
 		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
 	}
 
-	if (islegal(x, y, mov.msg) == 0)
+	if (islegal(clients[id].x, clients[id].y, mov.msg) == 0)
 		return;
 
 	// assumindo que o movimento e legal
@@ -93,50 +82,57 @@ void MyClientMoved (int id, mov_msg mov) {
 			if (x - 1 == monsters[i].x && y == monsters[i].y)
 				found = 1;
 	
-		if (found == 0) {
-			clients[id].x--;
-			clients[id].sprite = '^';
-		}
+		if (found == 0)
+			if (clients[id].sprite == '^')
+				clients[id].x--;
+
+		clients[id].sprite = '^';
 	}
 	else if (mov.msg == down) {
 		for (i = 0; i < qnt_monsters && !found; i++)
 			if (x + 1 == monsters[i].x && y == monsters[i].y)
 				found = 1;
 
-		if (found == 0) {
-			clients[id].x++;
-			clients[id].sprite = 'v';
-		}
+		if (found == 0)
+			if (clients[id].sprite == 'v')
+				clients[id].x++;
+
+		clients[id].sprite = 'v';
 	}
 	else if (mov.msg == left) {
 		for (i = 0; i < qnt_monsters && !found; i++)
 			if (x == monsters[i].x && y - 1 == monsters[i].y)
 				found = 1;
 
-		if (found == 0) {
-			clients[id].y--;
-			clients[id].sprite = '<';
-		}
+		if (found == 0)
+			if (clients[id].sprite == '<')
+				clients[id].y--;
+
+		clients[id].sprite = '<';
 	}
 	else if (mov.msg == right) {
 		for (i = 0; i < qnt_monsters && !found; i++)
 			if (x == monsters[i].x && y + 1 == monsters[i].y)
 				found = 1;
 
-		if (found == 0) {
-			clients[id].y++;
-			clients[id].sprite = '>';
-		}
+		if (found == 0)
+			if (clients[id].sprite == '>')
+				clients[id].y++;
+		
+		clients[id].sprite = '>';
 	}
 
-	if (found == 1 || clients[id].fight == 1) {
+	if (found == 1) {
 		map_changes[pos_broad].tipo = 1;
 		clients[id].fight = 1;
 		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 	}
-	else { // podre
+	else {
+		map_changes[pos_broad].tipo = 0;
+		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
-	map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].new = mov.msg;
 		map_changes[pos_broad].sprite = clients[id].sprite;
 		pos_broad++;
 	}
@@ -152,8 +148,8 @@ void startGame(){
 	game_status = 2;
 
 	for(id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
-		clients[id].x = rand()%(map.linha - 1) + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;
-		clients[id].y = rand()%(map.coluna - 1) + 1;  //	clients[id].y = rand()%(field.linha) + 1;
+		clients[id].x = rand()%(map.linha - 2) + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;
+		clients[id].y = rand()%(map.coluna - 2) + 1;  //	clients[id].y = rand()%(field.linha) + 1;
 		clients[id].sprite = '^';
 
 		map_changes[pos_broad].tipo = 0;
