@@ -1,13 +1,6 @@
 #include "default.h"
 
 typedef struct {
-	int linha;
-	int coluna;
-	int monstros;
-	char mapa[100][100];
-} MAP;
-
-typedef struct {
 	char sprite;
 	char *color;
 	int x;
@@ -18,6 +11,8 @@ MAP field;
 
 int network_socket;
 struct sockaddr_in server_address;
+
+void delay (unsigned int secs);
 
 char *color(int id);
 void printcchar(char *color,char c);

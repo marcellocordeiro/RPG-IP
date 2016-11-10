@@ -39,11 +39,18 @@
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
 
-struct mov_msg{
+struct MAP {
+	int linha;
+	int coluna;
+	int monstros;
+	char mapa[100][100];
+};
+
+struct mov_msg {
 	char msg;
 };
 
-struct upd_msg{//Mensagem de atualização do jogo
+struct upd_msg {//Mensagem de atualização do jogo
 	int tipo, id, vida;
 	int x, y;
 	char new;
@@ -66,6 +73,7 @@ struct clientInfo{
 	char nome[NAME_SIZE];
 };
 
+typedef struct MAP MAP;
 typedef struct clientInfo clientInfo;
 typedef struct mov_msg mov_msg;
 typedef struct upd_msg upd_msg;

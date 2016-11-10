@@ -30,8 +30,9 @@ int main () {
 	}
 }
 
-void MyClientConnected(int id, clientInfo startInfo){
+void MyClientConnected (int id, clientInfo startInfo) {
 	char str[1];
+	char nome_mapa[16];
 
 	printf("Client %s connected, id = %d, map = %d\n", startInfo.nome, id, startInfo.mapa);
 	game_status = 1;
@@ -44,10 +45,23 @@ void MyClientConnected(int id, clientInfo startInfo){
 		map_changes[pos_broad].tipo = 6;
 		map_changes[pos_broad].id = startInfo.mapa;
 		pos_broad++;
+
+		strcpy(nome_mapa, "data/mapa");
+		sprintf(nome_mapa, "%s%d.txt", nome_mapa, startInfo.mapa);
+
+		fpmap = fopen(nome_mapa, "rt");
+			if (fpmap == NULL) {
+				system("clear");
+				printf("ERRO: MAPA NÃO ENCONTRADO\n");
+				exit(1);
+			}
+
+		fscanf(fpmap, "%d %d %d", &map.linha, &map.coluna, &map.monstros);
+		fclose(fpmap);
 	}
 }
 
-void MyClientMoved(int id, mov_msg mov){
+void MyClientMoved (int id, mov_msg mov) {
 	int i, found = 0, x, y;
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
@@ -69,6 +83,9 @@ void MyClientMoved(int id, mov_msg mov){
 	if (clients[id].fight == 1) {
 		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
 	}
+
+	if (islegal(x, y, mov.msg) == 0)
+		return;
 
 	// assumindo que o movimento e legal
 	if (mov.msg == up) {
@@ -135,8 +152,8 @@ void startGame(){
 	game_status = 2;
 
 	for(id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
-		clients[id].x = rand()%10 + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;
-		clients[id].y = rand()%10 + 1;  //	clients[id].y = rand()%(field.linha) + 1;
+		clients[id].x = rand()%(map.linha - 1) + 1;	//	clients[id].x = rand()%(field.linhaupdt.id) + 1;
+		clients[id].y = rand()%(map.coluna - 1) + 1;  //	clients[id].y = rand()%(field.linha) + 1;
 		clients[id].sprite = '^';
 
 		map_changes[pos_broad].tipo = 0;
