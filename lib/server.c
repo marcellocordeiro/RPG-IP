@@ -90,15 +90,15 @@ void monsterMove () {
 			(monsters[i].x)--;
 			flag = 1;
 		}
-		else if (chance < 0.75 && islegalMonster(monsters[i].x, monsters[i].y, down)) {
+		else if (chance < 0.5 && islegalMonster(monsters[i].x, monsters[i].y, down)) {
 			(monsters[i].x)++;
 			flag = 1;
 		}
-		else if (chance <= 1.0 && islegalMonster(monsters[i].x, monsters[i].y, left)) {
+		else if (chance < 0.75 && islegalMonster(monsters[i].x, monsters[i].y, left)) {
 			(monsters[i].y)--;
 			flag = 1;
 		}
-		else if (chance < 0.5 && islegalMonster(monsters[i].x, monsters[i].y, right)) {
+		else if (chance <= 1.0 && islegalMonster(monsters[i].x, monsters[i].y, right)) {
 			(monsters[i].y)++;
 			flag = 1;
 		}
