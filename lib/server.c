@@ -105,7 +105,7 @@ void monsterMove () {
 		}
 
 		if (flag) {
-			map_changes[pos_broad].tipo = 0;
+			map_changes[pos_broad].type = 0;
 			map_changes[pos_broad].x = monsters[i].x;
 			map_changes[pos_broad].y = monsters[i].y;
 			map_changes[pos_broad].id = i;

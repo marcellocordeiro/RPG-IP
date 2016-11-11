@@ -27,7 +27,7 @@ int main () {
 void MyClientConnected (int id, clientInfo startInfo) {
 	int i;
 	char str[1];
-	char nome_mapa[16];
+	char map_name[16];
 
 	printf("Client %s connected, id = %d, map = %d\n", startInfo.nome, id, startInfo.mapa);
 	game_status = 1;
@@ -37,14 +37,14 @@ void MyClientConnected (int id, clientInfo startInfo) {
 	sendTxtToClient(clients[id].sockid, str);
 
 	if (id == 0) {
-		map_changes[pos_broad].tipo = 6;
+		map_changes[pos_broad].type = 6;
 		map_changes[pos_broad].id = startInfo.mapa;
 		pos_broad++;
 
-		strcpy(nome_mapa, "data/mapa");
-		sprintf(nome_mapa, "%s%d.txt", nome_mapa, startInfo.mapa);
+		strcpy(map_name, "data/mapa");
+		sprintf(map_name, "%s%d.txt", map_name, startInfo.mapa);
 
-		fpmap = fopen(nome_mapa, "rt");
+		fpmap = fopen(map_name, "rt");
 			if (fpmap == NULL) {
 				system("clear");
 				printf("ERRO: MAPA NÃO ENCONTRADO\n");
@@ -70,8 +70,9 @@ void MyClientMoved (int id, mov_msg mov) {
 		return;
 	}
 
-	if (clients[id].fight != 0) {
-		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
+	if (clients[id].fight) {
+		//sendBattleUpdate(clients[id].fight, clients[id].whofight);
+		return;
 	}
 
 	if (islegal(clients[id].x, clients[id].y, clients[id].sprite, mov.msg) == 0)
@@ -125,15 +126,27 @@ void MyClientMoved (int id, mov_msg mov) {
 
 	map.map[clients[id].x][clients[id].y] = ' ';
 
-	/*if (found == 1 || clients[id].fight) { // flag de batalha
-		//map_changes[pos_broad].tipo = 1;
-		//clients[id].fight = 1;
+	if (found == 1) { // flag de batalha
+		clients[id].fight = 1;
+		clients[id].whofight = 1;
+
+
+
+		map_changes[pos_broad].type = 1;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].x = clients[id].x;
+		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].ismonster = 0;
+		map_changes[pos_broad].sprite = clients[id].sprite;
 		//pos_broad++;
-		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
 	}
-	else */if (!clients[id].fight) {
-		map_changes[pos_broad].tipo = 0;
+	else {
+		map_changes[pos_broad].type = 0;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
@@ -146,7 +159,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		pos_broad++;
 
 		/*
-		map_changes[pos_broad].tipo;
+		map_changes[pos_broad].type;
 		map_changes[pos_broad].id;
 		map_changes[pos_broad].x, 
 		map_changes[pos_broad].y
@@ -198,7 +211,7 @@ void startGame(){
 		//clients[id].*color; // definir aqui?
 
 
-		map_changes[pos_broad].tipo = 7;
+		map_changes[pos_broad].type = 7;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
@@ -224,7 +237,7 @@ void startGame(){
 		monsters[id].sprite = 'm';
 		monsters[id].fight = 0;
 
-		map_changes[pos_broad].tipo = 7;
+		map_changes[pos_broad].type = 7;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = monsters[id].x;
 		map_changes[pos_broad].y = monsters[id].y;

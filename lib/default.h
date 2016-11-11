@@ -24,11 +24,11 @@
 #define left 'a'
 #define right 'd'
 
-#define qtdmenu 3 // quantidade de opcoes no menu principal
-#define opcoesmenu 20, 22, 24 // linhas de cada opcao do menu principal
-#define qtdop 5 // quantidade de opcoes no menu de opcoes
-#define opcoesoptions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
-#define colseta 22 // coluna da seta >
+#define qnt_menu 3 // quantidade de opcoes no menu principal
+#define menu_positions 20, 22, 24 // linhas de cada opcao do menu principal
+#define qnt_options 5 // quantidade de opcoes no menu de opcoes
+#define options_positions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
+#define cursor_pos 22 // coluna da seta >
 
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
@@ -92,7 +92,7 @@ struct mov_msg {
 };
 
 struct upd_msg { //Mensagem de atualização do jogo
-	int tipo;
+	int type;
 	int id;
 	int x, y, hp;
 	int fight, whofight;
@@ -110,6 +110,7 @@ struct upd_msg { //Mensagem de atualização do jogo
 	= 4 mensagem para avisar que morreu
 	= 5 mensagem para avisar que venceu
 	= 6 mensagem para dizer qual o mapa que vai ser jogado (id = num do mapa)
+	= 6 mensagem para inicializar os vetores de players e monstros
 */
 
 typedef struct map_data map_data;

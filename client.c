@@ -10,15 +10,14 @@ int main () {
 	//variaveis
 	int id = -1;
 
-	long int newtime = time(NULL);
-	long int oldtime = time(NULL);
+	long int newtime;
+	long int oldtime;
 
-	int x = 0, y = 0;
 	///mapa
 	FILE *fpmap; //ponteiro para o arquivo do mapa
-	char nome_mapa[16];
+	char map_name[16];
 
-	strcpy(nome_mapa, "data/mapa");
+	strcpy(map_name, "data/mapa");
 
 	menu(&info);
 
@@ -55,11 +54,14 @@ int main () {
 
 	//delay(2);
 
+	newtime = time(NULL);
+	oldtime = time(NULL);
+
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
 	while (playing) {
 		while (readUpdFromServer(&upd) > 0) {// recebe todas mensagens
-			switch (upd.tipo) { // tipo de update
+			switch (upd.type) { // tipo de update
 				case 0: // update no mapa
 					// atualizando as posições de cada player
 					if (!upd.ismonster) {
@@ -100,22 +102,36 @@ int main () {
 					if (!players[id].fight) {
 						system("clear");
 						drawall();
-						printf("%splayer %d%s\n", players[id].color, id, KNRM);
+						printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM);
 						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
 					}
 					break;
 
 				case 1: // em batalha
+					if (!upd.ismonster) { // atualizando os status dos players
+						players[upd.id].hp = upd.hp;
+						players[upd.id].fight = upd.fight;
+						players[upd.id].whofight = upd.whofight;
+					}
+
+					if (upd.ismonster) { // atualizando os status dos monstros
+						monsters[upd.id].hp = upd.hp;
+						monsters[upd.id].fight = upd.fight;
+						players[upd.id].whofight = upd.whofight;
+					}
+
 					system("clear");
 					printf("Battle\n");
+					printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM, players[id].fight);
+					delay(2);
 
 					break;
 					
 				case 6: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					// lê o arquivo do mapa escolhido e o salva na matriz
-					sprintf(nome_mapa, "%s%d.txt", nome_mapa, upd.id);
+					sprintf(map_name, "%s%d.txt", map_name, upd.id);
 
-					fpmap = fopen(nome_mapa, "rt");
+					fpmap = fopen(map_name, "rt");
 					if (fpmap == NULL) {
 						system("clear");
 						printf("ERRO: MAPA NÃO ENCONTRADO\n");
