@@ -90,7 +90,10 @@ void sendUpdToClient(int filedes, upd_msg change) {
 
 void sleepServer() {
 	read_fd_set = active_fd_set;
-	if (select (FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0){
+	struct timeval tv;
+	tv.tv_sec = 1;
+	tv.tv_usec = 2;
+	if (select (FD_SETSIZE, &read_fd_set, NULL, NULL, &tv) < 0){
 		perror ("select");
 		exit (EXIT_FAILURE);
 	}

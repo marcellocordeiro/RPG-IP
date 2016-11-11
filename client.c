@@ -50,6 +50,9 @@ int main () {
 	for (i = 0; i < 13; i++) 
 		printf("\n");
 
+	long int newtime = time(NULL);
+	long int oldtime = time(NULL);
+
 	//delay(2);
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
@@ -57,20 +60,39 @@ int main () {
 	while (jogando) {
 		while (readUpdFromServer(&updt) > 0) {// recebe todas mensagens
 			// qual o tipo do update, ex:
+			system("clear");
 			switch (updt.tipo) {
 				case 0:
 					// update no mapa
-					system("clear");
-
-					x = updt.x;
-					y = updt.y;
-
 					if (updt.new == -1 && updt.id == 0) { //informações iniciais
 						qnt_clients = updt.vida;
 
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
+
+						break;
 					}
+
+					if (updt.new == -1) {
+						players[updt.id].sprite = updt.sprite;
+						players[updt.id].x = updt.x;
+						players[updt.id].y = updt.y;
+
+						break;
+					}
+					else if (updt.new == -2) {
+						monsters[updt.id].sprite = updt.sprite;
+						monsters[updt.id].x = updt.x;
+						monsters[updt.id].y = updt.y;
+
+						break;
+					}
+
+
+					x = updt.x;
+					y = updt.y;
+
+
 
 					//atualizando as posições de cada player
 					for (i = 0; i < qnt_clients && !updt.ismonster; i++) {
@@ -80,10 +102,17 @@ int main () {
 							players[i].y = y;
 						}
 
-						//printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						//printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
-						//printf("players[%d].x: %d\n", i, players[i].x);
-						//printf("players[%d].y: %d\n", i, players[i].y);
+						/*printf("players[%d].sprite: %c\n", i, players[i].sprite);
+						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
+						printf("players[%d].x: %d\n", i, players[i].x);
+						printf("players[%d].y: %d\n", i, players[i].y);*/
+					}
+
+					for (i = 0; i < qnt_clients; i++) {
+						printf("players[%d].sprite: %c\n", i, players[i].sprite);
+						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
+						printf("players[%d].x: %d\n", i, players[i].x);
+						printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
 					//atualizando as posições de cada player
@@ -100,6 +129,7 @@ int main () {
 						//printf("players[%d].y: %d\n", i, players[i].y);
 					}
 
+					
 					drawall();
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
 
@@ -136,9 +166,29 @@ int main () {
 			}
 		}
 
+		
+		if (id == 0) {
+			if (newtime - oldtime >= 3) {
+				//mov.msg = -10;
+				mov.updtmonsters = 1;
+				sendMovToServer(mov);
+				oldtime = time(NULL);
+				mov.updtmonsters = 0;
+				//printf("3 sec\n");
+			}
+			else
+				newtime = time(NULL);
+		}
+
 		mov.msg = getch();
 		if ((mov.msg != -1) && islegal(players[id].x, players[id].y, mov.msg)) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
+
+		
+
+		
+
+
 	}
 
 	return 0;

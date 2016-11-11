@@ -52,6 +52,7 @@ struct MAP {
 
 struct mov_msg {
 	char msg;
+	int updtmonsters;
 };
 
 struct upd_msg {//Mensagem de atualização do jogo

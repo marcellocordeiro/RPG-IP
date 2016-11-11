@@ -12,7 +12,7 @@ void delay (unsigned int secs) {
 
 char* color (int id) {
 	switch (id) {
-		case 0:
+		case 2:
 			return KBLU;
 
 			break;
@@ -20,7 +20,7 @@ char* color (int id) {
 			return KYEL;
 
 			break;
-		case 2:
+		case 0:
 			return KMAG;
 
 			break;

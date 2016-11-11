@@ -5,9 +5,50 @@ void MyClientMoved(int id, mov_msg mov);// função que é chamada quando cleint
 void startGame(void);// função que é chamada quando cliente 0 confirma o inicio do jogo
 void MyBroadcast(char *s);// um exemplo de como mandar uma mensagem para todos os usuários
 
+void monsterMove () {
+	int i;
+	float chance;
+	srand(time(NULL));
+
+	for (i = 0; i < map.qnt_monsters; i++) {
+		//srand48(time(NULL));
+		//float chance = drand48();
+		chance = rand()%101;
+		chance /= 100;
+
+		// chances iguais de escolher a direcao
+		if (chance < 0.25) {
+			//if (islegalMonster(monster->x, monster->y, up) == 1)
+				(monsters[i].x)--;
+		}
+		else if (chance < 0.5) {
+			//if (islegalMonster(monster->x, monster->y, right) == 1)
+				(monsters[i].y)++;
+		}
+		else if (chance < 0.75) {
+			//if (islegalMonster(monster->x, monster->y, down) == 1)
+				(monsters[i].x)++;
+		}
+		else if (chance < 1.0) {
+			//if (islegalMonster(monster->x, monster->y, left) == 1)
+				(monsters[i].y)--;
+		}
+
+		map_changes[pos_broad].tipo = 0;
+		map_changes[pos_broad].x = monsters[i].x;
+		map_changes[pos_broad].y = monsters[i].y;
+		map_changes[pos_broad].id = i;
+		map_changes[pos_broad].new = -10;
+		map_changes[pos_broad].sprite = monsters[i].sprite;
+		map_changes[pos_broad].ismonster = 1;
+		pos_broad++;
+	}
+	
+}
+
+
 int main () {
 	srand(time(NULL)); // seed pra usar o rand durante o jogo
-
 	clientMoved = MyClientMoved;
 	clientConnected = MyClientConnected;
 	clientConfirmed = startGame;
@@ -66,6 +107,11 @@ void MyClientMoved (int id, mov_msg mov) {
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
 
+	if (mov.updtmonsters == 1) {
+		monsterMove();
+		return;
+	}
+
 	x = clients[id].x;
 	y = clients[id].y;
 
@@ -73,8 +119,13 @@ void MyClientMoved (int id, mov_msg mov) {
 		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
 	}
 
+	
+
 	if (islegal(clients[id].x, clients[id].y, mov.msg) == 0)
 		return;
+
+	
+
 
 	// assumindo que o movimento e legal
 	if (mov.msg == up) {
@@ -123,9 +174,9 @@ void MyClientMoved (int id, mov_msg mov) {
 	}
 
 	if (found == 1) {
-		map_changes[pos_broad].tipo = 1;
-		clients[id].fight = 1;
-		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+		//map_changes[pos_broad].tipo = 1;
+		//clients[id].fight = 1;
+		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 	}
 	else {
 		map_changes[pos_broad].tipo = 0;
@@ -134,6 +185,12 @@ void MyClientMoved (int id, mov_msg mov) {
 		map_changes[pos_broad].y = clients[id].y;
 		map_changes[pos_broad].new = mov.msg;
 		map_changes[pos_broad].sprite = clients[id].sprite;
+
+
+
+		map_changes[pos_broad].ismonster = 0; // !!!!!!!!!!
+
+
 		pos_broad++;
 	}
 }
