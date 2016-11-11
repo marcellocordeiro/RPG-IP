@@ -25,6 +25,7 @@ int main () {
 }
 
 void MyClientConnected (int id, clientInfo startInfo) {
+	FILE *fpmap;
 	int i;
 	char str[1];
 	char map_name[16];
@@ -37,6 +38,7 @@ void MyClientConnected (int id, clientInfo startInfo) {
 	sendTxtToClient(clients[id].sockid, str);
 
 	if (id == 0) {
+		// mandar o número do mapa para os clients
 		map_changes[pos_broad].type = 6;
 		map_changes[pos_broad].id = startInfo.mapa;
 		pos_broad++;
@@ -128,9 +130,7 @@ void MyClientMoved (int id, mov_msg mov) {
 
 	if (found == 1) { // flag de batalha
 		clients[id].fight = 1;
-		clients[id].whofight = 1;
-
-
+		clients[id].whofight = 1; // id do monstro!!!
 
 		map_changes[pos_broad].type = 1;
 		map_changes[pos_broad].id = id;
@@ -141,7 +141,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		map_changes[pos_broad].whofight = clients[id].whofight;
 		map_changes[pos_broad].ismonster = 0;
 		map_changes[pos_broad].sprite = clients[id].sprite;
-		//pos_broad++;
+		//pos_broad++; ///////////////// PQ COMENTASSE ISSO?
 		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
 	}
@@ -152,7 +152,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		map_changes[pos_broad].y = clients[id].y;
 		map_changes[pos_broad].hp = clients[id].hp;
 		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].whofight = clients[id].whofight; // PRECISA?
 		map_changes[pos_broad].ismonster = 0;
 		map_changes[pos_broad].dir = mov.msg;
 		map_changes[pos_broad].sprite = clients[id].sprite;
@@ -191,11 +191,48 @@ void MyClientMoved (int id, mov_msg mov) {
 
 void startGame(){
 	int id;
+	long int oldtime;
 
 	printf("Client 0 confirmed, the game will start now...\n");
 	broadcastTxt("O JOGO VAI COMEÇAR", -1); // avisar para os clientes que o jogo vai começar
 	game_status = 2;
 
+	oldtime = ((long int) time(NULL));
+	srand(time(NULL));
+
+	// status inicial dos clientes
+	initClients();
+	for (id = 0; id < clients_connected; id++) {
+		map_changes[pos_broad].type = 7;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].x = clients[id].x;
+		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients_connected; // passar a quantidade de players
+		map_changes[pos_broad].ismonster = clients[id].ismonster;
+		map_changes[pos_broad].dir = -1;
+		map_changes[pos_broad].sprite = clients[id].sprite;
+		pos_broad++;
+	}
+
+	// status inicial dos monstros
+	initMonsters();
+	for (id = 0; id < map.qnt_monsters; id++) {
+		map_changes[pos_broad].type = 7;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].x = monsters[id].x;
+		map_changes[pos_broad].y = monsters[id].y;
+		map_changes[pos_broad].hp = monsters[id].hp;
+		map_changes[pos_broad].fight = monsters[id].fight;
+		map_changes[pos_broad].whofight = monsters[id].whofight;
+		map_changes[pos_broad].ismonster = monsters[id].ismonster;
+		map_changes[pos_broad].dir = -2;
+		map_changes[pos_broad].sprite = monsters[id].sprite;
+		pos_broad++;
+	}
+
+/*
 	for (id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
 		clients[id].x = rand()%(map.height - 2) + 1;
 		clients[id].y = rand()%(map.width - 2) + 1;
@@ -249,6 +286,7 @@ void startGame(){
 		map_changes[pos_broad].sprite = monsters[id].sprite;
 		pos_broad++;
 	}
+*/
 }
 
 void MyBroadcast(char *s){

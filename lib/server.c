@@ -75,6 +75,100 @@ int islegalMonster (int x, int y, char c) {
 	return 1;
 }
 
+// colocando os jogadores no mapa, aleatoriamente
+void initClients() {
+	int i, k, j = 0, colisao = 0;
+	int qnt_players = clients_connected; // quantidade de jogadores a serem criados
+	int posX, posY;
+
+	do {
+		// gerar ints aleatorias para X e Y
+		posX = rand() % (map.height - 2) + 1;
+		posY = rand() % (map.width - 2) + 1;
+
+		//printf("posX = %d  posY = %d\n", posX, posY);
+		
+		// conferir se colide com player no mapa
+		for (i = 0; i < (clients_connected - qnt_players); i++) {
+			if (posX == clients[i].x && posY == clients[i].y)
+				colisao = 1;
+		}
+
+		//printf("colisao player: %d\n", colisao);
+
+	/*	// conferir se tem uma arvore nessa posicao
+		if (map.map[posX][posY] == '*')
+			colisao = 1;
+	*/
+		//printf("colisao *: %d\n", colisao);
+
+		// inicializar o jogador no vetor monster[qnt_monsters]!
+		if (colisao == 0) {
+			clients[j].x = posX;
+			clients[j].y = posY;
+			clients[j].ismonster = 0;
+			//clients[j].hp = ;
+			//clients[j].ataque = ;
+			//clients[j].defesa = ;
+			clients[j].fight = 0;
+			clients[j].sprite = '^';
+			j++;
+			qnt_players--; // um jogador a menos para ser criado
+		}
+	}while (colisao == 1 || qnt_players > 0);
+}
+
+// colocando os montros no mapa, aleatoriamente
+void initMonsters() {
+	int i, k, j = 0, colisao = 0;
+	int qnt_monsters = map.qnt_monsters; // quantidade de monstros a serem criados
+	int posX, posY;
+
+	do {
+		// gerar ints aleatorias para X e Y
+		posX = rand() % (map.height - 2) + 1;
+		posY = rand() % (map.width - 2) + 1;
+
+		//printf("posX = %d  posY = %d\n", posX, posY);
+		
+		// conferir se colide com player no mapa
+		for (i = 0; i < clients_connected; i++) {
+			if (posX == clients[i].x && posY == clients[i].y)
+				colisao = 1;
+		}
+
+		//printf("colisao client: %d\n", colisao);
+
+		// conferir se colide com monstro no mapa
+		for (i = 0; i < (map.qnt_monsters - qnt_monsters); i++) {
+			if (posX == monsters[i].x && posY == monsters[i].y)
+				colisao = 1;
+		}
+
+		//printf("colisao monster: %d\n", colisao);
+
+		// conferir se tem uma arvore nessa posicao
+		if (map.map[posX][posY] == '*')
+			colisao = 1;
+
+		//printf("colisao *: %d\n", colisao);
+
+		// inicializar o monstro no vetor monster[qnt_monsters]!
+		if (colisao == 0) {
+			monsters[j].x = posX;
+			monsters[j].y = posY;
+			monsters[j].ismonster = 1;
+			monsters[j].hp = VIDA_1;
+			monsters[j].ataque = ATK_1;
+			monsters[j].defesa = DEF_1;
+			monsters[j].fight = 0;
+			monsters[j].sprite = 'm'; // chefoes devem ter sprite maiusculo (M)
+			j++;
+			qnt_monsters--; // um monstro a menos para ser criado
+		}
+	}while (colisao == 1 || qnt_monsters > 0);
+}
+
 void monsterMove () {
 	int i, flag = 0;
 	float chance;

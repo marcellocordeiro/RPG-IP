@@ -1,20 +1,20 @@
 #include "lib/client.h"
 
 int main () {
+	// VARIÁVEIS
 	clientInfo info;
 	char msg[BUFFER_SIZE];
-	int i, error = 0, start = 0, playing = 1;
 	upd_msg upd;
 	mov_msg mov;
 
-	//variaveis
+	int i, error = 0, start = 0, playing = 1;
 	int id = -1;
 
 	long int newtime;
 	long int oldtime;
 
-	///mapa
-	FILE *fpmap; //ponteiro para o arquivo do mapa
+	/// mapa
+	FILE *fpmap; // ponteiro para o arquivo do mapa
 	char map_name[16];
 
 	strcpy(map_name, "data/mapa");
@@ -102,7 +102,7 @@ int main () {
 					if (!players[id].fight) {
 						system("clear");
 						drawall();
-						printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM);
+						printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM, players[id].fight);
 						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
 					}
 					break;

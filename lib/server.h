@@ -3,13 +3,8 @@
 
 #include "default.h"
 
-FILE *fpmap;
+/// VARIÁVEIS GLOBAIS
 map_data map;
-
-int sock; // id do socket do server
-
-fd_set active_fd_set, read_fd_set; // variáveis auxiliares do server
-struct sockaddr_in clientname;
 
 player_data clients[MAX_CLIENTS]; // vetor com clientes connectados e suas informações
 int clients_connected; // quantidade de clientes connectados
@@ -28,6 +23,13 @@ int game_status;
 int pos_broad; // posição livre no vetor do broadcast declarado abaixo
 upd_msg map_changes[BUFFER_SIZE]; // vetor com as alterações do mapa
 
+int sock; // id do socket do server
+
+fd_set active_fd_set, read_fd_set; // variáveis auxiliares do server
+struct sockaddr_in clientname;
+
+
+/// FUNÇÕES
 void MyClientConnected(int id, clientInfo startInfo); // função que é chamada quando um cliente é connectado
 void MyClientMoved(int id, mov_msg mov);// função que é chamada quando cleinte manda mensagem de movimento
 void startGame(void);// função que é chamada quando cliente 0 confirma o inicio do jogo
@@ -39,8 +41,10 @@ void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
 int islegal(int x, int y, char sprite, char c);
-int findPlayer(int x, int y);
 int islegalMonster(int x, int y, char c);
+int findPlayer(int x, int y);
+void initClients();
+void initMonsters();
 void monsterMove();
 
 int makeSocket(uint16_t);

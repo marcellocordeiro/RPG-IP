@@ -1,5 +1,6 @@
 #include "default.h"
 
+/// VARIÁVEIS GLOBAIS
 map_data map;
 
 player_data players[MAX_CLIENTS];
@@ -10,6 +11,8 @@ int qnt_clients;
 int network_socket;
 struct sockaddr_in server_address;
 
+
+/// FUNÇÕES
 void delay (unsigned int secs);
 
 char *color(int id);

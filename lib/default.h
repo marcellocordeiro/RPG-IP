@@ -45,6 +45,10 @@
 
 #define MAX_HP 150
 
+#define VIDA_1 300 // monstro lvl 1
+#define ATK_1 200
+#define DEF_1 150
+
 struct clientInfo {
 	int mapa;
 	char nome[NAME_SIZE];
