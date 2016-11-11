@@ -1,16 +1,9 @@
 #include "default.h"
 
-typedef struct {
-	char sprite;
-	char *color;
-	int x;
-	int y;
-} updt_player; // MUDAR NOME!!
+map_data map;
 
-MAP field;
-
-updt_player players[MAX_CLIENTS];
-updt_player monsters[MAX_MONSTERS];
+player_data players[MAX_CLIENTS];
+player_data monsters[MAX_MONSTERS];
 
 int qnt_clients;
 
@@ -29,14 +22,9 @@ int mod(int x, int m);
 
 void menu(clientInfo *info);
 
-void connectToServer(const char *server_IP);
-
-int sendMovToServer(mov_msg message);
-
-int readTxtFromServer(char* message);
-
-int getch();
-
 int sendInfoToServer(clientInfo info);
-
+void connectToServer(const char *server_IP);
+int readTxtFromServer(char* message);
 int readUpdFromServer(upd_msg* message);
+int sendMovToServer(mov_msg message);
+int getch();

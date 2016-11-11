@@ -14,15 +14,14 @@ char* color (int id) {
 	switch (id) {
 		case 2:
 			return KBLU;
-
 			break;
+
 		case 1:
 			return KYEL;
-
 			break;
+
 		case 0:
 			return KMAG;
-
 			break;
 	}
 }
@@ -35,29 +34,50 @@ void printcchar (char *color, char c) {
 void drawall () {
 	int i, j, k, flag = 0;
 	
-	for(i = 0; i < field.linha; i++) {
-		for(j = 0; j < field.coluna; j++) {
+	for(i = 0; i < map.height; i++) {
+		for(j = 0; j < map.width; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == players[k].x && j == players[k].y) {
 					printcchar(players[k].color, players[k].sprite);
-					field.mapa[i][j] = ' ';
+					map.map[i][j] = ' ';
 					flag = 1;
 				}
 			}
 
-			for (k = 0; k < field.qnt_monsters && !flag; k++) {
+			for (k = 0; k < map.qnt_monsters && !flag; k++) {
 				if(i == monsters[k].x && j == monsters[k].y) {
 					printcchar(monsters[k].color, monsters[k].sprite);
 					flag = 1;
 				}
 			}
 
-			if (flag == 0)
-				printcchar(KGRN, field.mapa[i][j]);
-			else {
-				flag = 0;
+			if (flag == 0) {
+				if ((i == 0 || j == 0) || (i == map.height - 1 || j == map.width - 1))
+					printcchar(KRED, map.map[i][j]);
+				else
+					printcchar(KGRN, map.map[i][j]);
 			}
-			
+			else
+				flag = 0;
+		}
+
+		printf("\n");
+	}
+}
+
+void drawmenus (char menu[100][100], int height, int width) {
+	int i, j, k, flag = 0;
+	
+	for(i = 0; i < height; i++) {
+		for(j = 0; j < width; j++) {
+			if (menu[i][j] != '*' && menu[i][j] != ' ')
+				printcchar(KWHT, menu[i][j]);
+			else if ((i == 0 || j == 0) || (i == height - 1 || j == width - 1))
+				printcchar(KRED, menu[i][j]);
+			else if ((j + 1 < width && (menu[i][j] == '*' && menu[i][j + 1] == ' ')) || (i > 0 && (menu[i][j] == '*' && menu[i - 1][j] == ' ')) || (i + 1 < height && (menu[i][j] == '*' && menu[i + 1][j] == ' ')) || (j > 0 && (menu[i][j] == '*' && menu[i][j - 1] == ' ')))
+				printcchar(KBLU, menu[i][j]);
+			else
+				printcchar(KGRN, menu[i][j]);
 		}
 
 		printf("\n");
@@ -72,7 +92,7 @@ int islegal (int x, int y, char c) {
 
 			break;
 		case down:
-			if (x + 1 == field.linha - 1)
+			if (x + 1 == map.height - 1)
 				return 0;
 
 			break;
@@ -82,7 +102,7 @@ int islegal (int x, int y, char c) {
 
 			break;
 		case right:
-			if (y + 1 == field.coluna - 1)
+			if (y + 1 == map.width - 1)
 				return 0;
 
 			break;
@@ -126,8 +146,13 @@ void menu (clientInfo *info) {
 		system("clear"); // limpa o terminal
 
 		if (tipomenu == MAIN) { // menu principal
-			for (i = 0; i < qtdlm; i++)
-				printf("%s\n", mainmenu[i]); // mostra o menu
+			//for (i = 0; i < qtdlm; i++)
+			//	printf("%s\n", mainmenu[i]); // mostra o menu
+			drawmenus(mainmenu, qtdlm, strlen(mainmenu[0]));
+
+			 ////////////////////////////////////////////////
+			printf("Lembrem-se de trocar as cores :)\n"); // pls
+			///////////////////////////////////////////////
 
 			do
 				dir = getch();
@@ -156,8 +181,9 @@ void menu (clientInfo *info) {
 			mainmenu[navm[seta]][colseta] = '>'; // coloca a seta na nova posicao do menu
 		}
 		else if (tipomenu == OPTIONS) { // menu de opcoes
-			for (i = 0; i < qtdlop; i++)
-				printf("%s\n", options[i]);
+			//for (i = 0; i < qtdlop; i++)
+			//	printf("%s\n", options[i]);
+			drawmenus(options, qtdlop, strlen(options[0]));
 
 			do
 				dir = getch();

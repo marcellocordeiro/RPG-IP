@@ -4,37 +4,20 @@
 #include "default.h"
 
 FILE *fpmap;
-MAP map;
-
-struct player{
-	int x, y;
-	// int informações do game, hp, ataque, defesa, pontos...;
-	int vida, vida_max, ataque, defesa, turn;
-	int sockid, fight, whofight;
-	char nome[NAME_SIZE];
-	char sprite;
-	int ismonster;
-};
-/*
-	fight
-	= 0 se não está lutando
-	= 1 se lutando contra monstro, e whofight = id do monstro
-	= 2 se lutando contra outro player, e whofight = id do player, turn diz se é a vez de tal cleinte
-*/
-
-typedef struct player player;
+map_data map;
 
 int sock; // id do socket do server
 
 fd_set active_fd_set, read_fd_set; // variáveis auxiliares do server
 struct sockaddr_in clientname;
 
-player clients[MAX_CLIENTS]; // vetor com clientes connectados e suas informações
+player_data clients[MAX_CLIENTS]; // vetor com clientes connectados e suas informações
 int clients_connected; // quantidade de clientes connectados
 
-player monsters[MAX_MONSTERS];
+player_data monsters[MAX_MONSTERS];
 
-int game_status; 
+int game_status;
+
 /* 
 	game status 
 	= 0 se ngm conectou
@@ -45,12 +28,20 @@ int game_status;
 int pos_broad; // posição livre no vetor do broadcast declarado abaixo
 upd_msg map_changes[BUFFER_SIZE]; // vetor com as alterações do mapa
 
+void MyClientConnected(int id, clientInfo startInfo); // função que é chamada quando um cliente é connectado
+void MyClientMoved(int id, mov_msg mov);// função que é chamada quando cleinte manda mensagem de movimento
+void startGame(void);// função que é chamada quando cliente 0 confirma o inicio do jogo
+void MyBroadcast(char *s);// um exemplo de como mandar uma mensagem para todos os usuários
+
 void (*clientMoved)(int, mov_msg);
 void (*clientConnected)(int, clientInfo);
 void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
 int islegal(int x, int y, char c);
+int findPlayer(int x, int y);
+int islegalMonster(int x, int y, char c);
+void monsterMove();
 
 int makeSocket(uint16_t);
 int readMovFromClient(int filedes, mov_msg *message);

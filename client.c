@@ -3,14 +3,17 @@
 int main () {
 	clientInfo info;
 	char msg[BUFFER_SIZE];
-	int falha = 0, comecar = 0, jogando = 1, i, j, x = 0, y = 0;
-	upd_msg updt;
+	int i, error = 0, start = 0, playing = 1;
+	upd_msg upd;
 	mov_msg mov;
 
 	//variaveis
 	int id = -1;
-	int indice;
-	char c;
+
+	long int newtime = time(NULL);
+	long int oldtime = time(NULL);
+
+	int x = 0, y = 0;
 	///mapa
 	FILE *fpmap; //ponteiro para o arquivo do mapa
 	char nome_mapa[16];
@@ -23,15 +26,15 @@ int main () {
 		if (readTxtFromServer(msg) > 0)
 			id = msg[0] - '0';
 
-	while (comecar == 0) { // depois só mensagem de texto até o jogo começar
+	while (!start) { // depois só mensagem de texto até o jogo começar
 		if (readTxtFromServer(msg) > 0) {
 			if (msg[0] == 'O')
-				comecar = 1;
+				start = 1;
 			else if (msg[0] != 'o')
-				falha = 1;
+				error = 1;
 		}
 
-		if (falha)
+		if (error)
 			exit(1);
 
 		mov.msg = getch();
@@ -50,22 +53,16 @@ int main () {
 	for (i = 0; i < 13; i++) 
 		printf("\n");
 
-	long int newtime = time(NULL);
-	long int oldtime = time(NULL);
-
 	//delay(2);
 
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
-	while (jogando) {
-		while (readUpdFromServer(&updt) > 0) {// recebe todas mensagens
-			// qual o tipo do update, ex:
-			system("clear");
-			switch (updt.tipo) {
-				case 0:
-					// update no mapa
-					if (updt.new == -1 && updt.id == 0) { //informações iniciais
-						qnt_clients = updt.vida;
+	while (playing) {
+		while (readUpdFromServer(&upd) > 0) {// recebe todas mensagens
+			switch (upd.tipo) { // tipo de update
+				case 0: // update no mapa
+					if (upd.dir == -1 && upd.id == 0) { // informações iniciais
+						qnt_clients = upd.vida;
 
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
@@ -73,78 +70,70 @@ int main () {
 						break;
 					}
 
-					if (updt.new == -1) {
-						players[updt.id].sprite = updt.sprite;
-						players[updt.id].x = updt.x;
-						players[updt.id].y = updt.y;
+					if (upd.dir == -1) {
+						players[upd.id].sprite = upd.sprite;
+						players[upd.id].x = upd.x;
+						players[upd.id].y = upd.y;
 
 						break;
 					}
-					else if (updt.new == -2) {
-						monsters[updt.id].sprite = updt.sprite;
-						monsters[updt.id].x = updt.x;
-						monsters[updt.id].y = updt.y;
+					else if (upd.dir == -2) {
+						monsters[upd.id].sprite = upd.sprite;
+						monsters[upd.id].x = upd.x;
+						monsters[upd.id].y = upd.y;
 
 						break;
 					}
 
-
-					x = updt.x;
-					y = updt.y;
-
-
-
-					//atualizando as posições de cada player
-					for (i = 0; i < qnt_clients && !updt.ismonster; i++) {
-						if (updt.id == i) {
-							players[i].sprite = updt.sprite;
-							players[i].x = x;
-							players[i].y = y;
+					// atualizando as posições de cada player
+					for (i = 0; i < qnt_clients && !upd.ismonster; i++)
+						if (upd.id == i) {
+							players[i].sprite = upd.sprite;
+							players[i].x = upd.x;
+							players[i].y = upd.y;
 						}
 
-						/*printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
-						printf("players[%d].x: %d\n", i, players[i].x);
-						printf("players[%d].y: %d\n", i, players[i].y);*/
-					}
-
-					for (i = 0; i < qnt_clients; i++) {
+					/*
+					for (i = 0; i < qnt_clients; i++) { // debug
 						printf("players[%d].sprite: %c\n", i, players[i].sprite);
 						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
 						printf("players[%d].x: %d\n", i, players[i].x);
 						printf("players[%d].y: %d\n", i, players[i].y);
 					}
+					*/
 
-					//atualizando as posições de cada player
-					for (i = 0; i < field.qnt_monsters && updt.ismonster; i++) {
-						if (updt.id == i) {
-							monsters[i].sprite = updt.sprite;
-							monsters[i].x = x;
-							monsters[i].y = y;
+					// atualizando as posições de cada monstro
+					for (i = 0; i < map.qnt_monsters && upd.ismonster; i++)
+						if (upd.id == i) {
+							monsters[i].sprite = upd.sprite;
+							monsters[i].x = upd.x;
+							monsters[i].y = upd.y;
 						}
 
-						//printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						//printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
-						//printf("players[%d].x: %d\n", i, players[i].x);
-						//printf("players[%d].y: %d\n", i, players[i].y);
+					/*
+					for (i = 0; i < map.qnt_monsters; i++) { // debug
+						printf("monsters[%d].sprite: %c\n", i, monsters[i].sprite);
+						printf("monsters[%d].color: %scolor%s\n", i, monsters[i].color, KNRM);
+						printf("monsters[%d].x: %d\n", i, monsters[i].x);
+						printf("monsters[%d].y: %d\n", i, monsters[i].y);
 					}
+					*/
 
-					
+					system("clear");
 					drawall();
 					printf("%splayer %d%s\n", players[id].color, id, KNRM);
-
-					//for (i = 0; i < field.qnt_monsters && updt.ismonster; i++)
-					//	printf("monsters[%d]:\nx:  %d y: %d  sprite: %c\n", i, monsters[i].x, monsters[i].y, monsters[i].sprite);
 					
 					break;
-				case 1:
+
+				case 1: // em batalha
 					system("clear");
 					printf("Battle\n");
 
 					break;
-				case 6: //primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
-					//lê o arquivo do mapa escolhido e o salva na matriz
-					sprintf(nome_mapa, "%s%d.txt", nome_mapa, updt.id);
+					
+				case 6: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
+					// lê o arquivo do mapa escolhido e o salva na matriz
+					sprintf(nome_mapa, "%s%d.txt", nome_mapa, upd.id);
 
 					fpmap = fopen(nome_mapa, "rt");
 					if (fpmap == NULL) {
@@ -152,29 +141,26 @@ int main () {
 						printf("ERRO: MAPA NÃO ENCONTRADO\n");
 						exit(1);
 					}
-					fscanf(fpmap, "%d %d %d", &field.linha, &field.coluna, &field.qnt_monsters);
+					fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
 
-					for(i = 0; i < field.linha; i++)
-						fscanf(fpmap, " %[^\n]", field.mapa[i]);
+					for(i = 0; i < map.height; i++)
+						fscanf(fpmap, " %[^\n]", map.map[i]);
 
 					fclose(fpmap);
 
-					for (i = 0; i < field.qnt_monsters; i++)
+					for (i = 0; i < map.qnt_monsters; i++)
 						monsters[i].color = KWHT;
 
 					break;
 			}
 		}
 
-		
 		if (id == 0) {
-			if (newtime - oldtime >= 3) {
-				//mov.msg = -10;
-				mov.updtmonsters = 1;
+			if (newtime - oldtime >= 1) {
+				mov.upd_monsters = 1;
 				sendMovToServer(mov);
 				oldtime = time(NULL);
-				mov.updtmonsters = 0;
-				//printf("3 sec\n");
+				mov.upd_monsters = 0;
 			}
 			else
 				newtime = time(NULL);
@@ -183,12 +169,6 @@ int main () {
 		mov.msg = getch();
 		if ((mov.msg != -1) && islegal(players[id].x, players[id].y, mov.msg)) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
-
-		
-
-		
-
-
 	}
 
 	return 0;

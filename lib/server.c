@@ -5,30 +5,115 @@ int islegal (int x, int y, char c) {
 		case up:
 			if (x - 1 == 0)
 				return 0;
-
 			break;
+
 		case down:
-			if (x + 1 == map.linha - 1)
+			if (x + 1 == map.height - 1)
 				return 0;
-
 			break;
+
 		case left:
 			if (y - 1 == 0)
 				return 0;
-
 			break;
+
 		case right:
-			if (y + 1 == map.coluna - 1)
+			if (y + 1 == map.width - 1)
 				return 0;
-
 			break;
+
 		default:
 			return 0;
-
 			break;
 	}
 
 	return 1;
+}
+
+int findPlayer (int x, int y) {
+	int i;
+
+	for (i = 0; i < MAX_CLIENTS; i++)
+		if (clients[i].sockid > 0 && (clients[i].x == x && clients[i].y == y))
+			return 1;
+
+	for (i = 0; i < map.qnt_monsters; i++)
+		if (monsters[i].x == x && monsters[i].y == y)
+			return 1;
+
+	return 0;
+}
+
+int islegalMonster (int x, int y, char c) {
+	switch (c) {
+		case up:
+			if (x - 1 == 0 || map.map[x - 1][y] != ' ' || findPlayer(x - 1, y))
+				return 0;
+			break;
+
+		case down:
+			if (x + 1 == map.height - 1 || map.map[x + 1][y] != ' ' || findPlayer(x + 1, y))
+				return 0;
+			break;
+
+		case left:
+			if (y - 1 == 0 || map.map[x][y - 1] != ' ' || findPlayer(x, y - 1))
+				return 0;
+			break;
+
+		case right:
+			if (y + 1 == map.width - 1 || map.map[x][y + 1] != ' ' || findPlayer(x, y + 1))
+				return 0;
+			break;
+
+		default:
+			return 0;
+			break;
+	}
+
+	return 1;
+}
+
+void monsterMove () {
+	int i, flag = 0;
+	float chance;
+	srand(time(NULL));
+
+	for (i = 0; i < map.qnt_monsters; i++) {
+		//srand48(time(NULL));
+		//float chance = drand48();
+		chance = rand()%101;
+		chance /= 100;
+
+		// chances iguais de escolher a direcao
+		if (chance < 0.25 && islegalMonster(monsters[i].x, monsters[i].y, up)) {
+			(monsters[i].x)--;
+			flag = 1;
+		}
+		else if (chance < 0.75 && islegalMonster(monsters[i].x, monsters[i].y, down)) {
+			(monsters[i].x)++;
+			flag = 1;
+		}
+		else if (chance <= 1.0 && islegalMonster(monsters[i].x, monsters[i].y, left)) {
+			(monsters[i].y)--;
+			flag = 1;
+		}
+		else if (chance < 0.5 && islegalMonster(monsters[i].x, monsters[i].y, right)) {
+			(monsters[i].y)++;
+			flag = 1;
+		}
+
+		if (flag) {
+			map_changes[pos_broad].tipo = 0;
+			map_changes[pos_broad].x = monsters[i].x;
+			map_changes[pos_broad].y = monsters[i].y;
+			map_changes[pos_broad].id = i;
+			map_changes[pos_broad].dir = -10;
+			map_changes[pos_broad].sprite = monsters[i].sprite;
+			map_changes[pos_broad].ismonster = 1;
+			pos_broad++;
+		}
+	}
 }
 
 void init(){
