@@ -107,11 +107,13 @@ void initClients() {
 			clients[j].x = posX;
 			clients[j].y = posY;
 			clients[j].ismonster = 0;
-			//clients[j].hp = ;
+			clients[j].hp = MAX_HP;
+			clients[id].max_hp = MAX_HP;
 			//clients[j].ataque = ;
 			//clients[j].defesa = ;
 			clients[j].fight = 0;
 			clients[j].sprite = '^';
+			strcpy(clients[id].color, color(j));
 			j++;
 			qnt_players--; // um jogador a menos para ser criado
 		}
@@ -159,6 +161,7 @@ void initMonsters() {
 			monsters[j].y = posY;
 			monsters[j].ismonster = 1;
 			monsters[j].hp = VIDA_1;
+			monsters[j].max_hp = VIDA_1;
 			monsters[j].ataque = ATK_1;
 			monsters[j].defesa = DEF_1;
 			monsters[j].fight = 0;
