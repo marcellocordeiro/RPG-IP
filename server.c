@@ -125,27 +125,59 @@ void MyClientMoved (int id, mov_msg mov) {
 
 	map.map[clients[id].x][clients[id].y] = ' ';
 
-	if (found == 1) { // flag de batalha
-		//map_changes[pos_broad].tipo = 1;
-		//clients[id].fight = 1;
-		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+	if (found == 1 || clients[id].fight) { // flag de batalha
+		map_changes[pos_broad].tipo = 1;
+		clients[id].fight = 1;
+		//pos_broad++;
+		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+
 	}
-	else {
+	else if (!clients[id].fight) {
 		map_changes[pos_broad].tipo = 0;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].ismonster = 0;
 		map_changes[pos_broad].dir = mov.msg;
 		map_changes[pos_broad].sprite = clients[id].sprite;
-
-		map_changes[pos_broad].ismonster = 0; // !!!!!!!!!!
-
 		pos_broad++;
+
+		/*
+		map_changes[pos_broad].tipo;
+		map_changes[pos_broad].id;
+		map_changes[pos_broad].x, 
+		map_changes[pos_broad].y
+		map_changes[pos_broad].hp;
+		map_changes[pos_broad].fight, 
+		map_changes[pos_broad].whofight;
+		map_changes[pos_broad].ismonster;
+		map_changes[pos_broad].dir;
+		map_changes[pos_broad].sprite;
+		*/
+
+		/*
+		clients[id].x;
+		clients[id].y;
+		clients[id].ismonster;
+		clients[id].hp;
+		clients[id].max_hp;
+		clients[id].ataque;
+		clients[id].defesa;
+		clients[id].turn;
+		clients[id].fight;
+		clients[id].whofight;
+		clients[id].nome[NAME_SIZE];
+		clients[id].sprite;
+		clients[id].*color;
+		*/
 	}
 }
 
 void startGame(){
-	int i, id;
+	int id;
 
 	printf("Client 0 confirmed, the game will start now...\n");
 	broadcastTxt("O JOGO VAI COMEÇAR", -1); // avisar para os clientes que o jogo vai começar
@@ -154,35 +186,56 @@ void startGame(){
 	for (id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
 		clients[id].x = rand()%(map.height - 2) + 1;
 		clients[id].y = rand()%(map.width - 2) + 1;
+		clients[id].ismonster = 0;
+		clients[id].hp = MAX_HP;
+		clients[id].max_hp = MAX_HP;
+		//clients[id].ataque = ??;
+		//clients[id].defesa = ??;
+		//clients[id].turn = ??;
+		clients[id].fight = 0;
+		clients[id].whofight = 0;
 		clients[id].sprite = '^';
+		//clients[id].*color; // definir aqui?
+
 
 		map_changes[pos_broad].tipo = 0;
+		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].hp = clients_connected;
+		//map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].ismonster = clients[id].ismonster;
 		map_changes[pos_broad].dir = -1;
 		map_changes[pos_broad].sprite = clients[id].sprite;
-		map_changes[pos_broad].vida = clients_connected;
-		map_changes[pos_broad].ismonster = 0;
 		pos_broad++;
 	}
 
-	for (i = 0; i < map.qnt_monsters; i++) {
-		monsters[i].x = rand()%(map.height - 2) + 1;
-		monsters[i].y = rand()%(map.width - 2) + 1;
-		monsters[i].sprite = 'm';
-		monsters[i].fight = 0;
+	for (id = 0; id < map.qnt_monsters; id++) {
+		monsters[id].x = rand()%(map.height - 2) + 1;
+		monsters[id].y = rand()%(map.width - 2) + 1;
+		monsters[id].ismonster = 1;
+
+		monsters[id].hp = MAX_HP;
+		monsters[id].max_hp = MAX_HP;
+		//monsters[id].ataque = ??;
+		//monsters[id].defesa = ??;
+		//monsters[id].turn = ??;
+		monsters[id].sprite = 'm';
+		monsters[id].fight = 0;
 
 		map_changes[pos_broad].tipo = 0;
-		map_changes[pos_broad].x = monsters[i].x;
-		map_changes[pos_broad].y = monsters[i].y;
-		map_changes[pos_broad].id = i;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].x = monsters[id].x;
+		map_changes[pos_broad].y = monsters[id].y;
+		map_changes[pos_broad].hp = monsters[id].hp;
+		map_changes[pos_broad].fight = monsters[id].fight;
+		map_changes[pos_broad].whofight = monsters[id].whofight;
+		map_changes[pos_broad].ismonster = monsters[id].ismonster;
 		map_changes[pos_broad].dir = -2;
-		map_changes[pos_broad].sprite = monsters[i].sprite;
-		map_changes[pos_broad].ismonster = 1;
+		map_changes[pos_broad].sprite = monsters[id].sprite;
 		pos_broad++;
-
-		//printf("monsters[%d]:\nx:  %d y: %d  sprite: %c\n", i, monsters[i].x, monsters[i].y, monsters[i].sprite);
 	}
 }
 

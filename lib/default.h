@@ -43,6 +43,8 @@
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10
 
+#define MAX_HP 150
+
 struct clientInfo {
 	int mapa;
 	char nome[NAME_SIZE];
@@ -63,7 +65,7 @@ struct client_data {
 struct player_data { // MUDAR NOME!! (ainda?)
 	int x, y;
 	int ismonster;
-	int vida, vida_max, ataque, defesa, turn; // int informações do game, hp, ataque, defesa, pontos...
+	int hp, max_hp, ataque, defesa, turn; // int informações do game, hp, ataque, defesa, pontos...
 	int sockid, fight, whofight;
 	char nome[NAME_SIZE];
 	char sprite;
@@ -90,11 +92,13 @@ struct mov_msg {
 };
 
 struct upd_msg { //Mensagem de atualização do jogo
-	int tipo, id, vida;
-	int x, y;
+	int tipo;
+	int id;
+	int x, y, hp;
+	int fight, whofight;
+	int ismonster;
 	char dir;
 	char sprite;
-	int ismonster;
 };
 
 /*

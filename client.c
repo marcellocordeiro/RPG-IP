@@ -62,7 +62,7 @@ int main () {
 			switch (upd.tipo) { // tipo de update
 				case 0: // update no mapa
 					if (upd.dir == -1 && upd.id == 0) { // informações iniciais
-						qnt_clients = upd.vida;
+						qnt_clients = upd.hp;
 
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
@@ -89,6 +89,7 @@ int main () {
 							players[i].sprite = upd.sprite;
 							players[i].x = upd.x;
 							players[i].y = upd.y;
+							players[i].fight = upd.fight;
 						}
 
 					/*
@@ -106,6 +107,7 @@ int main () {
 							monsters[i].sprite = upd.sprite;
 							monsters[i].x = upd.x;
 							monsters[i].y = upd.y;
+							monsters[i].fight = upd.fight;
 						}
 
 					/*
@@ -118,9 +120,10 @@ int main () {
 					*/
 
 					system("clear");
-					drawall();
-					printf("%splayer %d%s\n", players[id].color, id, KNRM);
-					
+					if (!players[id].fight) {
+						drawall();
+						printf("%splayer %d%s\n", players[id].color, id, KNRM);
+					}
 					break;
 
 				case 1: // em batalha
