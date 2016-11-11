@@ -68,14 +68,14 @@ int main () {
 							players[i].color = color(i);
 					}
 
-					if (upd.dir == -1) {
+					if (!upd.ismonster) {
 						players[upd.id].sprite = upd.sprite;
 						players[upd.id].x = upd.x;
 						players[upd.id].y = upd.y;
 
 						break;
 					}
-					else if (upd.dir == -2) {
+					else if (upd.ismonster) {
 						monsters[upd.id].sprite = upd.sprite;
 						monsters[upd.id].x = upd.x;
 						monsters[upd.id].y = upd.y;
