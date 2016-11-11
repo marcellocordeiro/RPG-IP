@@ -141,7 +141,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		map_changes[pos_broad].whofight = clients[id].whofight;
 		map_changes[pos_broad].ismonster = 0;
 		map_changes[pos_broad].sprite = clients[id].sprite;
-		//pos_broad++; ///////////////// PQ COMENTASSE ISSO?
+		//pos_broad++;
 		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
 	}
@@ -202,6 +202,7 @@ void startGame(){
 
 	// status inicial dos clientes
 	initClients();
+
 	for (id = 0; id < clients_connected; id++) {
 		map_changes[pos_broad].type = 7;
 		map_changes[pos_broad].id = id;
@@ -218,6 +219,7 @@ void startGame(){
 
 	// status inicial dos monstros
 	initMonsters();
+
 	for (id = 0; id < map.qnt_monsters; id++) {
 		map_changes[pos_broad].type = 7;
 		map_changes[pos_broad].id = id;

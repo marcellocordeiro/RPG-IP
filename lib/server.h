@@ -40,6 +40,7 @@ void (*clientConnected)(int, clientInfo);
 void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
+//char *color(int id);
 int islegal(int x, int y, char sprite, char c);
 int islegalMonster(int x, int y, char c);
 int findPlayer(int x, int y);

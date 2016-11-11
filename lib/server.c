@@ -1,5 +1,21 @@
 #include "server.h"
+/*
+char* color (int id) {
+	switch (id) {
+		case 2:
+			return KBLU;
+			break;
 
+		case 1:
+			return KYEL;
+			break;
+
+		case 0:
+			return KMAG;
+			break;
+	}
+}
+*/
 int islegal (int x, int y, char sprite, char c) {
 	switch (c) {
 		case up:
@@ -77,11 +93,13 @@ int islegalMonster (int x, int y, char c) {
 
 // colocando os jogadores no mapa, aleatoriamente
 void initClients() {
-	int i, k, j = 0, colisao = 0;
+	int i, k, j = 0, colisao;
 	int qnt_players = clients_connected; // quantidade de jogadores a serem criados
 	int posX, posY;
 
 	do {
+		colisao = 0;
+
 		// gerar ints aleatorias para X e Y
 		posX = rand() % (map.height - 2) + 1;
 		posY = rand() % (map.width - 2) + 1;
@@ -108,12 +126,12 @@ void initClients() {
 			clients[j].y = posY;
 			clients[j].ismonster = 0;
 			clients[j].hp = MAX_HP;
-			clients[id].max_hp = MAX_HP;
+			clients[j].max_hp = MAX_HP;
 			//clients[j].ataque = ;
 			//clients[j].defesa = ;
 			clients[j].fight = 0;
 			clients[j].sprite = '^';
-			strcpy(clients[id].color, color(j));
+			//clients[j].color = color(j); - > SE DEFINIR AQUI, TERIA QUE CRIAR UM NOVO CAMPO NA MSG DE UPDT P/ PASSAR P/ OS CLIENTS
 			j++;
 			qnt_players--; // um jogador a menos para ser criado
 		}
@@ -122,11 +140,13 @@ void initClients() {
 
 // colocando os montros no mapa, aleatoriamente
 void initMonsters() {
-	int i, k, j = 0, colisao = 0;
+	int i, k, j = 0, colisao;
 	int qnt_monsters = map.qnt_monsters; // quantidade de monstros a serem criados
 	int posX, posY;
 
 	do {
+		colisao = 0;
+
 		// gerar ints aleatorias para X e Y
 		posX = rand() % (map.height - 2) + 1;
 		posY = rand() % (map.width - 2) + 1;
