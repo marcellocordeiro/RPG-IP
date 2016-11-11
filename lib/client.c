@@ -84,25 +84,25 @@ void drawmenus (char menu[100][100], int height, int width) {
 	}
 }
 
-int islegal (int x, int y, char c) {
+int islegal (int x, int y, char sprite, char c) {
 	switch (c) {
 		case up:
-			if (x - 1 == 0)
+			if (x - 1 == 0 && sprite == '^')
 				return 0;
 
 			break;
 		case down:
-			if (x + 1 == map.height - 1)
+			if (x + 1 == map.height - 1 && sprite == 'v')
 				return 0;
 
 			break;
 		case left:
-			if (y - 1 == 0)
+			if (y - 1 == 0 && sprite == '<')
 				return 0;
 
 			break;
 		case right:
-			if (y + 1 == map.width - 1)
+			if (y + 1 == map.width - 1 && sprite == '>')
 				return 0;
 
 			break;

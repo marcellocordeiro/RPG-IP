@@ -74,7 +74,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		//sendBattleUpdate(clients[id].fight, clients[id].whofight)
 	}
 
-	if (islegal(clients[id].x, clients[id].y, mov.msg) == 0)
+	if (islegal(clients[id].x, clients[id].y, clients[id].sprite, mov.msg) == 0)
 		return;
 
 	// update dos players
@@ -125,14 +125,14 @@ void MyClientMoved (int id, mov_msg mov) {
 
 	map.map[clients[id].x][clients[id].y] = ' ';
 
-	if (found == 1 || clients[id].fight) { // flag de batalha
-		map_changes[pos_broad].tipo = 1;
-		clients[id].fight = 1;
+	/*if (found == 1 || clients[id].fight) { // flag de batalha
+		//map_changes[pos_broad].tipo = 1;
+		//clients[id].fight = 1;
 		//pos_broad++;
-		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
 	}
-	else if (!clients[id].fight) {
+	else */if (!clients[id].fight) {
 		map_changes[pos_broad].tipo = 0;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
@@ -198,14 +198,13 @@ void startGame(){
 		//clients[id].*color; // definir aqui?
 
 
-		map_changes[pos_broad].tipo = 0;
+		map_changes[pos_broad].tipo = 7;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients_connected;
-		//map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].hp = clients[id].hp;
 		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].whofight = clients_connected; // passar a quantidade de players
 		map_changes[pos_broad].ismonster = clients[id].ismonster;
 		map_changes[pos_broad].dir = -1;
 		map_changes[pos_broad].sprite = clients[id].sprite;
@@ -225,7 +224,7 @@ void startGame(){
 		monsters[id].sprite = 'm';
 		monsters[id].fight = 0;
 
-		map_changes[pos_broad].tipo = 0;
+		map_changes[pos_broad].tipo = 7;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = monsters[id].x;
 		map_changes[pos_broad].y = monsters[id].y;

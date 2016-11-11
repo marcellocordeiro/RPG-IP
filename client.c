@@ -61,36 +61,14 @@ int main () {
 		while (readUpdFromServer(&upd) > 0) {// recebe todas mensagens
 			switch (upd.tipo) { // tipo de update
 				case 0: // update no mapa
-					if (upd.dir == -1 && upd.id == 0) { // informações iniciais
-						qnt_clients = upd.hp;
-
-						for (i = 0; i < qnt_clients; i++)
-							players[i].color = color(i);
-					}
-
+					// atualizando as posições de cada player
 					if (!upd.ismonster) {
-						players[upd.id].sprite = upd.sprite;
 						players[upd.id].x = upd.x;
 						players[upd.id].y = upd.y;
-
-						break;
+						players[upd.id].hp = upd.hp;
+						players[upd.id].fight = upd.fight;
+						players[upd.id].sprite = upd.sprite;
 					}
-					else if (upd.ismonster) {
-						monsters[upd.id].sprite = upd.sprite;
-						monsters[upd.id].x = upd.x;
-						monsters[upd.id].y = upd.y;
-
-						break;
-					}
-
-					// atualizando as posições de cada player
-					for (i = 0; i < qnt_clients && !upd.ismonster; i++)
-						if (upd.id == i) {
-							players[i].sprite = upd.sprite;
-							players[i].x = upd.x;
-							players[i].y = upd.y;
-							players[i].fight = upd.fight;
-						}
 
 					/*
 					for (i = 0; i < qnt_clients; i++) { // debug
@@ -102,13 +80,13 @@ int main () {
 					*/
 
 					// atualizando as posições de cada monstro
-					for (i = 0; i < map.qnt_monsters && upd.ismonster; i++)
-						if (upd.id == i) {
-							monsters[i].sprite = upd.sprite;
-							monsters[i].x = upd.x;
-							monsters[i].y = upd.y;
-							monsters[i].fight = upd.fight;
-						}
+					if (upd.ismonster) {
+						monsters[upd.id].x = upd.x;
+						monsters[upd.id].y = upd.y;
+						monsters[upd.id].hp = upd.hp;
+						monsters[upd.id].fight = upd.fight;
+						monsters[upd.id].sprite = upd.sprite;
+					}
 
 					/*
 					for (i = 0; i < map.qnt_monsters; i++) { // debug
@@ -118,11 +96,12 @@ int main () {
 						printf("monsters[%d].y: %d\n", i, monsters[i].y);
 					}
 					*/
-
-					system("clear");
+					
 					if (!players[id].fight) {
+						system("clear");
 						drawall();
 						printf("%splayer %d%s\n", players[id].color, id, KNRM);
+						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
 					}
 					break;
 
@@ -153,6 +132,28 @@ int main () {
 						monsters[i].color = KWHT;
 
 					break;
+
+				case 7:
+					if (upd.dir == -1 && upd.id == 0) { // informações iniciais
+						qnt_clients = upd.whofight;
+
+						for (i = 0; i < qnt_clients; i++)
+							players[i].color = color(i);
+					}
+
+					if (!upd.ismonster) {
+						players[upd.id].x = upd.x;
+						players[upd.id].y = upd.y;
+						players[upd.id].hp = upd.hp;
+						players[upd.id].sprite = upd.sprite;
+					}
+					else if (upd.ismonster) {
+						monsters[upd.id].x = upd.x;
+						monsters[upd.id].y = upd.y;
+						monsters[upd.id].hp = upd.hp;
+						monsters[upd.id].sprite = upd.sprite;
+					}
+					break;
 			}
 		}
 
@@ -168,7 +169,7 @@ int main () {
 		}
 
 		mov.msg = getch();
-		if ((mov.msg != -1) && islegal(players[id].x, players[id].y, mov.msg)) // retorna -1 se demorou muito e nada foi digitado.
+		if ((mov.msg != -1) && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
 

@@ -16,7 +16,7 @@ char *color(int id);
 void printcchar(char *color,char c);
 void drawall();
 
-int islegal(int x, int y, char c);
+int islegal(int x, int y, char sprite, char c);
 
 int mod(int x, int m);
 

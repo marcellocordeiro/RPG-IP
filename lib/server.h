@@ -38,7 +38,7 @@ void (*clientConnected)(int, clientInfo);
 void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
-int islegal(int x, int y, char c);
+int islegal(int x, int y, char sprite, char c);
 int findPlayer(int x, int y);
 int islegalMonster(int x, int y, char c);
 void monsterMove();
