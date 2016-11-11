@@ -66,8 +66,6 @@ int main () {
 
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
-
-						break;
 					}
 
 					if (upd.dir == -1) {
