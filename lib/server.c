@@ -1,21 +1,35 @@
 #include "server.h"
-/*
-char* color (int id) {
-	switch (id) {
-		case 2:
-			return KBLU;
-			break;
 
-		case 1:
-			return KYEL;
-			break;
+upd_msg buildUpd (int id, int ismonster) {
+	upd_msg temp;
 
-		case 0:
-			return KMAG;
-			break;
+	if (!ismonster) {
+		temp.type = -1;
+		temp.id = id;
+		temp.x = clients[id].x;
+		temp.y = clients[id].y;
+		temp.hp = clients[id].hp;
+		temp.fight = clients[id].fight;
+		temp.whofight = clients[id].whofight;
+		temp.ismonster = 0;
+		//temp.dir = ??;
+		temp.sprite = clients[id].sprite;
 	}
+	else {
+		temp.type = -1;
+		temp.id = id;
+		temp.x = monsters[id].x;
+		temp.y = monsters[id].y;
+		temp.hp = monsters[id].hp;
+		temp.fight = monsters[id].fight;
+		temp.whofight = monsters[id].whofight;
+		temp.ismonster = 1;
+		//temp.dir = ??;
+		temp.sprite = monsters[id].sprite;
+	}
+
+	return temp;
 }
-*/
 
 int dmg(int atk, int def) {
 	int dmgg;
@@ -27,8 +41,6 @@ int dmg(int atk, int def) {
 }
 
 // falta ver como vai printar a tela de batalha e atualizar os stats --> yea
-
-/* Há algum problema na hora de remover o monstro, e/ou na hora de atualizar o hp */
 void battle(int id, char move) {
 	int opponent = clients[id].whofight;
 
@@ -41,67 +53,41 @@ void battle(int id, char move) {
 			monsters[opponent].fight = 0;
 		}
 
+		map_changes[pos_broad] = buildUpd(id, 0);
 		map_changes[pos_broad].type = 0;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].ismonster = 0;
-		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 		pos_broad++;
+		
+		map_changes[pos_broad] = buildUpd(opponent, 1);
 		map_changes[pos_broad].type = 0;
-		map_changes[pos_broad].id = opponent;
-		map_changes[pos_broad].fight = monsters[opponent].fight;
-		map_changes[pos_broad].whofight = monsters[opponent].whofight;
-		map_changes[pos_broad].hp = monsters[opponent].hp;
-		map_changes[pos_broad].x = monsters[opponent].x;
-		map_changes[pos_broad].y = monsters[opponent].y;
-		map_changes[pos_broad].ismonster = 1;
-		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 		pos_broad++;
-	}/*
+	}
 	else {
 		if (clients[id].turn && move == 'a') {
-			clients[clients[id].whofight].hp -= 15;
+			clients[opponent].hp -= 15;
 			clients[id].turn = 0;
-			clients[clients[id].whofight].turn = 0;
+			clients[opponent].turn = 1;
 		}
-		else if (clients[clients[id].whofight].turn && move == 'a') {
+		else if (clients[opponent].turn && move == 'a') {
 			clients[id].hp -= 10;
-			clients[clients[id].whofight].turn = 0;
+			clients[opponent].turn = 0;
 			clients[id].turn = 1;
 		}
+		else
+			return;
 
-		if (clients[id].hp <= 0 || clients[clients[id].whofight].hp <= 0) {
+		if (clients[id].hp <= 0 || clients[opponent].hp <= 0) {
 			clients[id].fight = 0;
-			clients[clients[id].whofight].fight = 0;
+			clients[opponent].fight = 0;
 		}
 
-		map_changes[pos_broad].type = 1;
-		map_changes[pos_broad].id = id;
-		//map_changes[pos_broad].x = clients[id].x;
-		//map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight;
-		map_changes[pos_broad].ismonster = 0;
-		//map_changes[pos_broad].sprite = clients[id].sprite;
-		//pos_broad++;
-		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
-
-		map_changes[pos_broad].type = 1;
-		map_changes[pos_broad].id = clients[id].whofight;
-		map_changes[pos_broad].x = clients[clients[id].whofight].x;
-		map_changes[pos_broad].y = clients[clients[id].whofight].y;
-		map_changes[pos_broad].hp = clients[clients[id].whofight].hp;
-		map_changes[pos_broad].fight = clients[clients[id].whofight].fight;
-		map_changes[pos_broad].whofight = clients[clients[id].whofight].whofight;
-		map_changes[pos_broad].ismonster = 1;
-		map_changes[pos_broad].sprite = clients[clients[id].whofight].sprite;
-		sendUpdToClient(clients[clients[id].whofight].sockid, map_changes[pos_broad]);
-	}*/
+		map_changes[pos_broad] = buildUpd(id, 0);
+		map_changes[pos_broad].type = 0;
+		pos_broad++;
+		
+		map_changes[pos_broad] = buildUpd(opponent, 0);
+		map_changes[pos_broad].type = 0;
+		pos_broad++;
+	}
 }
 
 int islegal (int x, int y, char sprite, char c) {
@@ -314,7 +300,7 @@ void monsterMove () {
 				flag = 1;
 			}
 	
-			if (flag) {
+			if (flag) {/*
 				map_changes[pos_broad].type = 0;
 				map_changes[pos_broad].x = monsters[i].x;
 				map_changes[pos_broad].y = monsters[i].y;
@@ -322,6 +308,10 @@ void monsterMove () {
 				map_changes[pos_broad].dir = -10;
 				map_changes[pos_broad].sprite = monsters[i].sprite;
 				map_changes[pos_broad].ismonster = 1;
+				pos_broad++;*/
+
+				map_changes[pos_broad] = buildUpd(i, 1);
+				map_changes[pos_broad].type = 0;
 				pos_broad++;
 			}
 		}

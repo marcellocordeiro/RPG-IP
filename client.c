@@ -106,9 +106,17 @@ int main () {
 						printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM, players[id].fight);
 						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
 					}
+					else { // coloquei a batalha aqui só para testes, mas podemos passar para o case 1, se preferir
+						system("clear");
+						printf("Battle\n");
+						if (players[id].fight == 1)
+							printf("%splayer %d%s; in battle: %d; hp player1: %d; hp monster: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, monsters[players[id].whofight].hp);
+						else
+							printf("%splayer %d%s; in battle: %d; hp player1: %d; hp player2: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, players[players[id].whofight].hp);
+					}
 					break;
 
-				case 1: // em batalha
+				case 1: /*// em batalha
 					if (!upd.ismonster) { // atualizando os stats dos players
 						players[upd.id].hp = upd.hp;
 						players[upd.id].fight = upd.fight;
@@ -124,7 +132,7 @@ int main () {
 					system("clear");
 					printf("Battle\n");
 					printf("%splayer %d%s; in battle: %d; hp play: %d; hp monst: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, monsters[players[id].whofight].hp);
-					//delay(2);
+					//delay(2);*/
 
 					break;
 

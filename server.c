@@ -161,97 +161,41 @@ void MyClientMoved (int id, mov_msg mov) {
 		clients[id].fight = 1;
 		clients[id].whofight = found; // id do monstro!!! --> sim!
 		clients[id].turn = 1;
-/*
-		map_changes[pos_broad].type = 0;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight;
-		map_changes[pos_broad].ismonster = 0;
-		map_changes[pos_broad].sprite = clients[id].sprite;
-		pos_broad++;*/
-		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
-	}/*
+		monsters[found].fight = 1;
+		monsters[found].whofight = id;
+		monsters[found].turn = 0;
+
+		map_changes[pos_broad] = buildUpd(id, 0);
+		map_changes[pos_broad].type = 0;
+		pos_broad++;
+
+		map_changes[pos_broad] = buildUpd(found, 1);
+		map_changes[pos_broad].type = 0;
+		pos_broad++;
+	}
 	else if (found2 != -1) {
 		clients[id].fight = 2;
 		clients[id].whofight = found2; // id do monstro!!! --> sim!
 		clients[id].turn = 1;
 
 		clients[found2].fight = 2;
-		clients[found2].whofight = id; // id do monstro!!! --> sim!
+		clients[found2].whofight = id;
 		clients[found2].turn = 0;
-		
-		map_changes[pos_broad].type = 1;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight;
-		map_changes[pos_broad].ismonster = 0;
-		map_changes[pos_broad].sprite = clients[id].sprite;
-		//pos_broad++;
-		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
-		map_changes[pos_broad].type = 1;
-		map_changes[pos_broad].id = found2;
-		map_changes[pos_broad].x = clients[found2].x;
-		map_changes[pos_broad].y = clients[found2].y;
-		map_changes[pos_broad].hp = clients[found2].hp;
-		map_changes[pos_broad].fight = clients[found2].fight;
-		map_changes[pos_broad].whofight = clients[found2].whofight;
-		map_changes[pos_broad].ismonster = 0;
-		map_changes[pos_broad].sprite = clients[found2].sprite;
-		//pos_broad++;
-		sendUpdToClient(clients[found2].sockid, map_changes[pos_broad]);
-
-
-	}*/
-	//else {
+		map_changes[pos_broad] = buildUpd(id, 0);
 		map_changes[pos_broad].type = 0;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients[id].whofight; // PRECISA?
-		map_changes[pos_broad].ismonster = 0;
-		map_changes[pos_broad].dir = mov.msg;
-		map_changes[pos_broad].sprite = clients[id].sprite;
 		pos_broad++;
 
-		/*
-		map_changes[pos_broad].type;
-		map_changes[pos_broad].id;
-		map_changes[pos_broad].x, 
-		map_changes[pos_broad].y
-		map_changes[pos_broad].hp;
-		map_changes[pos_broad].fight, 
-		map_changes[pos_broad].whofight;
-		map_changes[pos_broad].ismonster;
-		map_changes[pos_broad].dir;
-		map_changes[pos_broad].sprite;
-		*/
-
-		/*
-		clients[id].x;
-		clients[id].y;
-		clients[id].ismonster;
-		clients[id].hp;
-		clients[id].max_hp;
-		clients[id].ataque;
-		clients[id].defesa;
-		clients[id].turn;
-		clients[id].fight;
-		clients[id].whofight;
-		clients[id].nome[NAME_SIZE];
-		clients[id].sprite;
-		clients[id].*color;
-		*/
-	//}
+		map_changes[pos_broad] = buildUpd(found2, 0);
+		map_changes[pos_broad].type = 0;
+		pos_broad++;
+	}
+	else {
+		map_changes[pos_broad] = buildUpd(id, 0);
+		map_changes[pos_broad].type = 0;
+		pos_broad++;
+	}
 }
 
 void startGame(){
@@ -269,16 +213,10 @@ void startGame(){
 	initClients();
 
 	for (id = 0; id < clients_connected; id++) {
+		map_changes[pos_broad] = buildUpd(id, 0);
 		map_changes[pos_broad].type = 7;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].fight = clients[id].fight;
 		map_changes[pos_broad].whofight = clients_connected; // passar a quantidade de players
-		map_changes[pos_broad].ismonster = clients[id].ismonster;
 		map_changes[pos_broad].dir = -1;
-		map_changes[pos_broad].sprite = clients[id].sprite;
 		pos_broad++;
 	}
 
@@ -286,74 +224,11 @@ void startGame(){
 	initMonsters();
 
 	for (id = 0; id < map.qnt_monsters; id++) {
+		map_changes[pos_broad] = buildUpd(id, 1);
 		map_changes[pos_broad].type = 7;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = monsters[id].x;
-		map_changes[pos_broad].y = monsters[id].y;
-		map_changes[pos_broad].hp = monsters[id].hp;
-		map_changes[pos_broad].fight = monsters[id].fight;
-		map_changes[pos_broad].whofight = monsters[id].whofight;
-		map_changes[pos_broad].ismonster = monsters[id].ismonster;
 		map_changes[pos_broad].dir = -2;
-		map_changes[pos_broad].sprite = monsters[id].sprite;
 		pos_broad++;
 	}
-
-/*
-	for (id = 0; id < clients_connected; id++) { // enviar algumas informações, como mapa, status inicial do cliente, etc..
-		clients[id].x = rand()%(map.height - 2) + 1;
-		clients[id].y = rand()%(map.width - 2) + 1;
-		clients[id].ismonster = 0;
-		clients[id].hp = MAX_HP;
-		clients[id].max_hp = MAX_HP;
-		//clients[id].ataque = ??;
-		//clients[id].defesa = ??;
-		//clients[id].turn = ??;
-		clients[id].fight = 0;
-		clients[id].whofight = 0;
-		clients[id].sprite = '^';
-		//clients[id].*color; // definir aqui?
-
-
-		map_changes[pos_broad].type = 7;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = clients[id].x;
-		map_changes[pos_broad].y = clients[id].y;
-		map_changes[pos_broad].hp = clients[id].hp;
-		map_changes[pos_broad].fight = clients[id].fight;
-		map_changes[pos_broad].whofight = clients_connected; // passar a quantidade de players
-		map_changes[pos_broad].ismonster = clients[id].ismonster;
-		map_changes[pos_broad].dir = -1;
-		map_changes[pos_broad].sprite = clients[id].sprite;
-		pos_broad++;
-	}
-
-	for (id = 0; id < map.qnt_monsters; id++) {
-		monsters[id].x = rand()%(map.height - 2) + 1;
-		monsters[id].y = rand()%(map.width - 2) + 1;
-		monsters[id].ismonster = 1;
-
-		monsters[id].hp = MAX_HP;
-		monsters[id].max_hp = MAX_HP;
-		//monsters[id].ataque = ??;
-		//monsters[id].defesa = ??;
-		//monsters[id].turn = ??;
-		monsters[id].sprite = 'm';
-		monsters[id].fight = 0;
-
-		map_changes[pos_broad].type = 7;
-		map_changes[pos_broad].id = id;
-		map_changes[pos_broad].x = monsters[id].x;
-		map_changes[pos_broad].y = monsters[id].y;
-		map_changes[pos_broad].hp = monsters[id].hp;
-		map_changes[pos_broad].fight = monsters[id].fight;
-		map_changes[pos_broad].whofight = monsters[id].whofight;
-		map_changes[pos_broad].ismonster = monsters[id].ismonster;
-		map_changes[pos_broad].dir = -2;
-		map_changes[pos_broad].sprite = monsters[id].sprite;
-		pos_broad++;
-	}
-*/
 }
 
 void MyBroadcast(char *s){
