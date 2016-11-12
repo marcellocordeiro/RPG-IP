@@ -108,9 +108,9 @@ int main () {
 						system("clear");
 						printf("Battle\n");
 						if (players[id].fight == 1)
-							printf("%splayer %d%s; in battle: %d; hp player1: %d; hp monster: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, monsters[players[id].whofight].hp);
+							printf("%splayer %d%s; hp player1: %d; hp monster: %d\n", players[id].color, id, KNRM, players[id].hp, monsters[players[id].whofight].hp);
 						else
-							printf("%splayer %d%s; in battle: %d; hp player1: %d; hp player2: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, players[players[id].whofight].hp);
+							printf("%splayer %d%s; hp player1: %d; hp player2: %d\n", players[id].color, id, KNRM, players[id].hp, players[players[id].whofight].hp);
 					}
 					break;
 

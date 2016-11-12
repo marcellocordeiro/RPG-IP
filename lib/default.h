@@ -80,7 +80,7 @@ struct player_data { // MUDAR NOME!! (ainda?)
 	fight
 	= 0 se não está lutando
 	= 1 se lutando contra monstro, e whofight = id do monstro
-	= 2 se lutando contra outro player, e whofight = id do player, turn diz se é a vez de tal cleinte
+	= 2 se lutando contra outro player, e whofight = id do player, turn diz se é a vez de tal client
 */
 
 struct map_data {

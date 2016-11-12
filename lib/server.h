@@ -40,8 +40,9 @@ void (*clientConnected)(int, clientInfo);
 void (*clientDesconnected)(int);
 void (*clientConfirmed)(void);
 
-//char *color(int id);
 upd_msg buildUpd(int id, int ismonster);
+int dmg(int atk, int def);
+void battleUpd(int id, char move);
 int islegal(int x, int y, char sprite, char c);
 int islegalMonster(int x, int y, char c);
 int findPlayer(int x, int y);

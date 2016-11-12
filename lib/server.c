@@ -1,5 +1,8 @@
 #include "server.h"
 
+#define atkteste 20 // para testes!!
+#define defteste 10
+
 upd_msg buildUpd (int id, int ismonster) {
 	upd_msg temp;
 
@@ -31,22 +34,17 @@ upd_msg buildUpd (int id, int ismonster) {
 	return temp;
 }
 
-int dmg(int atk, int def) {
-	int dmgg;
-	if (atk >= def)
-		dmgg = atk - def;
-	else
-		dmgg = 0;
-	return dmgg;
+int dmg (int atk, int def) {
+	return atk > def ? atk : atk/2; // fazer!!
 }
 
 // falta ver como vai printar a tela de batalha e atualizar os stats --> yea
-void battle(int id, char move) {
+void battleUpd (int id, char move) {
 	int opponent = clients[id].whofight;
 
 	if (clients[id].fight == 1) {
-		clients[id].hp -= 10;
-		monsters[opponent].hp -= 20;
+		clients[id].hp -= dmg(defteste, atkteste);
+		monsters[opponent].hp -= dmg(atkteste, defteste);
 
 		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) {
 			clients[id].fight = 0;
@@ -62,18 +60,22 @@ void battle(int id, char move) {
 		pos_broad++;
 	}
 	else {
-		if (clients[id].turn && move == 'a') {
-			clients[opponent].hp -= 15;
+		/*if (clients[id].turn && move == 'a') {
+			clients[opponent].hp -= dmg(atkteste, defteste);
 			clients[id].turn = 0;
 			clients[opponent].turn = 1;
 		}
 		else if (clients[opponent].turn && move == 'a') {
-			clients[id].hp -= 10;
+			clients[id].hp -= dmg(defteste, atkteste);
 			clients[opponent].turn = 0;
 			clients[id].turn = 1;
 		}
 		else
 			return;
+		*/
+		clients[opponent].hp -= dmg(atkteste, defteste);
+		clients[id].turn = 0;
+		clients[opponent].turn = 1;
 
 		if (clients[id].hp <= 0 || clients[opponent].hp <= 0) {
 			clients[id].fight = 0;
@@ -378,10 +380,7 @@ void sendUpdToClient(int filedes, upd_msg change) {
 
 void sleepServer() {
 	read_fd_set = active_fd_set;
-	struct timeval tv;
-	tv.tv_sec = 1;
-	tv.tv_usec = 2;
-	if (select (FD_SETSIZE, &read_fd_set, NULL, NULL, &tv) < 0){
+	if (select (FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0){
 		perror ("select");
 		exit (EXIT_FAILURE);
 	}

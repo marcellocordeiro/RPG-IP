@@ -74,13 +74,13 @@ void drawmenus (char menu[100][100], int height, int width) {
 	
 	for(i = 0; i < height; i++) {
 		for(j = 0; j < width; j++) {
-			if (menu[i][j] != '*' && menu[i][j] != ' ')
+			/*if (menu[i][j] != '*' && menu[i][j] != ' ')
 				printcchar(KWHT, menu[i][j]);
 			else if ((i == 0 || j == 0) || (i == height - 1 || j == width - 1))
 				printcchar(KRED, menu[i][j]);
 			else if ((j + 1 < width && (menu[i][j] == '*' && menu[i][j + 1] == ' ')) || (i > 0 && (menu[i][j] == '*' && menu[i - 1][j] == ' ')) || (i + 1 < height && (menu[i][j] == '*' && menu[i + 1][j] == ' ')) || (j > 0 && (menu[i][j] == '*' && menu[i][j - 1] == ' ')))
 				printcchar(KBLU, menu[i][j]);
-			else
+			else*/
 				printcchar(KGRN, menu[i][j]);
 		}
 
@@ -154,9 +154,9 @@ void menu (clientInfo *info) {
 			//	printf("%s\n", mainmenu[i]); // mostra o menu
 			drawmenus(mainmenu, main_height, strlen(mainmenu[0]));
 
-			 ////////////////////////////////////////////////
-			printf("Lembrem-se de trocar as cores :)\n"); // pls
-			///////////////////////////////////////////////
+			///////////////////////////////////////////////////
+			//printf("Lembrem-se de trocar as cores :)\n"); // pls
+			/////////////////////////////////////////////////
 
 			do
 				dir = getch();

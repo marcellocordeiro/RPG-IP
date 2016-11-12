@@ -73,7 +73,8 @@ void MyClientMoved (int id, mov_msg mov) {
 	}
 
 	if (clients[id].fight) {
-		battle(id, mov.msg);
+		if (clients[id].turn)
+			battleUpd(id, mov.msg);
 		return;
 	}
 
