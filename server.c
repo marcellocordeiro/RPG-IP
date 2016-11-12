@@ -63,7 +63,7 @@ void MyClientConnected (int id, clientInfo startInfo) {
 }
 
 void MyClientMoved (int id, mov_msg mov) {
-	int i, found = 0;
+	int i, found = -1, found2 = -1;
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
 
@@ -73,7 +73,7 @@ void MyClientMoved (int id, mov_msg mov) {
 	}
 
 	if (clients[id].fight) {
-		//sendBattleUpdate(clients[id].fight, clients[id].whofight);
+		battle(id, mov.msg);
 		return;
 	}
 
@@ -81,57 +81,109 @@ void MyClientMoved (int id, mov_msg mov) {
 		return;
 
 	// update dos players
-	if (mov.msg == up) {
-		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if ((clients[id].x - 1 == monsters[i].x && clients[id].y == monsters[i].y) && clients[id].sprite == '^')
-				found = 1;
+	switch (mov.msg) {
+		case up:
+			if (clients[id].sprite == '^') {
+				// encontrar monstro
+				found = findMonster(clients[id].x - 1, clients[id].y);
 	
-		if (found == 0)
-			if (clients[id].sprite == '^')
-				clients[id].x--;
+				// encontrar player
+				if (found == -1)
+					found2 = findPlayer(clients[id].x - 1, clients[id].y);
+			}
+	
+			// alterar posição
+			if (found == -1 && found2 == -1)
+				if (clients[id].sprite == '^')
+					clients[id].x--;
+	
+			clients[id].sprite = '^';
+			break;
 
-		clients[id].sprite = '^';
-	}
-	else if (mov.msg == down) {
-		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if ((clients[id].x + 1 == monsters[i].x && clients[id].y == monsters[i].y) && clients[id].sprite == 'v')
-				found = 1;
-
-		if (found == 0)
-			if (clients[id].sprite == 'v')
-				clients[id].x++;
-
-		clients[id].sprite = 'v';
-	}
-	else if (mov.msg == left) {
-		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if ((clients[id].x == monsters[i].x && clients[id].y - 1 == monsters[i].y) && clients[id].sprite == '<')
-				found = 1;
-
-		if (found == 0)
-			if (clients[id].sprite == '<')
-				clients[id].y--;
-
-		clients[id].sprite = '<';
-	}
-	else if (mov.msg == right) {
-		for (i = 0; i < map.qnt_monsters && !found; i++)
-			if ((clients[id].x == monsters[i].x && clients[id].y + 1 == monsters[i].y) && clients[id].sprite == '>')
-				found = 1;
-
-		if (found == 0)
-			if (clients[id].sprite == '>')
-				clients[id].y++;
+		case down:
+			if (clients[id].sprite == 'v') {
+				// encontrar monstro
+				found = findMonster(clients[id].x + 1, clients[id].y);
 		
-		clients[id].sprite = '>';
+				// encontrar player
+				if (found == -1)
+					found2 = findPlayer(clients[id].x + 1, clients[id].y);
+			}
+	
+			// alterar posição
+			if (found == -1 && found2 == -1)
+				if (clients[id].sprite == 'v')
+					clients[id].x++;
+	
+			clients[id].sprite = 'v';
+			break;
+
+		case left:
+			if (clients[id].sprite == '<') {
+				// encontrar monstro
+				found = findMonster(clients[id].x, clients[id].y - 1);
+		
+				// encontrar player
+				if (found == -1)
+					found2 = findPlayer(clients[id].x, clients[id].y - 1);
+			}
+	
+			// alterar posição
+			if (found == -1 && found2 == -1)
+				if (clients[id].sprite == '<')
+					clients[id].y--;
+	
+			clients[id].sprite = '<';
+			break;
+
+		case right:
+			if (clients[id].sprite == '>') {
+				// encontrar monstro
+				found = findMonster(clients[id].x, clients[id].y + 1);
+		
+				// encontrar player
+				if (found == -1)
+					found2 = findPlayer(clients[id].x, clients[id].y + 1);
+			}
+	
+			// alterar posição
+			if (found == -1 && found2 == -1)
+				if (clients[id].sprite == '>')
+					clients[id].y++;
+			
+			clients[id].sprite = '>';
+			break;
 	}
 
 	map.map[clients[id].x][clients[id].y] = ' ';
 
-	if (found == 1) { // flag de batalha
+	if (found != -1) { // flag de batalha
 		clients[id].fight = 1;
-		clients[id].whofight = 1; // id do monstro!!!
+		clients[id].whofight = found; // id do monstro!!! --> sim!
+		clients[id].turn = 1;
+/*
+		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].x = clients[id].x;
+		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].ismonster = 0;
+		map_changes[pos_broad].sprite = clients[id].sprite;
+		pos_broad++;*/
+		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
+	}/*
+	else if (found2 != -1) {
+		clients[id].fight = 2;
+		clients[id].whofight = found2; // id do monstro!!! --> sim!
+		clients[id].turn = 1;
+
+		clients[found2].fight = 2;
+		clients[found2].whofight = id; // id do monstro!!! --> sim!
+		clients[found2].turn = 0;
+		
 		map_changes[pos_broad].type = 1;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
@@ -144,8 +196,21 @@ void MyClientMoved (int id, mov_msg mov) {
 		//pos_broad++;
 		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 
-	}
-	else {
+		map_changes[pos_broad].type = 1;
+		map_changes[pos_broad].id = found2;
+		map_changes[pos_broad].x = clients[found2].x;
+		map_changes[pos_broad].y = clients[found2].y;
+		map_changes[pos_broad].hp = clients[found2].hp;
+		map_changes[pos_broad].fight = clients[found2].fight;
+		map_changes[pos_broad].whofight = clients[found2].whofight;
+		map_changes[pos_broad].ismonster = 0;
+		map_changes[pos_broad].sprite = clients[found2].sprite;
+		//pos_broad++;
+		sendUpdToClient(clients[found2].sockid, map_changes[pos_broad]);
+
+
+	}*/
+	//else {
 		map_changes[pos_broad].type = 0;
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
@@ -186,7 +251,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		clients[id].sprite;
 		clients[id].*color;
 		*/
-	}
+	//}
 }
 
 void startGame(){

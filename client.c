@@ -69,6 +69,7 @@ int main () {
 						players[upd.id].y = upd.y;
 						players[upd.id].hp = upd.hp;
 						players[upd.id].fight = upd.fight;
+						players[upd.id].whofight = upd.whofight;
 						players[upd.id].sprite = upd.sprite;
 					}
 
@@ -108,25 +109,25 @@ int main () {
 					break;
 
 				case 1: // em batalha
-					if (!upd.ismonster) { // atualizando os status dos players
+					if (!upd.ismonster) { // atualizando os stats dos players
 						players[upd.id].hp = upd.hp;
 						players[upd.id].fight = upd.fight;
 						players[upd.id].whofight = upd.whofight;
 					}
 
-					if (upd.ismonster) { // atualizando os status dos monstros
+					if (upd.ismonster) { // atualizando os stats dos monstros
 						monsters[upd.id].hp = upd.hp;
 						monsters[upd.id].fight = upd.fight;
-						players[upd.id].whofight = upd.whofight;
+						monsters[upd.id].whofight = upd.whofight;
 					}
 
 					system("clear");
 					printf("Battle\n");
-					printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM, players[id].fight);
-					delay(2);
+					printf("%splayer %d%s; in battle: %d; hp play: %d; hp monst: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, monsters[players[id].whofight].hp);
+					//delay(2);
 
 					break;
-					
+
 				case 6: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					// lê o arquivo do mapa escolhido e o salva na matriz
 					sprintf(map_name, "%s%d.txt", map_name, upd.id);
@@ -185,7 +186,7 @@ int main () {
 		}
 
 		mov.msg = getch();
-		if ((mov.msg != -1) && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) // retorna -1 se demorou muito e nada foi digitado.
+		if (((mov.msg != -1) && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) && !players[id].fight || (players[id].fight != 0 && (mov.msg == 'a' || mov.msg == 'r'))) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
 

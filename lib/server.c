@@ -16,6 +16,94 @@ char* color (int id) {
 	}
 }
 */
+
+int dmg(int atk, int def) {
+	int dmgg;
+	if (atk >= def)
+		dmgg = atk - def;
+	else
+		dmgg = 0;
+	return dmgg;
+}
+
+// falta ver como vai printar a tela de batalha e atualizar os stats --> yea
+
+/* Há algum problema na hora de remover o monstro, e/ou na hora de atualizar o hp */
+void battle(int id, char move) {
+	int opponent = clients[id].whofight;
+
+	if (clients[id].fight == 1) {
+		clients[id].hp -= 10;
+		monsters[opponent].hp -= 20;
+
+		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) {
+			clients[id].fight = 0;
+			monsters[opponent].fight = 0;
+		}
+
+		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad].id = id;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].x = clients[id].x;
+		map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].ismonster = 0;
+		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+		pos_broad++;
+		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad].id = opponent;
+		map_changes[pos_broad].fight = monsters[opponent].fight;
+		map_changes[pos_broad].whofight = monsters[opponent].whofight;
+		map_changes[pos_broad].hp = monsters[opponent].hp;
+		map_changes[pos_broad].x = monsters[opponent].x;
+		map_changes[pos_broad].y = monsters[opponent].y;
+		map_changes[pos_broad].ismonster = 1;
+		//sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+		pos_broad++;
+	}/*
+	else {
+		if (clients[id].turn && move == 'a') {
+			clients[clients[id].whofight].hp -= 15;
+			clients[id].turn = 0;
+			clients[clients[id].whofight].turn = 0;
+		}
+		else if (clients[clients[id].whofight].turn && move == 'a') {
+			clients[id].hp -= 10;
+			clients[clients[id].whofight].turn = 0;
+			clients[id].turn = 1;
+		}
+
+		if (clients[id].hp <= 0 || clients[clients[id].whofight].hp <= 0) {
+			clients[id].fight = 0;
+			clients[clients[id].whofight].fight = 0;
+		}
+
+		map_changes[pos_broad].type = 1;
+		map_changes[pos_broad].id = id;
+		//map_changes[pos_broad].x = clients[id].x;
+		//map_changes[pos_broad].y = clients[id].y;
+		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].fight = clients[id].fight;
+		map_changes[pos_broad].whofight = clients[id].whofight;
+		map_changes[pos_broad].ismonster = 0;
+		//map_changes[pos_broad].sprite = clients[id].sprite;
+		//pos_broad++;
+		sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+
+		map_changes[pos_broad].type = 1;
+		map_changes[pos_broad].id = clients[id].whofight;
+		map_changes[pos_broad].x = clients[clients[id].whofight].x;
+		map_changes[pos_broad].y = clients[clients[id].whofight].y;
+		map_changes[pos_broad].hp = clients[clients[id].whofight].hp;
+		map_changes[pos_broad].fight = clients[clients[id].whofight].fight;
+		map_changes[pos_broad].whofight = clients[clients[id].whofight].whofight;
+		map_changes[pos_broad].ismonster = 1;
+		map_changes[pos_broad].sprite = clients[clients[id].whofight].sprite;
+		sendUpdToClient(clients[clients[id].whofight].sockid, map_changes[pos_broad]);
+	}*/
+}
+
 int islegal (int x, int y, char sprite, char c) {
 	switch (c) {
 		case up:
@@ -51,35 +139,41 @@ int findPlayer (int x, int y) {
 	int i;
 
 	for (i = 0; i < MAX_CLIENTS; i++)
-		if (clients[i].sockid > 0 && (clients[i].x == x && clients[i].y == y))
-			return 1;
+		if ((x == clients[i].x && y == clients[i].y) && clients[i].sockid > 0)
+			return i;
+
+	return -1;
+}
+
+int findMonster (int x, int y) {
+	int i;
 
 	for (i = 0; i < map.qnt_monsters; i++)
-		if (monsters[i].x == x && monsters[i].y == y)
-			return 1;
+		if ((x == monsters[i].x && y == monsters[i].y) && monsters[i].hp > 0)
+			return i;
 
-	return 0;
+	return -1;
 }
 
 int islegalMonster (int x, int y, char c) {
 	switch (c) {
 		case up:
-			if (x - 1 == 0 || map.map[x - 1][y] != ' ' || findPlayer(x - 1, y))
+			if ((x - 1 == 0 || map.map[x - 1][y] != ' ') || findPlayer(x - 1, y) != findMonster(x - 1, y))
 				return 0;
 			break;
 
 		case down:
-			if (x + 1 == map.height - 1 || map.map[x + 1][y] != ' ' || findPlayer(x + 1, y))
+			if (x + 1 == map.height - 1 || map.map[x + 1][y] != ' ' || findPlayer(x + 1, y) != findMonster(x + 1, y))
 				return 0;
 			break;
 
 		case left:
-			if (y - 1 == 0 || map.map[x][y - 1] != ' ' || findPlayer(x, y - 1))
+			if (y - 1 == 0 || map.map[x][y - 1] != ' ' || findPlayer(x, y - 1) != findMonster(x, y - 1))
 				return 0;
 			break;
 
 		case right:
-			if (y + 1 == map.width - 1 || map.map[x][y + 1] != ' ' || findPlayer(x, y + 1))
+			if (y + 1 == map.width - 1 || map.map[x][y + 1] != ' ' || findPlayer(x, y + 1) != findMonster(x, y + 1))
 				return 0;
 			break;
 
@@ -198,38 +292,38 @@ void monsterMove () {
 	srand(time(NULL));
 
 	for (i = 0; i < map.qnt_monsters; i++) {
-		//srand48(time(NULL));
-		//float chance = drand48();
-		chance = rand()%101;
-		chance /= 100;
-
-		// chances iguais de escolher a direcao
-		if (chance < 0.25 && islegalMonster(monsters[i].x, monsters[i].y, up)) {
-			(monsters[i].x)--;
-			flag = 1;
-		}
-		else if (chance < 0.5 && islegalMonster(monsters[i].x, monsters[i].y, down)) {
-			(monsters[i].x)++;
-			flag = 1;
-		}
-		else if (chance < 0.75 && islegalMonster(monsters[i].x, monsters[i].y, left)) {
-			(monsters[i].y)--;
-			flag = 1;
-		}
-		else if (chance <= 1.0 && islegalMonster(monsters[i].x, monsters[i].y, right)) {
-			(monsters[i].y)++;
-			flag = 1;
-		}
-
-		if (flag) {
-			map_changes[pos_broad].type = 0;
-			map_changes[pos_broad].x = monsters[i].x;
-			map_changes[pos_broad].y = monsters[i].y;
-			map_changes[pos_broad].id = i;
-			map_changes[pos_broad].dir = -10;
-			map_changes[pos_broad].sprite = monsters[i].sprite;
-			map_changes[pos_broad].ismonster = 1;
-			pos_broad++;
+		if (monsters[i].hp > 0) {
+			chance = rand()%101;
+			chance /= 100;
+	
+			// chances iguais de escolher a direcao
+			if (chance < 0.25 && islegalMonster(monsters[i].x, monsters[i].y, up)) {
+				(monsters[i].x)--;
+				flag = 1;
+			}
+			else if (chance < 0.5 && islegalMonster(monsters[i].x, monsters[i].y, down)) {
+				(monsters[i].x)++;
+				flag = 1;
+			}
+			else if (chance < 0.75 && islegalMonster(monsters[i].x, monsters[i].y, left)) {
+				(monsters[i].y)--;
+				flag = 1;
+			}
+			else if (chance <= 1.0 && islegalMonster(monsters[i].x, monsters[i].y, right)) {
+				(monsters[i].y)++;
+				flag = 1;
+			}
+	
+			if (flag) {
+				map_changes[pos_broad].type = 0;
+				map_changes[pos_broad].x = monsters[i].x;
+				map_changes[pos_broad].y = monsters[i].y;
+				map_changes[pos_broad].id = i;
+				map_changes[pos_broad].dir = -10;
+				map_changes[pos_broad].sprite = monsters[i].sprite;
+				map_changes[pos_broad].ismonster = 1;
+				pos_broad++;
+			}
 		}
 	}
 }
@@ -247,6 +341,7 @@ void init(){
 	FD_ZERO (&active_fd_set);
 	FD_SET (sock, &active_fd_set);
 	memset(clients, 0, sizeof clients);
+	memset(monsters, 0, sizeof monsters);
 }
 
 int makeSocket (uint16_t port){

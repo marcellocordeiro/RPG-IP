@@ -45,9 +45,9 @@
 
 #define MAX_HP 150
 
-#define VIDA_1 300 // monstro lvl 1
-#define ATK_1 200
-#define DEF_1 150
+#define VIDA_1 50 // monstro lvl 1
+#define ATK_1 10
+#define DEF_1 5
 
 struct clientInfo {
 	int mapa;

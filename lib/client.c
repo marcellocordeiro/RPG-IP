@@ -45,7 +45,7 @@ void drawall () {
 			}
 
 			for (k = 0; k < map.qnt_monsters && !flag; k++) {
-				if(i == monsters[k].x && j == monsters[k].y) {
+				if((i == monsters[k].x && j == monsters[k].y) && monsters[k].hp > 0) {
 					printcchar(monsters[k].color, monsters[k].sprite);
 					flag = 1;
 				}
@@ -167,6 +167,9 @@ void menu (clientInfo *info) {
 			else if (dir == right && cursor == 0) { // comecar o jogo e conectar ao servidor
 				connectToServer(ip);
 				sendInfoToServer(*info);
+
+				memset(players, 0, sizeof players); // incialização dos vetores
+				memset(monsters, 0, sizeof monsters);
 
 				return; // sai do menu
 			}
