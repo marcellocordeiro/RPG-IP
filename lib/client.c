@@ -1,5 +1,9 @@
 #include "client.h"
 
+#define asteristico 1// esses números são usados para proporção , exemplo asteristico 1 de 5 =20%
+#define espaco 4 // espaco 4 de 5= 80%
+#define maxrepetidos 5//numero max de vezes que um caractere pode ser repetido em sequncia
+
 enum {
 	MAIN,
 	OPTIONS
@@ -211,7 +215,7 @@ void menu (clientInfo *info) {
 				scanf("%s", ip);
 			}
 			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
-				//createRandomMap();
+				createRandomMap();
 			}
 			else if (dir == right && cursor == 4) { // voltar para o menu principal
 				cursor = 0;
@@ -223,6 +227,75 @@ void menu (clientInfo *info) {
 		}
 	}
 }
+
+void createRandomMap () {
+	srand(time(NULL));
+	
+	FILE *fpmap;// = fopen("mapaaleatorio.txt", "w");
+	int width = rand()%13 + 30, height = rand()%10 + 30;// Deixar o mapa mais largo
+	int monsters = rand()%4 + 3; // evitar de não entrarem monstros
+	int i, j, proximo = 1, contador = 0;
+	char caractere, anterior='*';
+
+	int n;
+
+	char map_name[16];
+
+	for (i = 1; i == 1 || fpmap != NULL; i++) { // procura o primeiro numero de mapa disponivel
+		if (fpmap != NULL) // se o anterior já existia, fecha o arquivo
+			fclose(fpmap);
+
+		sprintf(map_name, "data/mapa%d.txt", i); // coloca o i na string
+		fpmap = fopen(map_name, "r"); // tenta abrir o mapa
+	}
+
+	fpmap = fopen(map_name, "w"); // abre o mapa com o número encontrado
+
+	n = asteristico + espaco; // recebe a soma de asteristico + espaco ,como numa proporção 
+
+	fprintf(fpmap, "%d %d %d\n", height, width, monsters);
+
+	for (i = 0; i < height; i++) {
+		for (j = 0; j < width; j++) {
+			if(i == 0 || i == height - 1 || j == 0 || j == width - 1)
+				fputc('*', fpmap);
+			else {
+				proximo = rand()%n;
+				
+				if (proximo < asteristico)
+					caractere = '*';
+				else
+					caractere=' ';
+
+				if (caractere == anterior)
+					contador += 1;
+				else
+					contador = 0;
+
+				if (contador >= maxrepetidos) {
+					if (caractere == '*')
+						caractere = ' ';
+					else
+						caractere = '*';
+
+					fputc(caractere,fpmap);
+
+					contador=0;
+				}
+				else
+					fputc(caractere,fpmap);
+		
+				anterior= caractere;
+			}
+		}
+
+		fputc('\n', fpmap);
+		anterior = '*'; // "zera o anterior"
+	}
+
+	fclose(fpmap);
+}
+
 
 void connectToServer(const char *server_IP){
 	network_socket = socket(AF_INET, SOCK_STREAM, 0);

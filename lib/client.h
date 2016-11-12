@@ -18,12 +18,10 @@ void delay (unsigned int secs);
 char *color(int id);
 void printcchar(char *color,char c);
 void drawall();
-
 int islegal(int x, int y, char sprite, char c);
-
 int mod(int x, int m);
-
 void menu(clientInfo *info);
+void createRandomMap();
 
 int sendInfoToServer(clientInfo info);
 void connectToServer(const char *server_IP);

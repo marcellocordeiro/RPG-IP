@@ -17,8 +17,6 @@ int main () {
 	FILE *fpmap; // ponteiro para o arquivo do mapa
 	char map_name[16];
 
-	strcpy(map_name, "data/mapa");
-
 	menu(&info);
 
 	while (id == -1) // receber o id do client
@@ -138,7 +136,7 @@ int main () {
 
 				case 6: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					// lê o arquivo do mapa escolhido e o salva na matriz
-					sprintf(map_name, "%s%d.txt", map_name, upd.id);
+					sprintf(map_name, "data/mapa%d.txt", upd.id);
 
 					fpmap = fopen(map_name, "rt");
 					if (fpmap == NULL) {
