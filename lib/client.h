@@ -21,7 +21,7 @@ void drawmenus(char menu[100][100], int height, int width);
 int islegal(int x, int y, char sprite, char c);
 int mod(int x, int m);
 void menu(clientInfo *info);
-int createRandomMap(int height, int width, int monstros);
+int createRandomMap(int height, int width, int qnt_monters);
 
 int sendInfoToServer(clientInfo info);
 void connectToServer(const char *server_IP);

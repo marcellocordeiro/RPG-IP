@@ -132,7 +132,7 @@ void menu (clientInfo *info) {
 	char mainmenu[100][100], options[100][100];
 	char navm[] = {menu_positions}, navop[] = {options_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
-	int height, width, monstros;
+	int height, width, qnt_monsters;
 
 	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
 	strcpy((*info).nome, "default"); // nome padrao
@@ -214,7 +214,7 @@ void menu (clientInfo *info) {
 			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
 				printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
 				scanf("%d %d %d", &height, &width, &monstros);
-				(*info).mapa = createRandomMap(height, width, monstros);
+				(*info).mapa = createRandomMap(height, width, qnt_monsters);
 			}
 			else if (dir == right && cursor == 4) { // voltar para o menu principal
 				cursor = 0;
@@ -227,7 +227,7 @@ void menu (clientInfo *info) {
 	}
 }
 
-int createRandomMap (int height, int width, int monstros) {
+int createRandomMap (int height, int width, int qnt_monsters) {
 	FILE *fpmap;// = fopen("mapaaleatorio.txt", "w");
 	int i, j, proximo = 1, contador = 0;
 	char caractere, anterior='*';
@@ -249,13 +249,13 @@ int createRandomMap (int height, int width, int monstros) {
 
 	n = asteristico + espaco; // recebe a soma de asteristico + espaco ,como numa proporção 
 
-	fprintf(fpmap, "%d %d %d\n", height, width, monstros);
+	fprintf(fpmap, "%d %d %d\n", height, width, qnt_monsters);
 
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
-			if(i == 0 || i == height - 1 || j == 0 || j == width - 1) {
+			if(i == 0 || i == height - 1 || j == 0 || j == width - 1)
 				fputc('*', fpmap);
-			} else {
+			else {
 				proximo = rand()%n;
 				
 				if (proximo < asteristico)
