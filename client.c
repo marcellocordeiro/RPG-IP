@@ -72,6 +72,12 @@ int main () {
 						players[upd.id].fight = upd.fight;
 						players[upd.id].whofight = upd.whofight;
 						players[upd.id].sprite = upd.sprite;
+					} else { // atualizando as posições de cada monstro
+						monsters[upd.id].x = upd.x;
+						monsters[upd.id].y = upd.y;
+						monsters[upd.id].hp = upd.hp;
+						monsters[upd.id].fight = upd.fight;
+						monsters[upd.id].sprite = upd.sprite;
 					}
 
 					/*
@@ -83,15 +89,6 @@ int main () {
 					}
 					*/
 
-					// atualizando as posições de cada monstro
-					if (upd.ismonster) {
-						monsters[upd.id].x = upd.x;
-						monsters[upd.id].y = upd.y;
-						monsters[upd.id].hp = upd.hp;
-						monsters[upd.id].fight = upd.fight;
-						monsters[upd.id].sprite = upd.sprite;
-					}
-
 					/*
 					for (i = 0; i < map.qnt_monsters; i++) { // debug
 						printf("monsters[%d].sprite: %c\n", i, monsters[i].sprite);
@@ -101,14 +98,16 @@ int main () {
 					}
 					*/
 					
+					system("clear");
 					if (!players[id].fight) {
-						system("clear");
 						drawall();
 						printf("%splayer %d%s\n", players[id].color, id, KNRM);
 						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
+						//printf("%sSCORE: %d%s\n", players[id].color, , KNRM);
+						printf("%sATK: %d%s\n", players[id].color, players[id].atk, KNRM);
+						printf("%sDEF: %d%s\n", players[id].color, players[id].def, KNRM);
 					}
 					else { // coloquei a batalha aqui só para testes, mas podemos passar para o case 1, se preferir
-						system("clear");
 						printf("Battle\n");
 						if (players[id].fight == 1)
 							printf("%splayer %d%s; hp player1: %d; hp monster: %d\n", players[id].color, id, KNRM, players[id].hp, monsters[players[id].whofight].hp);
@@ -162,7 +161,7 @@ int main () {
 						players[upd.id].hp = upd.hp;
 						players[upd.id].sprite = upd.sprite;
 					}
-					else if (upd.ismonster) {
+					else {
 						monsters[upd.id].x = upd.x;
 						monsters[upd.id].y = upd.y;
 						monsters[upd.id].hp = upd.hp;

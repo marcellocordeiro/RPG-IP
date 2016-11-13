@@ -132,6 +132,7 @@ void menu (clientInfo *info) {
 	char mainmenu[100][100], options[100][100];
 	char navm[] = {menu_positions}, navop[] = {options_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
+	int height, width, monstros;
 
 	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
 	strcpy((*info).nome, "default"); // nome padrao
@@ -211,7 +212,9 @@ void menu (clientInfo *info) {
 				scanf("%s", ip);
 			}
 			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
-				createRandomMap();
+				printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
+				scanf("%d %d %d", &height, &width, &monstros);
+				(*info).mapa = createRandomMap(height, width, monstros);
 			}
 			else if (dir == right && cursor == 4) { // voltar para o menu principal
 				cursor = 0;
@@ -224,17 +227,12 @@ void menu (clientInfo *info) {
 	}
 }
 
-void createRandomMap () {
-	srand(time(NULL));
-	
+int createRandomMap (int height, int width, int monstros) {
 	FILE *fpmap;// = fopen("mapaaleatorio.txt", "w");
-	int width = rand()%13 + 30, height = rand()%10 + 30;// Deixar o mapa mais largo
-	int monsters = rand()%4 + 3; // evitar de não entrarem monstros
 	int i, j, proximo = 1, contador = 0;
 	char caractere, anterior='*';
-
+	int map_num;
 	int n;
-
 	char map_name[16];
 
 	for (i = 1; i == 1 || fpmap != NULL; i++) { // procura o primeiro numero de mapa disponivel
@@ -244,18 +242,20 @@ void createRandomMap () {
 		sprintf(map_name, "data/mapa%d.txt", i); // coloca o i na string
 		fpmap = fopen(map_name, "r"); // tenta abrir o mapa
 	}
-
+	map_num = i-1;
 	fpmap = fopen(map_name, "w"); // abre o mapa com o número encontrado
+	if (fpmap == NULL)
+		printf("ERRO AO ABRIR O ARQUIVO\n");
 
 	n = asteristico + espaco; // recebe a soma de asteristico + espaco ,como numa proporção 
 
-	fprintf(fpmap, "%d %d %d\n", height, width, monsters);
+	fprintf(fpmap, "%d %d %d\n", height, width, monstros);
 
 	for (i = 0; i < height; i++) {
 		for (j = 0; j < width; j++) {
-			if(i == 0 || i == height - 1 || j == 0 || j == width - 1)
+			if(i == 0 || i == height - 1 || j == 0 || j == width - 1) {
 				fputc('*', fpmap);
-			else {
+			} else {
 				proximo = rand()%n;
 				
 				if (proximo < asteristico)
@@ -274,22 +274,20 @@ void createRandomMap () {
 					else
 						caractere = '*';
 
-					fputc(caractere,fpmap);
-
 					contador=0;
 				}
-				else
-					fputc(caractere,fpmap);
+				fputc(caractere,fpmap);
 		
 				anterior= caractere;
 			}
 		}
-
 		fputc('\n', fpmap);
 		anterior = '*'; // "zera o anterior"
 	}
 
 	fclose(fpmap);
+
+	return map_num;
 }
 
 

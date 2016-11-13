@@ -189,7 +189,8 @@ void initClients () {
 		clients[id].max_hp = PLAYER_HP;
 		clients[id].atk = PLAYER_ATK;
 		clients[id].def = PLAYER_DEF;
-		clients[id].sprite = id + '0';
+		clients[id].sprite = '^';
+		//clients[id].sprite = id + '0';
 	}
 }
 
@@ -224,7 +225,7 @@ void monsterMove () {
 	srand(time(NULL));
 
 	for (i = 0; i < map.qnt_monsters; i++) {
-		if (monsters[i].hp > 0) {
+		if (monsters[i].hp > 0 && !monsters[i].fight) {
 			chance = rand()%101;
 			chance /= 100;
 	
