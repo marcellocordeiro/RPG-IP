@@ -43,33 +43,23 @@
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10
 
-#define MAX_HP 150
+#define PLAYER_HP 100 // player lvl 1
+#define PLAYER_ATK 20
+#define PLAYER_DEF 10
 
-#define VIDA_1 50 // monstro lvl 1
-#define ATK_1 10
-#define DEF_1 5
+#define MONSTER_HP 50 // monstro lvl 1
+#define MONSTER_ATK 10
+#define MONSTER_DEF 5
 
 struct clientInfo {
 	int mapa;
 	char nome[NAME_SIZE];
 };
 
-/*
-struct client_data {
-	int x, y;
-	// int informações do game, hp, ataque, defesa, pontos...;
-	int vida, vida_max, ataque, defesa, turn;
-	int sockid, fight, whofight;
-	char nome[NAME_SIZE];
-	char sprite;
-	int ismonster;
-};
-*/
-
 struct player_data { // MUDAR NOME!! (ainda?)
 	int x, y;
 	int ismonster;
-	int hp, max_hp, ataque, defesa, turn; // int informações do game, hp, ataque, defesa, pontos...
+	int hp, max_hp, atk, def, turn; // int informações do game, hp, ataque, defesa, pontos...
 	int sockid, fight, whofight;
 	char nome[NAME_SIZE];
 	char sprite;

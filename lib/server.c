@@ -1,9 +1,6 @@
 #include "server.h"
 
-#define atkteste 20 // para testes!!
-#define defteste 10
-
-upd_msg buildUpd (int id, int ismonster) {
+upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a partir de uma struct de player/monstro
 	upd_msg temp;
 
 	if (!ismonster) {
@@ -15,7 +12,6 @@ upd_msg buildUpd (int id, int ismonster) {
 		temp.fight = clients[id].fight;
 		temp.whofight = clients[id].whofight;
 		temp.ismonster = 0;
-		//temp.dir = ??;
 		temp.sprite = clients[id].sprite;
 	}
 	else {
@@ -27,69 +23,88 @@ upd_msg buildUpd (int id, int ismonster) {
 		temp.fight = monsters[id].fight;
 		temp.whofight = monsters[id].whofight;
 		temp.ismonster = 1;
-		//temp.dir = ??;
 		temp.sprite = monsters[id].sprite;
 	}
 
 	return temp;
 }
 
-int dmg (int atk, int def) {
-	return atk > def ? atk : atk/2; // fazer!!
+int dmg (int atk, int def) { // fazer!!
+	return atk > def ? atk : atk/2;
 }
 
-// falta ver como vai printar a tela de batalha e atualizar os stats --> yea
 void battleUpd (int id, char move) {
-	int opponent = clients[id].whofight;
+	int opponent = clients[id].whofight; // id do oponente é o whofight do player que atacou
 
-	if (clients[id].fight == 1) {
-		clients[id].hp -= dmg(defteste, atkteste);
-		monsters[opponent].hp -= dmg(atkteste, defteste);
+	if (clients[id].fight == 1) { // se a batalha for contra monstro
+		clients[id].hp -= dmg(monsters[opponent].atk, clients[id].def); // dano calculado a partir do ataque do monstro e da defesa do player
+		monsters[opponent].hp -= dmg(clients[id].atk, monsters[opponent].def); // dano calculado a partir do ataque do player e da defesa do monstro
 
-		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) {
+		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) { // se alguém morreu, a batalha termina
 			clients[id].fight = 0;
 			monsters[opponent].fight = 0;
+
+			if (clients[id].hp <= 0)
+				disconnectClient(id);
 		}
 
-		map_changes[pos_broad] = buildUpd(id, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 		
-		map_changes[pos_broad] = buildUpd(opponent, 1);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(opponent, 1); // broadcast dos novos stats do monstro
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 	}
-	else {
-		/*if (clients[id].turn && move == 'a') {
-			clients[opponent].hp -= dmg(atkteste, defteste);
-			clients[id].turn = 0;
-			clients[opponent].turn = 1;
-		}
-		else if (clients[opponent].turn && move == 'a') {
-			clients[id].hp -= dmg(defteste, atkteste);
-			clients[opponent].turn = 0;
-			clients[id].turn = 1;
-		}
-		else
-			return;
-		*/
-		clients[opponent].hp -= dmg(atkteste, defteste);
-		clients[id].turn = 0;
-		clients[opponent].turn = 1;
+	else { // se a batalha for contra player
+		clients[opponent].hp -= dmg(clients[id].atk, clients[opponent].def); // dano calculado a partir do ataque do player que atacou e defesa do outro player
+		clients[id].turn = 0; 
+		clients[opponent].turn = 1; // passa o turno para o oponente
 
-		if (clients[id].hp <= 0 || clients[opponent].hp <= 0) {
+		if (clients[id].hp <= 0 || clients[opponent].hp <= 0) { // se alguém morreu, a batalha termina
 			clients[id].fight = 0;
 			clients[opponent].fight = 0;
+
+			if (clients[id].hp <= 0) {
+				map_changes[pos_broad].type = 4;
+				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+				disconnectClient(id);
+			}
+			else {
+				map_changes[pos_broad].type = 4;
+				sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
+				disconnectClient(opponent);
+			}
 		}
 
-		map_changes[pos_broad] = buildUpd(id, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 		
-		map_changes[pos_broad] = buildUpd(opponent, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(opponent, 0); // broadcast dos novos stats do oponente
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 	}
+}
+
+int findPlayer (int x, int y) {
+	int i;
+
+	for (i = 0; i < MAX_CLIENTS; i++)
+		if ((x == clients[i].x && y == clients[i].y) && clients[i].sockid > 0)
+			return i;
+
+	return -1;
+}
+
+int findMonster (int x, int y) {
+	int i;
+
+	for (i = 0; i < map.qnt_monsters; i++)
+		if ((x == monsters[i].x && y == monsters[i].y) && monsters[i].hp > 0)
+			return i;
+
+	return -1;
 }
 
 int islegal (int x, int y, char sprite, char c) {
@@ -123,26 +138,6 @@ int islegal (int x, int y, char sprite, char c) {
 	return 1;
 }
 
-int findPlayer (int x, int y) {
-	int i;
-
-	for (i = 0; i < MAX_CLIENTS; i++)
-		if ((x == clients[i].x && y == clients[i].y) && clients[i].sockid > 0)
-			return i;
-
-	return -1;
-}
-
-int findMonster (int x, int y) {
-	int i;
-
-	for (i = 0; i < map.qnt_monsters; i++)
-		if ((x == monsters[i].x && y == monsters[i].y) && monsters[i].hp > 0)
-			return i;
-
-	return -1;
-}
-
 int islegalMonster (int x, int y, char c) {
 	switch (c) {
 		case up:
@@ -174,104 +169,53 @@ int islegalMonster (int x, int y, char c) {
 }
 
 // colocando os jogadores no mapa, aleatoriamente
-void initClients() {
-	int i, k, j = 0, colisao;
+void initClients () {
+	int id;
 	int qnt_players = clients_connected; // quantidade de jogadores a serem criados
 	int posX, posY;
+	
+	for (id = 0; id < qnt_players; id++) {
+		do {
+			// gerar ints aleatorias para X e Y
+			posX = rand() % (map.height - 2) + 1;
+			posY = rand() % (map.width - 2) + 1;
+		} while (findPlayer(posX, posY) != -1 || map.map[posX][posY] == '*');
 
-	do {
-		colisao = 0;
-
-		// gerar ints aleatorias para X e Y
-		posX = rand() % (map.height - 2) + 1;
-		posY = rand() % (map.width - 2) + 1;
-
-		//printf("posX = %d  posY = %d\n", posX, posY);
-		
-		// conferir se colide com player no mapa
-		for (i = 0; i < (clients_connected - qnt_players); i++) {
-			if (posX == clients[i].x && posY == clients[i].y)
-				colisao = 1;
-		}
-
-		//printf("colisao player: %d\n", colisao);
-
-	/*	// conferir se tem uma arvore nessa posicao
-		if (map.map[posX][posY] == '*')
-			colisao = 1;
-	*/
-		//printf("colisao *: %d\n", colisao);
-
-		// inicializar o jogador no vetor monster[qnt_monsters]!
-		if (colisao == 0) {
-			clients[j].x = posX;
-			clients[j].y = posY;
-			clients[j].ismonster = 0;
-			clients[j].hp = MAX_HP;
-			clients[j].max_hp = MAX_HP;
-			//clients[j].ataque = ;
-			//clients[j].defesa = ;
-			clients[j].fight = 0;
-			clients[j].sprite = '^';
-			//clients[j].color = color(j); - > SE DEFINIR AQUI, TERIA QUE CRIAR UM NOVO CAMPO NA MSG DE UPDT P/ PASSAR P/ OS CLIENTS
-			j++;
-			qnt_players--; // um jogador a menos para ser criado
-		}
-	}while (colisao == 1 || qnt_players > 0);
+		// inicializar o jogador no vetor clients!
+		clients[id].x = posX;
+		clients[id].y = posY;
+		clients[id].ismonster = 0;
+		clients[id].hp = PLAYER_HP;
+		clients[id].max_hp = PLAYER_HP;
+		clients[id].atk = PLAYER_ATK;
+		clients[id].def = PLAYER_DEF;
+		clients[id].sprite = id + '0';
+	}
 }
 
-// colocando os montros no mapa, aleatoriamente
-void initMonsters() {
-	int i, k, j = 0, colisao;
+// colocando os monstros no mapa, aleatoriamente
+void initMonsters () {
+	int id;
 	int qnt_monsters = map.qnt_monsters; // quantidade de monstros a serem criados
 	int posX, posY;
 
-	do {
-		colisao = 0;
+	for (id = 0; id < qnt_monsters; id++) {
+		do {
+			// gerar ints aleatorias para X e Y
+			posX = rand()%(map.height - 2) + 1;
+			posY = rand()%(map.width - 2) + 1;
+		} while (findPlayer(posX, posY) != -1 || findMonster(posX, posY) != -1 || map.map[posX][posY] == '*');
 
-		// gerar ints aleatorias para X e Y
-		posX = rand() % (map.height - 2) + 1;
-		posY = rand() % (map.width - 2) + 1;
-
-		//printf("posX = %d  posY = %d\n", posX, posY);
-		
-		// conferir se colide com player no mapa
-		for (i = 0; i < clients_connected; i++) {
-			if (posX == clients[i].x && posY == clients[i].y)
-				colisao = 1;
-		}
-
-		//printf("colisao client: %d\n", colisao);
-
-		// conferir se colide com monstro no mapa
-		for (i = 0; i < (map.qnt_monsters - qnt_monsters); i++) {
-			if (posX == monsters[i].x && posY == monsters[i].y)
-				colisao = 1;
-		}
-
-		//printf("colisao monster: %d\n", colisao);
-
-		// conferir se tem uma arvore nessa posicao
-		if (map.map[posX][posY] == '*')
-			colisao = 1;
-
-		//printf("colisao *: %d\n", colisao);
-
-		// inicializar o monstro no vetor monster[qnt_monsters]!
-		if (colisao == 0) {
-			monsters[j].x = posX;
-			monsters[j].y = posY;
-			monsters[j].ismonster = 1;
-			monsters[j].hp = VIDA_1;
-			monsters[j].max_hp = VIDA_1;
-			monsters[j].ataque = ATK_1;
-			monsters[j].defesa = DEF_1;
-			monsters[j].fight = 0;
-			monsters[j].sprite = 'm'; // chefoes devem ter sprite maiusculo (M)
-			j++;
-			qnt_monsters--; // um monstro a menos para ser criado
-		}
-	}while (colisao == 1 || qnt_monsters > 0);
+		// inicializar o jogador no vetor monsters!
+		monsters[id].x = posX;
+		monsters[id].y = posY;
+		monsters[id].ismonster = 1;
+		monsters[id].hp = MONSTER_HP;
+		monsters[id].max_hp = MONSTER_HP;
+		monsters[id].atk = MONSTER_ATK;
+		monsters[id].def = MONSTER_DEF;
+		monsters[id].sprite = 'm';
+	}
 }
 
 void monsterMove () {
@@ -286,32 +230,23 @@ void monsterMove () {
 	
 			// chances iguais de escolher a direcao
 			if (chance < 0.25 && islegalMonster(monsters[i].x, monsters[i].y, up)) {
-				(monsters[i].x)--;
+				monsters[i].x--;
 				flag = 1;
 			}
 			else if (chance < 0.5 && islegalMonster(monsters[i].x, monsters[i].y, down)) {
-				(monsters[i].x)++;
+				monsters[i].x++;
 				flag = 1;
 			}
 			else if (chance < 0.75 && islegalMonster(monsters[i].x, monsters[i].y, left)) {
-				(monsters[i].y)--;
+				monsters[i].y--;
 				flag = 1;
 			}
 			else if (chance <= 1.0 && islegalMonster(monsters[i].x, monsters[i].y, right)) {
-				(monsters[i].y)++;
+				monsters[i].y++;
 				flag = 1;
 			}
 	
-			if (flag) {/*
-				map_changes[pos_broad].type = 0;
-				map_changes[pos_broad].x = monsters[i].x;
-				map_changes[pos_broad].y = monsters[i].y;
-				map_changes[pos_broad].id = i;
-				map_changes[pos_broad].dir = -10;
-				map_changes[pos_broad].sprite = monsters[i].sprite;
-				map_changes[pos_broad].ismonster = 1;
-				pos_broad++;*/
-
+			if (flag) {
 				map_changes[pos_broad] = buildUpd(i, 1);
 				map_changes[pos_broad].type = 0;
 				pos_broad++;

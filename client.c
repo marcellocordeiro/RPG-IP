@@ -10,10 +10,9 @@ int main () {
 	int i, error = 0, start = 0, playing = 1;
 	int id = -1;
 
-	long int newtime;
-	long int oldtime;
+	long int newtime, oldtime;
 
-	/// mapa
+	// mapa
 	FILE *fpmap; // ponteiro para o arquivo do mapa
 	char map_name[16];
 
@@ -39,12 +38,16 @@ int main () {
 			sendMovToServer(mov);
 	}
 
+	// formatação e mensagem de start game
 	system("clear");
+
 	for (i = 0; i < 13; i++) 
 		printf("\n");
 	for (i = 0; i < 4; i++)
 		printf("\t");
+
 	printf(" %s\n", msg);
+	
 	for (i = 0; i < 3; i++)
 		printf("\t");
 	for (i = 0; i < 13; i++) 
@@ -101,7 +104,7 @@ int main () {
 					if (!players[id].fight) {
 						system("clear");
 						drawall();
-						printf("%splayer %d%s; in battle: %d\n", players[id].color, id, KNRM, players[id].fight);
+						printf("%splayer %d%s\n", players[id].color, id, KNRM);
 						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
 					}
 					else { // coloquei a batalha aqui só para testes, mas podemos passar para o case 1, se preferir
@@ -114,23 +117,12 @@ int main () {
 					}
 					break;
 
-				case 1: /*// em batalha
-					if (!upd.ismonster) { // atualizando os stats dos players
-						players[upd.id].hp = upd.hp;
-						players[upd.id].fight = upd.fight;
-						players[upd.id].whofight = upd.whofight;
-					}
+				case 1: // em batalha
 
-					if (upd.ismonster) { // atualizando os stats dos monstros
-						monsters[upd.id].hp = upd.hp;
-						monsters[upd.id].fight = upd.fight;
-						monsters[upd.id].whofight = upd.whofight;
-					}
+					break;
 
-					system("clear");
-					printf("Battle\n");
-					printf("%splayer %d%s; in battle: %d; hp play: %d; hp monst: %d\n", players[id].color, id, KNRM, players[id].fight, players[id].hp, monsters[players[id].whofight].hp);
-					//delay(2);*/
+				case 4:
+					printf("Dead\n");
 
 					break;
 

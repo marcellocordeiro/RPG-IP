@@ -16,7 +16,7 @@ void delay (unsigned int secs) {
 
 char* color (int id) {
 	switch (id) {
-		case 2:
+		case 0:
 			return KBLU;
 			break;
 
@@ -24,7 +24,7 @@ char* color (int id) {
 			return KYEL;
 			break;
 
-		case 0:
+		case 2:
 			return KMAG;
 			break;
 	}
@@ -41,7 +41,7 @@ void drawall () {
 	for(i = 0; i < map.height; i++) {
 		for(j = 0; j < map.width; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
-				if(i == players[k].x && j == players[k].y) {
+				if(i == players[k].x && j == players[k].y && players[k].hp > 0) {
 					printcchar(players[k].color, players[k].sprite);
 					map.map[i][j] = ' ';
 					flag = 1;
@@ -70,17 +70,17 @@ void drawall () {
 }
 
 void drawmenus (char menu[100][100], int height, int width) {
-	int i, j, k, flag = 0;
+	int i, j, flag = 0;
 	
 	for(i = 0; i < height; i++) {
 		for(j = 0; j < width; j++) {
-			/*if (menu[i][j] != '*' && menu[i][j] != ' ')
+			if (menu[i][j] != '*' && menu[i][j] != ' ')
 				printcchar(KWHT, menu[i][j]);
 			else if ((i == 0 || j == 0) || (i == height - 1 || j == width - 1))
 				printcchar(KRED, menu[i][j]);
 			else if ((j + 1 < width && (menu[i][j] == '*' && menu[i][j + 1] == ' ')) || (i > 0 && (menu[i][j] == '*' && menu[i - 1][j] == ' ')) || (i + 1 < height && (menu[i][j] == '*' && menu[i + 1][j] == ' ')) || (j > 0 && (menu[i][j] == '*' && menu[i][j - 1] == ' ')))
 				printcchar(KBLU, menu[i][j]);
-			else*/
+			else
 				printcchar(KGRN, menu[i][j]);
 		}
 
@@ -150,13 +150,9 @@ void menu (clientInfo *info) {
 		system("clear"); // limpa o terminal
 
 		if (draw == MAIN) { // menu principal
-			//for (i = 0; i < main_height; i++)
-			//	printf("%s\n", mainmenu[i]); // mostra o menu
-			drawmenus(mainmenu, main_height, strlen(mainmenu[0]));
-
-			///////////////////////////////////////////////////
-			//printf("Lembrem-se de trocar as cores :)\n"); // pls
-			/////////////////////////////////////////////////
+			for (i = 0; i < main_height; i++)
+				printf("%s\n", mainmenu[i]); // mostra o menu
+			//drawmenus(mainmenu, main_height, strlen(mainmenu[0]));
 
 			do
 				dir = getch();
@@ -188,9 +184,9 @@ void menu (clientInfo *info) {
 			mainmenu[navm[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu
 		}
 		else if (draw == OPTIONS) { // menu de opcoes
-			//for (i = 0; i < options_height; i++)
-			//	printf("%s\n", options[i]);
-			drawmenus(options, options_height, strlen(options[0]));
+			for (i = 0; i < options_height; i++)
+				printf("%s\n", options[i]);
+			//drawmenus(options, options_height, strlen(options[0]));
 
 			do
 				dir = getch();

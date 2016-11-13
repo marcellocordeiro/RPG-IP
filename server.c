@@ -43,8 +43,7 @@ void MyClientConnected (int id, clientInfo startInfo) {
 		map_changes[pos_broad].id = startInfo.mapa;
 		pos_broad++;
 
-		strcpy(map_name, "data/mapa");
-		sprintf(map_name, "%s%d.txt", map_name, startInfo.mapa);
+		sprintf(map_name, "data/mapa%d.txt", startInfo.mapa);
 
 		fpmap = fopen(map_name, "rt");
 			if (fpmap == NULL) {
@@ -72,13 +71,13 @@ void MyClientMoved (int id, mov_msg mov) {
 		return;
 	}
 
-	if (clients[id].fight) {
+	if (clients[id].fight) { // update da batalha
 		if (clients[id].turn)
 			battleUpd(id, mov.msg);
 		return;
 	}
 
-	if (islegal(clients[id].x, clients[id].y, clients[id].sprite, mov.msg) == 0)
+	if (islegal(clients[id].x, clients[id].y, clients[id].sprite, mov.msg) == 0) // verificar se o movimento é legal
 		return;
 
 	// update dos players
@@ -97,8 +96,8 @@ void MyClientMoved (int id, mov_msg mov) {
 			if (found == -1 && found2 == -1)
 				if (clients[id].sprite == '^')
 					clients[id].x--;
-	
-			clients[id].sprite = '^';
+				else
+					clients[id].sprite = '^';
 			break;
 
 		case down:
@@ -115,8 +114,8 @@ void MyClientMoved (int id, mov_msg mov) {
 			if (found == -1 && found2 == -1)
 				if (clients[id].sprite == 'v')
 					clients[id].x++;
-	
-			clients[id].sprite = 'v';
+				else
+					clients[id].sprite = 'v';
 			break;
 
 		case left:
@@ -133,8 +132,8 @@ void MyClientMoved (int id, mov_msg mov) {
 			if (found == -1 && found2 == -1)
 				if (clients[id].sprite == '<')
 					clients[id].y--;
-	
-			clients[id].sprite = '<';
+				else
+					clients[id].sprite = '<';
 			break;
 
 		case right:
@@ -151,69 +150,70 @@ void MyClientMoved (int id, mov_msg mov) {
 			if (found == -1 && found2 == -1)
 				if (clients[id].sprite == '>')
 					clients[id].y++;
-			
-			clients[id].sprite = '>';
+				else
+					clients[id].sprite = '>';
 			break;
 	}
 
-	map.map[clients[id].x][clients[id].y] = ' ';
+	if (map.map[clients[id].x][clients[id].y] == '*') { // player comeu uma árvore
+		clients[id].hp += 10; // aumenta o hp em 10
+		map.map[clients[id].x][clients[id].y] = ' '; // deleta a árvore do mapa
 
-	if (found != -1) { // flag de batalha
+		if (clients[id].hp > clients[id].max_hp) // não deixa o hp passar de max_hp
+			clients[id].hp = clients[id].max_hp;
+	}
+
+	if (found != -1) { // encontrou um monstro
 		clients[id].fight = 1;
 		clients[id].whofight = found; // id do monstro!!! --> sim!
-		clients[id].turn = 1;
+		clients[id].turn = 1; // o turno é sempre do player
 
 		monsters[found].fight = 1;
-		monsters[found].whofight = id;
-		monsters[found].turn = 0;
+		monsters[found].whofight = id; // id do player
 
-		map_changes[pos_broad] = buildUpd(id, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(id, 0); // broadcast das modificações
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 
-		map_changes[pos_broad] = buildUpd(found, 1);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(found, 1); // broadcast das modificações
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 	}
-	else if (found2 != -1) {
+	else if (found2 != -1) { // encontrou outro player
 		clients[id].fight = 2;
-		clients[id].whofight = found2; // id do monstro!!! --> sim!
-		clients[id].turn = 1;
+		clients[id].whofight = found2; // id do oponente
+		clients[id].turn = 1; // o primeiro ataque é de quem começou a batalha
 
 		clients[found2].fight = 2;
-		clients[found2].whofight = id;
+		clients[found2].whofight = id; // id do player que iniciou a batalha
 		clients[found2].turn = 0;
 
-		map_changes[pos_broad] = buildUpd(id, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(id, 0); // broadcast das modificações
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 
-		map_changes[pos_broad] = buildUpd(found2, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(found2, 0); // broadcast das modificações
+		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 	}
 	else {
-		map_changes[pos_broad] = buildUpd(id, 0);
-		map_changes[pos_broad].type = 0;
+		map_changes[pos_broad] = buildUpd(id, 0); // broadcast padrão das modificações
+		map_changes[pos_broad].type = 0; // update de mapa
 		pos_broad++;
 	}
 }
 
 void startGame(){
 	int id;
-	long int oldtime;
 
 	printf("Client 0 confirmed, the game will start now...\n");
 	broadcastTxt("O JOGO VAI COMEÇAR", -1); // avisar para os clientes que o jogo vai começar
 	game_status = 2;
 
-	oldtime = ((long int) time(NULL));
-	srand(time(NULL));
-
 	// status inicial dos clientes
 	initClients();
 
-	for (id = 0; id < clients_connected; id++) {
+	for (id = 0; id < clients_connected; id++) { // broadcast dos stats dos players
 		map_changes[pos_broad] = buildUpd(id, 0);
 		map_changes[pos_broad].type = 7;
 		map_changes[pos_broad].whofight = clients_connected; // passar a quantidade de players
@@ -224,7 +224,7 @@ void startGame(){
 	// status inicial dos monstros
 	initMonsters();
 
-	for (id = 0; id < map.qnt_monsters; id++) {
+	for (id = 0; id < map.qnt_monsters; id++) { // broadcast dos stats dos monstros
 		map_changes[pos_broad] = buildUpd(id, 1);
 		map_changes[pos_broad].type = 7;
 		map_changes[pos_broad].dir = -2;
