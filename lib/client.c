@@ -213,7 +213,7 @@ void menu (clientInfo *info) {
 			}
 			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
 				printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
-				scanf("%d %d %d", &height, &width, &monstros);
+				scanf("%d %d %d", &height, &width, &qnt_monsters);
 				(*info).mapa = createRandomMap(height, width, qnt_monsters);
 			}
 			else if (dir == right && cursor == 4) { // voltar para o menu principal
