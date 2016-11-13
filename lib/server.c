@@ -46,6 +46,8 @@ void battleUpd (int id, char move) {
 
 			if (clients[id].hp <= 0)
 				disconnectClient(id);
+
+			qntTotal--;
 		}
 
 		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
@@ -75,6 +77,8 @@ void battleUpd (int id, char move) {
 				sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 				disconnectClient(opponent);
 			}
+
+			qntTotal--;
 		}
 
 		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player

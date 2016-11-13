@@ -13,7 +13,7 @@ struct sockaddr_in server_address;
 
 
 /// FUNÇÕES
-void delay (unsigned int secs);
+void delay(unsigned int secs);
 char* color(int id);
 void printcchar(char *color,char c);
 void drawall();
@@ -21,7 +21,7 @@ void drawmenus(char menu[100][100], int height, int width);
 int islegal(int x, int y, char sprite, char c);
 int mod(int x, int m);
 void menu(clientInfo *info);
-int createRandomMap(int height, int width, int qnt_monters);
+int createRandomMap();
 
 int sendInfoToServer(clientInfo info);
 void connectToServer(const char *server_IP);

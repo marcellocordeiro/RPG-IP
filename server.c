@@ -53,6 +53,7 @@ void MyClientConnected (int id, clientInfo startInfo) {
 			}
 
 		fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
+		qntTotal += map.qnt_monsters;
 
 		for(i = 0; i < map.height; i++)
 			fscanf(fpmap, " %[^\n]", map.map[i]);
@@ -71,9 +72,14 @@ void MyClientMoved (int id, mov_msg mov) {
 		return;
 	}
 
-	if (clients[id].fight) { // update da batalha
-		if (clients[id].turn)
-			battleUpd(id, mov.msg);
+	if (clients[id].fight && clients[id].turn) { // update da batalha
+		battleUpd(id, mov.msg);
+
+		if (qntTotal == 1) {
+			map_changes[pos_broad].type = 5; // mudar para 1?
+			sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+		}
+
 		return;
 	}
 
@@ -205,6 +211,8 @@ void MyClientMoved (int id, mov_msg mov) {
 
 void startGame(){
 	int id;
+
+	qntTotal += clients_connected;
 
 	printf("Client 0 confirmed, the game will start now...\n");
 	broadcastTxt("O JOGO VAI COMEÇAR", -1); // avisar para os clientes que o jogo vai começar

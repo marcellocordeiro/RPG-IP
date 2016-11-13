@@ -12,9 +12,45 @@ int main () {
 
 	long int newtime, oldtime;
 
-	// mapa
+	char escolha;
+
+	/// mapa
 	FILE *fpmap; // ponteiro para o arquivo do mapa
 	char map_name[16];
+
+	/// tela de batalha
+	FILE *fpbat;
+	char battle[26][102];
+
+	// leitura da tela de batalha
+	fpbat = fopen("data/fight_frame.txt", "rt");
+	if (fpbat == NULL) 
+		printf("ERRO AO ABRIR O ARQUIVO\n");
+	for (i = 0; i < 26; i++) 
+		fscanf(fpbat, " %[^\n]", battle[i]);
+
+	/// tela de game over - lose
+	FILE *fplose;
+	char lose[28][81];
+
+	// leitura da tela de game over
+	fplose = fopen("data/lose_frame.txt", "rt");
+	if (fplose == NULL) 
+		printf("ERRO AO ABRIR O ARQUIVO\n");
+	for (i = 0; i < 28; i++) 
+		fscanf(fplose, " %[^\n]", lose[i]);
+
+	/// tela de game over - ein
+	FILE *fpwin;
+	char win[28][81];
+
+	// leitura da tela de game over
+	fpwin = fopen("data/win_frame.txt", "rt");
+	if (fpwin == NULL) 
+		printf("ERRO AO ABRIR O ARQUIVO\n");
+	for (i = 0; i < 28; i++) 
+		fscanf(fpwin, " %[^\n]", win[i]);
+
 
 	menu(&info);
 
@@ -101,18 +137,30 @@ int main () {
 					system("clear");
 					if (!players[id].fight) {
 						drawall();
-						printf("%splayer %d%s\n", players[id].color, id, KNRM);
-						printf("%sHP: %d%s\n", players[id].color, players[id].hp, KNRM);
-						//printf("%sSCORE: %d%s\n", players[id].color, , KNRM);
-						printf("%sATK: %d%s\n", players[id].color, players[id].atk, KNRM);
-						printf("%sDEF: %d%s\n", players[id].color, players[id].def, KNRM);
-					}
-					else { // coloquei a batalha aqui só para testes, mas podemos passar para o case 1, se preferir
-						printf("Battle\n");
-						if (players[id].fight == 1)
-							printf("%splayer %d%s; hp player1: %d; hp monster: %d\n", players[id].color, id, KNRM, players[id].hp, monsters[players[id].whofight].hp);
-						else
-							printf("%splayer %d%s; hp player1: %d; hp player2: %d\n", players[id].color, id, KNRM, players[id].hp, players[players[id].whofight].hp);
+						printf("%splayer %d\n", players[id].color, id);
+						printf("HP:\t%d\n", players[id].hp);
+						//printf("SCORE:\t%d\n",);
+						printf("ATK:\t%d\n",players[id].atk);
+						printf("DEF:\t%d%s\n", players[id].def, KNRM);
+					} else { // coloquei a batalha aqui só para testes, mas podemos passar para o case 1, se preferir
+						for (i = 0; i < 26; i++)
+							printf("%s\n", battle[i]);
+
+						printf("%splayer %d\n", players[id].color, id);
+						printf("HP:\t%d\n", players[id].hp);
+						printf("ATK:\t%d\n", players[id].atk);
+						printf("DEF:\t%d%s\n\n", players[id].def, KNRM);
+						if (players[id].fight == 1) {
+							printf("%smonster\n", monsters[players[id].whofight].color);
+							printf("HP:\t%d\n", monsters[players[id].whofight].hp);
+							printf("ATK:\t%d\n", monsters[players[id].whofight].atk);
+							printf("DEF:\t%d%s\n\n", monsters[players[id].whofight].def, KNRM);
+						} else {
+							printf("%splayer %d\n", players[players[id].whofight].color, players[id].whofight);
+							printf("HP:\t%d\n", players[players[id].whofight].hp);
+							printf("ATK:\t%d\n", players[players[id].whofight].atk);
+							printf("DEF:\t%d%s\n\n", players[players[id].whofight].def, KNRM);
+						}
 					}
 					break;
 
@@ -120,8 +168,41 @@ int main () {
 
 					break;
 
-				case 4:
-					printf("Dead\n");
+				case 4: // lose
+					system("clear");
+					for (i = 0; i < 28; i++)
+						printf("%s\n", lose[i]);
+					do {
+						escolha = getch();
+
+						switch (escolha) {
+							case 'h':
+
+								break;
+							case 'q':
+								exit(1);
+								break;
+						}
+					} while (escolha != 't' && escolha != 'q');
+
+					break;
+
+				case 5: // win
+					system("clear");
+					for (i = 0; i < 28; i++)
+						printf("%s\n", win[i]);
+					do {
+						escolha = getch();
+
+						switch (escolha) {
+							case 'h':
+
+								break;
+							case 'q':
+								exit(1);
+								break;
+						}
+					} while (escolha != 't' && escolha != 'q');
 
 					break;
 
@@ -136,7 +217,7 @@ int main () {
 						exit(1);
 					}
 					fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
-
+					
 					for(i = 0; i < map.height; i++)
 						fscanf(fpmap, " %[^\n]", map.map[i]);
 
@@ -150,7 +231,7 @@ int main () {
 				case 7:
 					if (upd.dir == -1 && upd.id == 0) { // informações iniciais
 						qnt_clients = upd.whofight;
-
+						
 						for (i = 0; i < qnt_clients; i++)
 							players[i].color = color(i);
 					}
@@ -160,8 +241,7 @@ int main () {
 						players[upd.id].y = upd.y;
 						players[upd.id].hp = upd.hp;
 						players[upd.id].sprite = upd.sprite;
-					}
-					else {
+					} else {
 						monsters[upd.id].x = upd.x;
 						monsters[upd.id].y = upd.y;
 						monsters[upd.id].hp = upd.hp;

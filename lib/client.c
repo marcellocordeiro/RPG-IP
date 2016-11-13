@@ -1,7 +1,7 @@
 #include "client.h"
 
-#define asteristico 1// esses números são usados para proporção , exemplo asteristico 1 de 5 =20%
-#define espaco 4 // espaco 4 de 5= 80%
+#define asteristico 1// esses números são usados para proporção , exemplo asteristico 1 de 5 = 20%
+#define espaco 4 // espaco 4 de 5 = 80%
 #define maxrepetidos 5//numero max de vezes que um caractere pode ser repetido em sequncia
 
 enum {
@@ -132,7 +132,6 @@ void menu (clientInfo *info) {
 	char mainmenu[100][100], options[100][100];
 	char navm[] = {menu_positions}, navop[] = {options_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
-	int height, width, qnt_monsters;
 
 	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
 	strcpy((*info).nome, "default"); // nome padrao
@@ -212,9 +211,7 @@ void menu (clientInfo *info) {
 				scanf("%s", ip);
 			}
 			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
-				printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
-				scanf("%d %d %d", &height, &width, &qnt_monsters);
-				(*info).mapa = createRandomMap(height, width, qnt_monsters);
+				(*info).mapa = createRandomMap();
 			}
 			else if (dir == right && cursor == 4) { // voltar para o menu principal
 				cursor = 0;
@@ -227,13 +224,18 @@ void menu (clientInfo *info) {
 	}
 }
 
-int createRandomMap (int height, int width, int qnt_monsters) {
-	FILE *fpmap;// = fopen("mapaaleatorio.txt", "w");
+// AS VEZES FUNCIONA, AS VEZES NÃO!!!!!
+int createRandomMap () {
+	FILE *fpmap;
 	int i, j, proximo = 1, contador = 0;
 	char caractere, anterior='*';
 	int map_num;
 	int n;
 	char map_name[16];
+	int height, width, qnt_monsters;
+
+	printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
+	scanf("%d %d %d", &height, &width, &qnt_monsters);
 
 	for (i = 1; i == 1 || fpmap != NULL; i++) { // procura o primeiro numero de mapa disponivel
 		if (fpmap != NULL) // se o anterior já existia, fecha o arquivo

@@ -11,6 +11,8 @@ int clients_connected; // quantidade de clientes connectados
 
 player_data monsters[MAX_MONSTERS];
 
+int qntTotal; // qnt de clientes + qnt de monstros
+
 int game_status;
 
 /* 
