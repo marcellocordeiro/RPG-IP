@@ -248,16 +248,15 @@ void menu (clientInfo *info) {
 
 // AS VEZES FUNCIONA, AS VEZES NÃO!!!!! --> consertado (?)
 void createRandomMap (clientInfo *info) {
-	srand(time(NULL));
-	
-	FILE *fpmap;// = fopen("mapaaleatorio.txt", "w");
-	int width, height, qnt_monsters; // evitar de não entrarem monstros
+	FILE *fpmap;
 	int i, j, proximo = 1, contador = 0;
 	char caractere, anterior='*';
-
+	int map_num;
 	int n;
-
 	char map_name[16];
+	int height, width, qnt_monsters;
+
+	srand(time(NULL));
 
 	printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
 	scanf("%d %d %d", &height, &width, &qnt_monsters);
@@ -272,8 +271,10 @@ void createRandomMap (clientInfo *info) {
 	}
 
 	fpmap = fopen(map_name, "w"); // abre o mapa com o número encontrado
+	if (fpmap == NULL)
+		printf("ERRO AO ABRIR O ARQUIVO\n");
 
-	n = asteristico + espaco; // recebe a soma de asteristico + espaco, como numa proporção 
+	n = asteristico + espaco; // recebe a soma de asteristico + espaco ,como numa proporção 
 
 	fprintf(fpmap, "%d %d %d\n", height, width, qnt_monsters);
 
@@ -300,17 +301,13 @@ void createRandomMap (clientInfo *info) {
 					else
 						caractere = '*';
 
-					fputc(caractere,fpmap);
-
 					contador = 0;
 				}
-				else
-					fputc(caractere,fpmap);
+				fputc(caractere,fpmap);
 		
-				anterior= caractere;
+				anterior = caractere;
 			}
 		}
-
 		fputc('\n', fpmap);
 		anterior = '*'; // "zera o anterior"
 	}
