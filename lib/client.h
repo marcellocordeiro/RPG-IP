@@ -13,6 +13,7 @@ struct sockaddr_in server_address;
 
 
 /// FUNÇÕES
+void readUpd(upd_msg upd);
 void delay(unsigned int secs);
 char* color(int id);
 void printcchar(char *color,char c);

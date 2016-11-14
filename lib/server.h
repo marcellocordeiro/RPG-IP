@@ -11,7 +11,7 @@ int clients_connected; // quantidade de clientes connectados
 
 player_data monsters[MAX_MONSTERS];
 
-int qntTotal; // qnt de clientes + qnt de monstros
+int qnt_total; // qnt de clientes + qnt de monstros
 
 int game_status;
 
@@ -38,7 +38,7 @@ void MyBroadcast(char *s); // um exemplo de como mandar uma mensagem para todos 
 
 void (*clientMoved)(int, mov_msg);
 void (*clientConnected)(int, clientInfo);
-void (*clientDesconnected)(int);
+void (*clientDisconnected)(int);
 void (*clientConfirmed)(void);
 
 upd_msg buildUpd(int id, int ismonster);

@@ -9,6 +9,28 @@ enum {
 	OPTIONS
 };
 
+void readUpd (upd_msg upd) {
+	if (!upd.ismonster) {
+		players[upd.id].x = upd.x;
+		players[upd.id].y = upd.y;
+		players[upd.id].hp = upd.hp;
+		players[upd.id].atk = upd.atk;
+		players[upd.id].def = upd.def;
+		players[upd.id].fight = upd.fight;
+		players[upd.id].whofight = upd.whofight;
+		players[upd.id].sprite = upd.sprite;
+	}
+	else {
+		monsters[upd.id].x = upd.x;
+		monsters[upd.id].y = upd.y;
+		monsters[upd.id].hp = upd.hp;
+		monsters[upd.id].atk = upd.atk;
+		monsters[upd.id].def = upd.def;
+		monsters[upd.id].fight = upd.fight;
+		monsters[upd.id].sprite = upd.sprite;
+	}
+}
+
 void delay (unsigned int secs) {
     secs += time(0);
     while (time(0) < secs);

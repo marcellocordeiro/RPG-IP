@@ -53,7 +53,6 @@ void MyClientConnected (int id, clientInfo startInfo) {
 			}
 
 		fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
-		qntTotal += map.qnt_monsters;
 
 		for(i = 0; i < map.height; i++)
 			fscanf(fpmap, " %[^\n]", map.map[i]);
@@ -75,7 +74,7 @@ void MyClientMoved (int id, mov_msg mov) {
 	if (clients[id].fight && clients[id].turn) { // update da batalha
 		battleUpd(id, mov.msg);
 
-		if (qntTotal == 1) {
+		if (qnt_total == 1) {
 			map_changes[pos_broad].type = 5; // mudar para 1?
 			sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 		}
@@ -211,11 +210,13 @@ void MyClientMoved (int id, mov_msg mov) {
 
 void startGame(){
 	int id;
+	char startMsg[40];
 
-	qntTotal += clients_connected;
+	qnt_total = clients_connected + map.qnt_monsters;
+	sprintf(startMsg, "%d players conectados, começando o jogo!", clients_connected);
 
 	printf("Client 0 confirmed, the game will start now...\n");
-	broadcastTxt("O JOGO VAI COMEÇAR", -1); // avisar para os clientes que o jogo vai começar
+	broadcastTxt(startMsg, -1); // avisar para os clientes que o jogo vai começar
 	game_status = 2;
 
 	// status inicial dos clientes
@@ -224,8 +225,6 @@ void startGame(){
 	for (id = 0; id < clients_connected; id++) { // broadcast dos stats dos players
 		map_changes[pos_broad] = buildUpd(id, 0);
 		map_changes[pos_broad].type = 7;
-		map_changes[pos_broad].whofight = clients_connected; // passar a quantidade de players
-		map_changes[pos_broad].dir = -1;
 		pos_broad++;
 	}
 
@@ -235,7 +234,6 @@ void startGame(){
 	for (id = 0; id < map.qnt_monsters; id++) { // broadcast dos stats dos monstros
 		map_changes[pos_broad] = buildUpd(id, 1);
 		map_changes[pos_broad].type = 7;
-		map_changes[pos_broad].dir = -2;
 		pos_broad++;
 	}
 }

@@ -57,13 +57,13 @@ struct clientInfo {
 };
 
 struct player_data { // MUDAR NOME!! (ainda?)
+	char name[NAME_SIZE];
 	int x, y;
-	int ismonster;
 	int hp, max_hp, atk, def, turn; // int informações do game, hp, ataque, defesa, pontos...
-	int sockid, fight, whofight;
-	char nome[NAME_SIZE];
+	int fight, whofight;
 	char sprite;
 	char *color;
+	int sockid;
 };
 
 /*
@@ -88,10 +88,11 @@ struct mov_msg {
 struct upd_msg { //Mensagem de atualização do jogo
 	int type;
 	int id;
-	int x, y, hp;
-	int fight, whofight;
+	char name[NAME_SIZE];
+	int x, y;
 	int ismonster;
-	char dir;
+	int hp, atk, def;
+	int fight, whofight;
 	char sprite;
 };
 

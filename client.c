@@ -40,7 +40,7 @@ int main () {
 	for (i = 0; i < 28; i++) 
 		fscanf(fplose, " %[^\n]", lose[i]);
 
-	/// tela de game over - ein
+	/// tela de game over - win
 	FILE *fpwin;
 	char win[28][81];
 
@@ -51,17 +51,21 @@ int main () {
 	for (i = 0; i < 28; i++) 
 		fscanf(fpwin, " %[^\n]", win[i]);
 
-
 	menu(&info);
 
 	while (id == -1) // receber o id do client
 		if (readTxtFromServer(msg) > 0)
 			id = msg[0] - '0';
 
+	for (i = 0; i < qnt_clients; i++) // inicializa as cores de cada player
+		players[i].color = color(i);
+
 	while (!start) { // depois só mensagem de texto até o jogo começar
 		if (readTxtFromServer(msg) > 0) {
-			if (msg[0] == 'O')
+			if (msg[0] > '0' && msg[0] <= '9') {
+				qnt_clients = msg[0] - '0';
 				start = 1;
+			}
 			else if (msg[0] != 'o')
 				error = 1;
 		}
@@ -100,21 +104,8 @@ int main () {
 		while (readUpdFromServer(&upd) > 0) {// recebe todas mensagens
 			switch (upd.type) { // tipo de update
 				case 0: // update no mapa
-					// atualizando as posições de cada player
-					if (!upd.ismonster) {
-						players[upd.id].x = upd.x;
-						players[upd.id].y = upd.y;
-						players[upd.id].hp = upd.hp;
-						players[upd.id].fight = upd.fight;
-						players[upd.id].whofight = upd.whofight;
-						players[upd.id].sprite = upd.sprite;
-					} else { // atualizando as posições de cada monstro
-						monsters[upd.id].x = upd.x;
-						monsters[upd.id].y = upd.y;
-						monsters[upd.id].hp = upd.hp;
-						monsters[upd.id].fight = upd.fight;
-						monsters[upd.id].sprite = upd.sprite;
-					}
+					// atualizando os vetores players e monsters
+					readUpd(upd);
 
 					/*
 					for (i = 0; i < qnt_clients; i++) { // debug
@@ -172,6 +163,7 @@ int main () {
 					system("clear");
 					for (i = 0; i < 28; i++)
 						printf("%s\n", lose[i]);
+
 					do {
 						escolha = getch();
 
@@ -191,6 +183,7 @@ int main () {
 					system("clear");
 					for (i = 0; i < 28; i++)
 						printf("%s\n", win[i]);
+
 					do {
 						escolha = getch();
 
@@ -229,24 +222,8 @@ int main () {
 					break;
 
 				case 7:
-					if (upd.dir == -1 && upd.id == 0) { // informações iniciais
-						qnt_clients = upd.whofight;
-						
-						for (i = 0; i < qnt_clients; i++)
-							players[i].color = color(i);
-					}
+					readUpd(upd);
 
-					if (!upd.ismonster) {
-						players[upd.id].x = upd.x;
-						players[upd.id].y = upd.y;
-						players[upd.id].hp = upd.hp;
-						players[upd.id].sprite = upd.sprite;
-					} else {
-						monsters[upd.id].x = upd.x;
-						monsters[upd.id].y = upd.y;
-						monsters[upd.id].hp = upd.hp;
-						monsters[upd.id].sprite = upd.sprite;
-					}
 					break;
 			}
 		}
@@ -263,7 +240,7 @@ int main () {
 		}
 
 		mov.msg = getch();
-		if (((mov.msg != -1) && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) && !players[id].fight || (players[id].fight != 0 && (mov.msg == 'a' || mov.msg == 'r'))) // retorna -1 se demorou muito e nada foi digitado.
+		if (mov.msg != -1 && ((!players[id].fight && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) || (players[id].fight != 0 && (mov.msg == 'a' || mov.msg == 'r')))) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
 

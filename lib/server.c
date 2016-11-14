@@ -4,25 +4,29 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 	upd_msg temp;
 
 	if (!ismonster) {
+		temp.ismonster = 0;
 		temp.type = -1;
 		temp.id = id;
 		temp.x = clients[id].x;
 		temp.y = clients[id].y;
 		temp.hp = clients[id].hp;
+		temp.atk = clients[id].atk;
+		temp.def = clients[id].def;
 		temp.fight = clients[id].fight;
 		temp.whofight = clients[id].whofight;
-		temp.ismonster = 0;
 		temp.sprite = clients[id].sprite;
 	}
 	else {
+		temp.ismonster = 1;
 		temp.type = -1;
 		temp.id = id;
 		temp.x = monsters[id].x;
 		temp.y = monsters[id].y;
 		temp.hp = monsters[id].hp;
+		temp.atk = monsters[id].atk;
+		temp.def = monsters[id].def;
 		temp.fight = monsters[id].fight;
 		temp.whofight = monsters[id].whofight;
-		temp.ismonster = 1;
 		temp.sprite = monsters[id].sprite;
 	}
 
@@ -34,7 +38,40 @@ int dmg (int atk, int def) { // fazer!!
 }
 
 void battleUpd (int id, char move) {
+	srand(time(NULL));
 	int opponent = clients[id].whofight; // id do oponente é o whofight do player que atacou
+	int chance = rand()%101;
+
+	if (move == 'r') { // se o player tentou fugir
+		if (clients[id].fight == 1 && chance <= 70) { // 70% de chance contra monstros
+				clients[id].fight = 0;
+				monsters[opponent].fight = 0;
+
+				map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
+				map_changes[pos_broad].type = 0; // mudar para 1?
+				pos_broad++;
+		
+				map_changes[pos_broad] = buildUpd(opponent, 1); // broadcast dos novos stats do monstro
+				map_changes[pos_broad].type = 0; // mudar para 1?
+				pos_broad++;
+
+				return;
+		}
+		else if (clients[id].fight == 2 && chance <= 30) { // 30% de chance contra players
+				clients[id].fight = 0;
+				clients[opponent].fight = 0;
+
+				map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
+				map_changes[pos_broad].type = 0; // mudar para 1?
+				pos_broad++;
+		
+				map_changes[pos_broad] = buildUpd(opponent, 0); // broadcast dos novos stats do oponente
+				map_changes[pos_broad].type = 0; // mudar para 1?
+				pos_broad++;
+
+				return;
+		}
+	}
 
 	if (clients[id].fight == 1) { // se a batalha for contra monstro
 		clients[id].hp -= dmg(monsters[opponent].atk, clients[id].def); // dano calculado a partir do ataque do monstro e da defesa do player
@@ -47,7 +84,7 @@ void battleUpd (int id, char move) {
 			if (clients[id].hp <= 0)
 				disconnectClient(id);
 
-			qntTotal--;
+			qnt_total--;
 		}
 
 		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
@@ -58,7 +95,7 @@ void battleUpd (int id, char move) {
 		map_changes[pos_broad].type = 0; // mudar para 1?
 		pos_broad++;
 	}
-	else { // se a batalha for contra player
+	else if (clients[id].fight == 2) { // se a batalha for contra player
 		clients[opponent].hp -= dmg(clients[id].atk, clients[opponent].def); // dano calculado a partir do ataque do player que atacou e defesa do outro player
 		clients[id].turn = 0; 
 		clients[opponent].turn = 1; // passa o turno para o oponente
@@ -78,7 +115,7 @@ void battleUpd (int id, char move) {
 				disconnectClient(opponent);
 			}
 
-			qntTotal--;
+			qnt_total--;
 		}
 
 		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
@@ -188,7 +225,6 @@ void initClients () {
 		// inicializar o jogador no vetor clients!
 		clients[id].x = posX;
 		clients[id].y = posY;
-		clients[id].ismonster = 0;
 		clients[id].hp = PLAYER_HP;
 		clients[id].max_hp = PLAYER_HP;
 		clients[id].atk = PLAYER_ATK;
@@ -214,7 +250,6 @@ void initMonsters () {
 		// inicializar o jogador no vetor monsters!
 		monsters[id].x = posX;
 		monsters[id].y = posY;
-		monsters[id].ismonster = 1;
 		monsters[id].hp = MONSTER_HP;
 		monsters[id].max_hp = MONSTER_HP;
 		monsters[id].atk = MONSTER_ATK;
@@ -371,8 +406,8 @@ void wasClient() {
 				FD_CLR (sd, &active_fd_set);
 				clients[i].sockid = 0;
 				--clients_connected;
-				if(clientDesconnected != NULL){
-					clientDesconnected(i);
+				if(clientDisconnected != NULL){
+					clientDisconnected(i);
 				}
 				if(clients_connected == 0)
 					game_status = 0;
