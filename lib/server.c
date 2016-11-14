@@ -4,7 +4,6 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 	upd_msg temp;
 
 	if (!ismonster) {
-		temp.ismonster = 0;
 		temp.type = -1;
 		temp.id = id;
 		temp.x = clients[id].x;
@@ -17,7 +16,6 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 		temp.sprite = clients[id].sprite;
 	}
 	else {
-		temp.ismonster = 1;
 		temp.type = -1;
 		temp.id = id;
 		temp.x = monsters[id].x;
@@ -29,6 +27,8 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 		temp.whofight = monsters[id].whofight;
 		temp.sprite = monsters[id].sprite;
 	}
+
+	temp.ismonster = ismonster;
 
 	return temp;
 }
@@ -48,11 +48,11 @@ void battleUpd (int id, char move) {
 				monsters[opponent].fight = 0;
 
 				map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
-				map_changes[pos_broad].type = 0; // mudar para 1?
+				map_changes[pos_broad].type = 0;
 				pos_broad++;
 		
 				map_changes[pos_broad] = buildUpd(opponent, 1); // broadcast dos novos stats do monstro
-				map_changes[pos_broad].type = 0; // mudar para 1?
+				map_changes[pos_broad].type = 0;
 				pos_broad++;
 
 				return;
@@ -62,11 +62,11 @@ void battleUpd (int id, char move) {
 				clients[opponent].fight = 0;
 
 				map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
-				map_changes[pos_broad].type = 0; // mudar para 1?
+				map_changes[pos_broad].type = 0;
 				pos_broad++;
 		
 				map_changes[pos_broad] = buildUpd(opponent, 0); // broadcast dos novos stats do oponente
-				map_changes[pos_broad].type = 0; // mudar para 1?
+				map_changes[pos_broad].type = 0;
 				pos_broad++;
 
 				return;
@@ -88,11 +88,11 @@ void battleUpd (int id, char move) {
 		}
 
 		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
-		map_changes[pos_broad].type = 0; // mudar para 1?
+		map_changes[pos_broad].type = 0;
 		pos_broad++;
 		
 		map_changes[pos_broad] = buildUpd(opponent, 1); // broadcast dos novos stats do monstro
-		map_changes[pos_broad].type = 0; // mudar para 1?
+		map_changes[pos_broad].type = 0;
 		pos_broad++;
 	}
 	else if (clients[id].fight == 2) { // se a batalha for contra player
@@ -119,11 +119,11 @@ void battleUpd (int id, char move) {
 		}
 
 		map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
-		map_changes[pos_broad].type = 0; // mudar para 1?
+		map_changes[pos_broad].type = 0;
 		pos_broad++;
 		
 		map_changes[pos_broad] = buildUpd(opponent, 0); // broadcast dos novos stats do oponente
-		map_changes[pos_broad].type = 0; // mudar para 1?
+		map_changes[pos_broad].type = 0;
 		pos_broad++;
 	}
 }

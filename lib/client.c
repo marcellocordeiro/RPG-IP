@@ -2,7 +2,7 @@
 
 #define asteristico 1// esses números são usados para proporção , exemplo asteristico 1 de 5 = 20%
 #define espaco 4 // espaco 4 de 5 = 80%
-#define maxrepetidos 5//numero max de vezes que um caractere pode ser repetido em sequncia
+#define maxrepetidos 5 //numero max de vezes que um caractere pode ser repetido em sequncia
 
 enum {
 	MAIN,
@@ -233,7 +233,7 @@ void menu (clientInfo *info) {
 				scanf("%s", ip);
 			}
 			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
-				(*info).mapa = createRandomMap();
+				createRandomMap(info);
 			}
 			else if (dir == right && cursor == 4) { // voltar para o menu principal
 				cursor = 0;
@@ -246,15 +246,18 @@ void menu (clientInfo *info) {
 	}
 }
 
-// AS VEZES FUNCIONA, AS VEZES NÃO!!!!!
-int createRandomMap () {
-	FILE *fpmap;
+// AS VEZES FUNCIONA, AS VEZES NÃO!!!!! --> consertado (?)
+void createRandomMap (clientInfo *info) {
+	srand(time(NULL));
+	
+	FILE *fpmap;// = fopen("mapaaleatorio.txt", "w");
+	int width, height, qnt_monsters; // evitar de não entrarem monstros
 	int i, j, proximo = 1, contador = 0;
 	char caractere, anterior='*';
-	int map_num;
+
 	int n;
+
 	char map_name[16];
-	int height, width, qnt_monsters;
 
 	printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
 	scanf("%d %d %d", &height, &width, &qnt_monsters);
@@ -265,13 +268,12 @@ int createRandomMap () {
 
 		sprintf(map_name, "data/mapa%d.txt", i); // coloca o i na string
 		fpmap = fopen(map_name, "r"); // tenta abrir o mapa
+		(*info).mapa = i;
 	}
-	map_num = i-1;
-	fpmap = fopen(map_name, "w"); // abre o mapa com o número encontrado
-	if (fpmap == NULL)
-		printf("ERRO AO ABRIR O ARQUIVO\n");
 
-	n = asteristico + espaco; // recebe a soma de asteristico + espaco ,como numa proporção 
+	fpmap = fopen(map_name, "w"); // abre o mapa com o número encontrado
+
+	n = asteristico + espaco; // recebe a soma de asteristico + espaco, como numa proporção 
 
 	fprintf(fpmap, "%d %d %d\n", height, width, qnt_monsters);
 
@@ -285,7 +287,7 @@ int createRandomMap () {
 				if (proximo < asteristico)
 					caractere = '*';
 				else
-					caractere=' ';
+					caractere = ' ';
 
 				if (caractere == anterior)
 					contador += 1;
@@ -298,22 +300,23 @@ int createRandomMap () {
 					else
 						caractere = '*';
 
-					contador=0;
+					fputc(caractere,fpmap);
+
+					contador = 0;
 				}
-				fputc(caractere,fpmap);
+				else
+					fputc(caractere,fpmap);
 		
 				anterior= caractere;
 			}
 		}
+
 		fputc('\n', fpmap);
 		anterior = '*'; // "zera o anterior"
 	}
 
 	fclose(fpmap);
-
-	return map_num;
 }
-
 
 void connectToServer(const char *server_IP){
 	network_socket = socket(AF_INET, SOCK_STREAM, 0);

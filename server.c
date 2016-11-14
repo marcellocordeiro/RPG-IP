@@ -5,6 +5,7 @@ int main () {
 	clientMoved = MyClientMoved;
 	clientConnected = MyClientConnected;
 	clientConfirmed = startGame;
+	clientDisconnected = disconnectClient;
 
 	init();
 
@@ -75,7 +76,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		battleUpd(id, mov.msg);
 
 		if (qnt_total == 1) {
-			map_changes[pos_broad].type = 5; // mudar para 1?
+			map_changes[pos_broad].type = 5;
 			sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 		}
 
