@@ -38,7 +38,15 @@
 #define KMAG  "\x1B[35m"
 #define KCYN  "\x1B[36m"
 #define KWHT  "\x1B[37m"
+
 #define KGRY  "\x1B[90m"
+
+#define CRED  "\x1B[91m"
+#define CGRN  "\x1B[92m"
+#define CYEL  "\x1B[93m"
+#define CBLU  "\x1B[94m"
+#define CMAG  "\x1B[95m"
+#define CCYN  "\x1B[96m"
 
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10

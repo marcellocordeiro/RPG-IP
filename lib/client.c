@@ -39,15 +39,15 @@ void delay (unsigned int secs) {
 char* color (int id) {
 	switch (id) {
 		case 0:
-			return KBLU;
+			return CBLU;
 			break;
 
 		case 1:
-			return KYEL;
+			return CYEL;
 			break;
 
 		case 2:
-			return KMAG;
+			return CMAG;
 			break;
 	}
 }
