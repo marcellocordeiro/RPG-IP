@@ -41,7 +41,7 @@ void (*clientConnected)(int, clientInfo);
 void (*clientDisconnected)(int);
 void (*clientConfirmed)(void);
 
-upd_msg buildUpd(int id, int ismonster);
+void buildUpd(int id, int ismonster, int type);
 int dmg(int atk, int def);
 void battleUpd(int id, char move);
 int findPlayer(int x, int y);

@@ -1,6 +1,6 @@
 #include "default.h"
 
-/// VARIÁVEIS GLOBAIS
+// VARIÁVEIS GLOBAIS
 map_data map;
 
 player_data players[MAX_CLIENTS];
@@ -11,8 +11,9 @@ int qnt_clients;
 int network_socket;
 struct sockaddr_in server_address;
 
-
-/// FUNÇÕES
+// FUNÇÕES
+void game(char battle[30][110], char lose[30][110], char win[30][110]);
+void loadFile(char *filename, char screen[30][110]);
 void readUpd(upd_msg upd);
 void delay(unsigned int secs);
 char* color(int id);

@@ -2,6 +2,8 @@
 
 int main () {
 	srand(time(NULL)); // seed pra usar o rand durante o jogo
+	rand();
+
 	clientMoved = MyClientMoved;
 	clientConnected = MyClientConnected;
 	clientConfirmed = startGame;
@@ -63,22 +65,18 @@ void MyClientConnected (int id, clientInfo startInfo) {
 }
 
 void MyClientMoved (int id, mov_msg mov) {
-	int i, found = -1, found2 = -1;
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
+	int i, found = -1, found2 = -1;
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
 
 	if (mov.upd_monsters == 1) { // update dos monstros
 		monsterMove();
+
 		return;
 	}
 
 	if (clients[id].fight && clients[id].turn) { // update da batalha
 		battleUpd(id, mov.msg);
-
-		if (qnt_total == 1) {
-			map_changes[pos_broad].type = 5;
-			sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
-		}
 
 		return;
 	}
@@ -177,13 +175,8 @@ void MyClientMoved (int id, mov_msg mov) {
 		monsters[found].fight = 1;
 		monsters[found].whofight = id; // id do player
 
-		map_changes[pos_broad] = buildUpd(id, 0); // broadcast das modificações
-		map_changes[pos_broad].type = 0; // mudar para 1?
-		pos_broad++;
-
-		map_changes[pos_broad] = buildUpd(found, 1); // broadcast das modificações
-		map_changes[pos_broad].type = 0; // mudar para 1?
-		pos_broad++;
+		buildUpd(id, 0, 0); // broadcast das modificações
+		buildUpd(found, 1, 0); // broadcast das modificações
 	}
 	else if (found2 != -1) { // encontrou outro player
 		clients[id].fight = 2;
@@ -194,19 +187,11 @@ void MyClientMoved (int id, mov_msg mov) {
 		clients[found2].whofight = id; // id do player que iniciou a batalha
 		clients[found2].turn = 0;
 
-		map_changes[pos_broad] = buildUpd(id, 0); // broadcast das modificações
-		map_changes[pos_broad].type = 0; // mudar para 1?
-		pos_broad++;
-
-		map_changes[pos_broad] = buildUpd(found2, 0); // broadcast das modificações
-		map_changes[pos_broad].type = 0; // mudar para 1?
-		pos_broad++;
+		buildUpd(id, 0, 0); // broadcast das modificações
+		buildUpd(found2, 0, 0); // broadcast das modificações
 	}
-	else {
-		map_changes[pos_broad] = buildUpd(id, 0); // broadcast padrão das modificações
-		map_changes[pos_broad].type = 0; // update de mapa
-		pos_broad++;
-	}
+	else
+		buildUpd(id, 0, 0); // broadcast padrão das modificações
 }
 
 void startGame(){
@@ -222,21 +207,13 @@ void startGame(){
 
 	// status inicial dos clientes
 	initClients();
-
-	for (id = 0; id < clients_connected; id++) { // broadcast dos stats dos players
-		map_changes[pos_broad] = buildUpd(id, 0);
-		map_changes[pos_broad].type = 7;
-		pos_broad++;
-	}
+	for (id = 0; id < clients_connected; id++) // broadcast dos stats dos players
+		buildUpd(id, 0, 7);
 
 	// status inicial dos monstros
 	initMonsters();
-
-	for (id = 0; id < map.qnt_monsters; id++) { // broadcast dos stats dos monstros
-		map_changes[pos_broad] = buildUpd(id, 1);
-		map_changes[pos_broad].type = 7;
-		pos_broad++;
-	}
+	for (id = 0; id < map.qnt_monsters; id++) // broadcast dos stats dos monstros
+		buildUpd(id, 1, 7);
 }
 
 void MyBroadcast(char *s){

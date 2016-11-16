@@ -1,13 +1,18 @@
 #include "client.h"
 
-#define asteristico 1// esses números são usados para proporção , exemplo asteristico 1 de 5 = 20%
-#define espaco 4 // espaco 4 de 5 = 80%
-#define maxrepetidos 5 //numero max de vezes que um caractere pode ser repetido em sequncia
+void loadFile (char *filename, char screen[30][110]) {
+	FILE* fp = fopen(filename, "rt");
+	int i;
 
-enum {
-	MAIN,
-	OPTIONS
-};
+	if (fp == NULL) {
+		printf("ERRO AO ABRIR O ARQUIVO\n");
+		exit(1);
+	}
+
+	for (i = 0; fscanf(fp, " %[^\n]", screen[i]) > 0; i++);
+
+	fclose(fp);
+}
 
 void readUpd (upd_msg upd) {
 	if (!upd.ismonster) {
@@ -248,14 +253,16 @@ void menu (clientInfo *info) {
 
 // AS VEZES FUNCIONA, AS VEZES NÃO!!!!! --> consertado (?)
 void createRandomMap (clientInfo *info) {
+	srand(time(NULL));
+	rand();
+
 	FILE *fpmap;
 	int i, j, proximo = 1, contador = 0;
-	char caractere, anterior='*';
+	char caractere, anterior = '*';
 	int n;
 	char map_name[16];
 	int height, width, qnt_monsters;
 
-	srand(time(NULL));
 
 	printf("Digite a quantidade de linhas, colunas e monstros do mapa: ");
 	scanf("%d %d %d", &height, &width, &qnt_monsters);
@@ -302,11 +309,13 @@ void createRandomMap (clientInfo *info) {
 
 					contador = 0;
 				}
-				fputc(caractere,fpmap);
+
+				fputc(caractere, fpmap);
 		
 				anterior = caractere;
 			}
 		}
+
 		fputc('\n', fpmap);
 		anterior = '*'; // "zera o anterior"
 	}

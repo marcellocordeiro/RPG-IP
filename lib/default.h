@@ -59,6 +59,15 @@
 #define MONSTER_ATK 35
 #define MONSTER_DEF 20
 
+#define asteristico 1 // esses números são usados para proporção, exemplo asteristico 1 de 5 = 20%
+#define espaco 4 // espaco 4 de 5 = 80%
+#define maxrepetidos 5 //numero max de vezes que um caractere pode ser repetido em sequncia
+
+enum {
+	MAIN,
+	OPTIONS
+};
+
 struct clientInfo {
 	int mapa;
 	char nome[NAME_SIZE];

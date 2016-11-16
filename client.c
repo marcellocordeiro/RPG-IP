@@ -1,72 +1,54 @@
 #include "lib/client.h"
 
 int main () {
-	// VARIÁVEIS
+	char battle[30][110], lose[30][110], win[30][110];
+
+	// leitura da tela de batalha
+	loadFile("data/fight_frame.txt", battle);
+
+	// leitura da tela de game over
+	loadFile("data/lose_frame.txt", lose);
+
+	// leitura da tela de game over
+	loadFile("data/win_frame.txt", win);
+
+	while (1)
+		game(battle, lose, win); // sugestão (o nome tá ok?)
+
+	return 0;
+}
+
+void game (char battle[30][110], char lose[30][110], char win[30][110]) {
+	// VARIÁVEIS DO SERVER
 	clientInfo info;
 	char msg[BUFFER_SIZE];
 	upd_msg upd;
 	mov_msg mov;
 
-	int i, error = 0, start = 0, playing = 1;
+	//VARIÁVEIS DO CLIENT
 	int id = -1;
-
+	int i, error = 0, start = 0, playing = 1;
 	long int newtime, oldtime;
-
 	char escolha;
+	
+	// menu
+	menu(&info);
 
-	/// mapa
+	// mapa
 	FILE *fpmap; // ponteiro para o arquivo do mapa
 	char map_name[16];
-
-	/// tela de batalha
-	FILE *fpbat;
-	char battle[26][102];
-
-	// leitura da tela de batalha
-	fpbat = fopen("data/fight_frame.txt", "rt");
-	if (fpbat == NULL) 
-		printf("ERRO AO ABRIR O ARQUIVO\n");
-	for (i = 0; i < 26; i++) 
-		fscanf(fpbat, " %[^\n]", battle[i]);
-	fclose(fpbat);
-
-	/// tela de game over - lose
-	FILE *fplose;
-	char lose[28][81];
-
-	// leitura da tela de game over
-	fplose = fopen("data/lose_frame.txt", "rt");
-	if (fplose == NULL) 
-		printf("ERRO AO ABRIR O ARQUIVO\n");
-	for (i = 0; i < 28; i++) 
-		fscanf(fplose, " %[^\n]", lose[i]);
-	fclose(fplose);
-
-	/// tela de game over - win
-	FILE *fpwin;
-	char win[28][81];
-
-	// leitura da tela de game over
-	fpwin = fopen("data/win_frame.txt", "rt");
-	if (fpwin == NULL) 
-		printf("ERRO AO ABRIR O ARQUIVO\n");
-	for (i = 0; i < 28; i++) 
-		fscanf(fpwin, " %[^\n]", win[i]);
-	fclose(fpwin);
-
-	menu(&info);
 
 	while (id == -1) // receber o id do client
 		if (readTxtFromServer(msg) > 0)
 			id = msg[0] - '0';
 
-	while (!start) { // depois só mensagem de texto até o jogo começar
+	while (!start) { // espera o servidor começar o jogo
 		if (readTxtFromServer(msg) > 0) {
 			if (msg[0] > '0' && msg[0] <= '9') {
 				qnt_clients = msg[0] - '0';
 				start = 1;
 			}
-			else if (msg[0] != 'o')
+			else
 				error = 1;
 		}
 
@@ -99,7 +81,7 @@ int main () {
 	//receber informações iniciais do jogo(mapa, status inicial, etc...)
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
 	while (playing) {
-		while (readUpdFromServer(&upd) > 0) {// recebe todas mensagens
+		while (readUpdFromServer(&upd) > 0) { // recebe todas mensagens
 			switch (upd.type) { // tipo de update
 				case 0: // update no mapa
 					// atualizando os vetores players e monsters
@@ -126,12 +108,13 @@ int main () {
 					system("clear");
 					if (!players[id].fight) {
 						drawall();
+
 						printf("%splayer %d\n", color(id), id);
 						printf("HP:\t%d\n", players[id].hp);
-						//printf("SCORE:\t%d\n",);
 						printf("ATK:\t%d\n",players[id].atk);
 						printf("DEF:\t%d%s\n", players[id].def, KNRM);
-					} else { // coloquei a batalha aqui só para testes, mas podemos passar para o case 1, se preferir
+					}
+					else { // batalha
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
@@ -139,12 +122,14 @@ int main () {
 						printf("HP:\t%d\n", players[id].hp);
 						printf("ATK:\t%d\n", players[id].atk);
 						printf("DEF:\t%d%s\n\n", players[id].def, KNRM);
+						
 						if (players[id].fight == 1) {
 							printf("%smonster\n", KWHT);
 							printf("HP:\t%d\n", monsters[players[id].whofight].hp);
 							printf("ATK:\t%d\n", monsters[players[id].whofight].atk);
 							printf("DEF:\t%d%s\n\n", monsters[players[id].whofight].def, KNRM);
-						} else {
+						}
+						else {
 							printf("%splayer %d\n", color(players[id].whofight), players[id].whofight);
 							printf("HP:\t%d\n", players[players[id].whofight].hp);
 							printf("ATK:\t%d\n", players[players[id].whofight].atk);
@@ -166,11 +151,13 @@ int main () {
 						escolha = getch();
 
 						switch (escolha) {
-							case 'h':
+							case 't':
+								return;
 
 								break;
 							case 'q':
 								exit(1);
+
 								break;
 						}
 					} while (escolha != 't' && escolha != 'q');
@@ -187,13 +174,15 @@ int main () {
 
 						switch (escolha) {
 							case 'h':
+								return;
 
 								break;
 							case 'q':
 								exit(1);
+
 								break;
 						}
-					} while (escolha != 't' && escolha != 'q');
+					} while (escolha != 'h' && escolha != 'q');
 
 					break;
 
@@ -238,6 +227,4 @@ int main () {
 		if (mov.msg != -1 && ((!players[id].fight && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) || (players[id].fight != 0 && (mov.msg == 'a' || mov.msg == 'r')))) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);
 	}
-
-	return 0;
 }
