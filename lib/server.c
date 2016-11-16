@@ -458,11 +458,11 @@ void wasClient() {
 		if (FD_ISSET (sd, &read_fd_set)){
 			mov_msg new_mov;
 			if (readMovFromClient (sd, &new_mov) < 0){ //o usuário de desconectou.
-				printf("Client %d disconnected\n",  i);
-				close (sd);
-				FD_CLR (sd, &active_fd_set);
-				clients[i].sockid = 0;
-				--clients_connected;
+				//printf("Client %d disconnected\n",  i);
+				//close (sd);
+				//FD_CLR (sd, &active_fd_set);
+				//clients[i].sockid = 0;
+				//--clients_connected;
 				if(clientDisconnected != NULL){
 					clientDisconnected(i);
 				}
@@ -506,14 +506,14 @@ void broadcastTxt(const char msg[], int s){
 }
 
 void disconnectClient(int id){
-	//shutdown(clients[id].sockid, SHUT_RD);
-	//clients[id].sockid = 0;
-
 	printf("Client %d disconnected\n",  id);
 	close (clients[id].sockid);
 	FD_CLR (clients[id].sockid, &active_fd_set);
 	clients[id].sockid = 0;
 	clients_connected--;
+
+	shutdown(clients[id].sockid, SHUT_RD);
+	clients[id].sockid = 0;
 
 	if(clients_connected == 0)
 		game_status = 0;
