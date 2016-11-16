@@ -150,7 +150,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 					do {
 						escolha = getch();
 
-						switch (escolha) {
+						/*switch (escolha) {
 							case 't':
 								return;
 
@@ -159,7 +159,15 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 								exit(1);
 
 								break;
+						}*/
+
+						if (escolha == 't') {
+							playing = 0;
+							break;
 						}
+						else if (escolha == 'q')
+							exit(1);
+						
 					} while (escolha != 't' && escolha != 'q');
 
 					break;
@@ -172,7 +180,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 					do {
 						escolha = getch();
 
-						switch (escolha) {
+						/*switch (escolha) {
 							case 'h':
 								return;
 
@@ -181,7 +189,15 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 								exit(1);
 
 								break;
+						}*/
+
+						if (escolha == 'h') {
+							playing = 0;
+							break;
 						}
+						else if (escolha == 'q')
+							exit(1);
+
 					} while (escolha != 'h' && escolha != 'q');
 
 					break;
