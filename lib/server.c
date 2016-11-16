@@ -506,6 +506,15 @@ void broadcastTxt(const char msg[], int s){
 }
 
 void disconnectClient(int id){
-	shutdown(clients[id].sockid, SHUT_RD);
+	//shutdown(clients[id].sockid, SHUT_RD);
+	//clients[id].sockid = 0;
+
+	printf("Client %d disconnected\n",  id);
+	close (clients[id].sockid);
+	FD_CLR (clients[id].sockid, &active_fd_set);
 	clients[id].sockid = 0;
+	clients_connected--;
+
+	if(clients_connected == 0)
+		game_status = 0;
 }
