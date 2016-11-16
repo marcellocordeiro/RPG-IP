@@ -167,7 +167,7 @@ void MyClientMoved (int id, mov_msg mov) {
 			clients[id].hp = clients[id].max_hp;
 	}
 
-	if (found != -1) { // encontrou um monstro
+	if (found != -1 && !monsters[found].fight) { // encontrou um monstro
 		clients[id].fight = 1;
 		clients[id].whofight = found; // id do monstro!!! --> sim!
 		clients[id].turn = 1; // o turno é sempre do player
@@ -178,7 +178,7 @@ void MyClientMoved (int id, mov_msg mov) {
 		buildUpd(id, 0, 0); // broadcast das modificações
 		buildUpd(found, 1, 0); // broadcast das modificações
 	}
-	else if (found2 != -1) { // encontrou outro player
+	else if (found2 != -1 && !clients[found2].fight) { // encontrou outro player
 		clients[id].fight = 2;
 		clients[id].whofight = found2; // id do oponente
 		clients[id].turn = 1; // o primeiro ataque é de quem começou a batalha
