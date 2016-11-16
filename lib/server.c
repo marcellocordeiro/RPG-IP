@@ -29,15 +29,23 @@ void buildUpd (int id, int ismonster, int type) { // retorna uma struct de updat
 	pos_broad++;
 }
 
-int dmg (int atk, int def) { // sugestão
+int dmg (int atk, int def) { // sugestão 2
+	int chance = rand()%101;
 	int damage;
 
-	damage = atk/2 - def/4;
-
-	if (damage > 0)
-		return damage;
+	if (def > atk)
+		damage = (def - atk)/3;
 	else
-		return 0;
+		damage = atk - def;
+	
+	if (chance < 5) // 5%
+		return damage*2;
+	else if (chance < 10) // 5%
+		return damage*0.5;
+	else if (chance < 50) // 40%
+		return damage*1.5;
+	else // 50%
+		return damage;
 }
 
 /*int dmg (int atk, int def) { // sugestão
