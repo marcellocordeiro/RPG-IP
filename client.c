@@ -28,6 +28,7 @@ int main () {
 		printf("ERRO AO ABRIR O ARQUIVO\n");
 	for (i = 0; i < 26; i++) 
 		fscanf(fpbat, " %[^\n]", battle[i]);
+	fclose(fpbat);
 
 	/// tela de game over - lose
 	FILE *fplose;
@@ -39,6 +40,7 @@ int main () {
 		printf("ERRO AO ABRIR O ARQUIVO\n");
 	for (i = 0; i < 28; i++) 
 		fscanf(fplose, " %[^\n]", lose[i]);
+	fclose(fplose);
 
 	/// tela de game over - win
 	FILE *fpwin;
@@ -50,6 +52,7 @@ int main () {
 		printf("ERRO AO ABRIR O ARQUIVO\n");
 	for (i = 0; i < 28; i++) 
 		fscanf(fpwin, " %[^\n]", win[i]);
+	fclose(fpwin);
 
 	menu(&info);
 
@@ -75,22 +78,16 @@ int main () {
 			sendMovToServer(mov);
 	}
 
-
-	//for (i = 0; i < qnt_clients; i++) // inicializa as cores de cada player
-	//	players[i].color = color(i);
-
 	// formatação e mensagem de start game
 	system("clear");
 
 	for (i = 0; i < 13; i++) 
 		printf("\n");
-	for (i = 0; i < 4; i++)
-		printf("\t");
-
-	printf(" %s\n", msg);
-	
 	for (i = 0; i < 3; i++)
 		printf("\t");
+
+	printf("%s\n", msg);
+	
 	for (i = 0; i < 13; i++) 
 		printf("\n");
 
@@ -111,7 +108,7 @@ int main () {
 					/*
 					for (i = 0; i < qnt_clients; i++) { // debug
 						printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						printf("players[%d].color: %scolor%s\n", i, players[i].color, KNRM);
+						printf("players[%d].color: %scolor%s\n", i, color(i), KNRM);
 						printf("players[%d].x: %d\n", i, players[i].x);
 						printf("players[%d].y: %d\n", i, players[i].y);
 					}
@@ -120,7 +117,7 @@ int main () {
 					/*
 					for (i = 0; i < map.qnt_monsters; i++) { // debug
 						printf("monsters[%d].sprite: %c\n", i, monsters[i].sprite);
-						printf("monsters[%d].color: %scolor%s\n", i, monsters[i].color, KNRM);
+						printf("monsters[%d].color: %scolor%s\n", i, KWTH, KNRM);
 						printf("monsters[%d].x: %d\n", i, monsters[i].x);
 						printf("monsters[%d].y: %d\n", i, monsters[i].y);
 					}
@@ -129,7 +126,6 @@ int main () {
 					system("clear");
 					if (!players[id].fight) {
 						drawall();
-						//printf("%splayer %d\n", players[id].color, id);
 						printf("%splayer %d\n", color(id), id);
 						printf("HP:\t%d\n", players[id].hp);
 						//printf("SCORE:\t%d\n",);
@@ -139,13 +135,11 @@ int main () {
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
-						//printf("%splayer %d\n", players[id].color, id);
 						printf("%splayer %d\n", color(id), id);
 						printf("HP:\t%d\n", players[id].hp);
 						printf("ATK:\t%d\n", players[id].atk);
 						printf("DEF:\t%d%s\n\n", players[id].def, KNRM);
 						if (players[id].fight == 1) {
-							//printf("%smonster\n", monsters[players[id].whofight].color);
 							printf("%smonster\n", KWHT);
 							printf("HP:\t%d\n", monsters[players[id].whofight].hp);
 							printf("ATK:\t%d\n", monsters[players[id].whofight].atk);
@@ -219,10 +213,7 @@ int main () {
 						fscanf(fpmap, " %[^\n]", map.map[i]);
 
 					fclose(fpmap);
-
-					//for (i = 0; i < map.qnt_monsters; i++)
-					//	monsters[i].color = KWHT;
-
+					
 					break;
 
 				case 7:

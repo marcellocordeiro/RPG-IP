@@ -33,10 +33,49 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 	return temp;
 }
 
-int dmg (int atk, int def) { // sugestão (não entendo muito disso, foi só pra sugerir um modelo)
-	srand(time(NULL));
+int dmg (int atk, int def) { // sugestão
 	int damage;
+
+	damage = atk/2 - def/4;
+
+	if (damage > 0)
+		return damage;
+	else
+		return 0;
+}
+
+/*int dmg (int atk, int def) { // sugestão
+	srand(time(NULL));
 	int chance = rand()%101;
+	int damage, atk1;
+
+	if (chance < 25) // 25%
+		atk1 = atk*2;
+	else if (chance < 50) // 25%
+		atk1 = atk*0.5;
+	else // 50%
+		atk1 = atk;
+
+	damage = atk1 - def;
+
+	if (damage < 0)
+		damage = 0;
+
+	return damage;
+}*/
+
+/*
+int dmg (int atk, int def) { // sugestão
+	srand(time(NULL));
+	int chance = rand()%101;
+	int damage;
+
+	damage = atk/2 - def/4;
+
+	if (damage > 0)
+		return damage;
+	else
+		return 0;
 
 	if (def < atk) {
 		damage = atk - def;
@@ -49,7 +88,7 @@ int dmg (int atk, int def) { // sugestão (não entendo muito disso, foi só pra
 			return damage*1.5;
 		else // 50%
 			return damage;
-	} else {
+	} else { // não faz muito sentido
 		damage = def - atk;
 
 		if (chance < 30) // 30%
@@ -63,7 +102,7 @@ int dmg (int atk, int def) { // sugestão (não entendo muito disso, foi só pra
 		else // 10%
 			return 0;
 	}
-}
+}*/
 
 void battleUpd (int id, char move) {
 	srand(time(NULL));
@@ -72,32 +111,32 @@ void battleUpd (int id, char move) {
 
 	if (move == 'r') { // se o player tentou fugir
 		if (clients[id].fight == 1 && chance <= 70) { // 70% de chance contra monstros
-				clients[id].fight = 0;
-				monsters[opponent].fight = 0;
+			clients[id].fight = 0;
+			monsters[opponent].fight = 0;
 
-				map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
-				map_changes[pos_broad].type = 0;
-				pos_broad++;
+			map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
+			map_changes[pos_broad].type = 0;
+			pos_broad++;
 		
-				map_changes[pos_broad] = buildUpd(opponent, 1); // broadcast dos novos stats do monstro
-				map_changes[pos_broad].type = 0;
-				pos_broad++;
+			map_changes[pos_broad] = buildUpd(opponent, 1); // broadcast dos novos stats do monstro
+			map_changes[pos_broad].type = 0;
+			pos_broad++;
 
-				return;
+			return;
 		}
 		else if (clients[id].fight == 2 && chance <= 30) { // 30% de chance contra players
-				clients[id].fight = 0;
-				clients[opponent].fight = 0;
+			clients[id].fight = 0;
+			clients[opponent].fight = 0;
 
-				map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
-				map_changes[pos_broad].type = 0;
-				pos_broad++;
+			map_changes[pos_broad] = buildUpd(id, 0); // broadcast dos novos stats do player
+			map_changes[pos_broad].type = 0;
+			pos_broad++;
 		
-				map_changes[pos_broad] = buildUpd(opponent, 0); // broadcast dos novos stats do oponente
-				map_changes[pos_broad].type = 0;
-				pos_broad++;
+			map_changes[pos_broad] = buildUpd(opponent, 0); // broadcast dos novos stats do oponente
+			map_changes[pos_broad].type = 0;
+			pos_broad++;
 
-				return;
+			return;
 		}
 	}
 

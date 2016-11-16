@@ -62,7 +62,6 @@ struct player_data { // MUDAR NOME!! (ainda?)
 	int hp, max_hp, atk, def, turn; // int informações do game, hp, ataque, defesa, pontos...
 	int fight, whofight;
 	char sprite;
-	//char *color;
 	int sockid;
 };
 

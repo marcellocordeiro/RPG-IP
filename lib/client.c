@@ -64,7 +64,6 @@ void drawall () {
 		for(j = 0; j < map.width; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == players[k].x && j == players[k].y && players[k].hp > 0) {
-					//printcchar(players[k].color, players[k].sprite);
 					printcchar(color(k), players[k].sprite);
 					map.map[i][j] = ' ';
 					flag = 1;
@@ -73,7 +72,6 @@ void drawall () {
 
 			for (k = 0; k < map.qnt_monsters && !flag; k++) {
 				if((i == monsters[k].x && j == monsters[k].y) && monsters[k].hp > 0) {
-					//printcchar(monsters[k].color, monsters[k].sprite);
 					printcchar(KWHT, monsters[k].sprite);
 					flag = 1;
 				}
