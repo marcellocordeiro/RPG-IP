@@ -64,7 +64,8 @@ void drawall () {
 		for(j = 0; j < map.width; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == players[k].x && j == players[k].y && players[k].hp > 0) {
-					printcchar(players[k].color, players[k].sprite);
+					//printcchar(players[k].color, players[k].sprite);
+					printcchar(color(k), players[k].sprite);
 					map.map[i][j] = ' ';
 					flag = 1;
 				}
@@ -72,7 +73,8 @@ void drawall () {
 
 			for (k = 0; k < map.qnt_monsters && !flag; k++) {
 				if((i == monsters[k].x && j == monsters[k].y) && monsters[k].hp > 0) {
-					printcchar(monsters[k].color, monsters[k].sprite);
+					//printcchar(monsters[k].color, monsters[k].sprite);
+					printcchar(KWHT, monsters[k].sprite);
 					flag = 1;
 				}
 			}
@@ -251,7 +253,6 @@ void createRandomMap (clientInfo *info) {
 	FILE *fpmap;
 	int i, j, proximo = 1, contador = 0;
 	char caractere, anterior='*';
-	int map_num;
 	int n;
 	char map_name[16];
 	int height, width, qnt_monsters;
@@ -274,7 +275,7 @@ void createRandomMap (clientInfo *info) {
 	if (fpmap == NULL)
 		printf("ERRO AO ABRIR O ARQUIVO\n");
 
-	n = asteristico + espaco; // recebe a soma de asteristico + espaco ,como numa proporção 
+	n = asteristico + espaco; // recebe a soma de asteristico + espaco, como numa proporção 
 
 	fprintf(fpmap, "%d %d %d\n", height, width, qnt_monsters);
 

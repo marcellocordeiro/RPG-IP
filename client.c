@@ -57,9 +57,6 @@ int main () {
 		if (readTxtFromServer(msg) > 0)
 			id = msg[0] - '0';
 
-	for (i = 0; i < qnt_clients; i++) // inicializa as cores de cada player
-		players[i].color = color(i);
-
 	while (!start) { // depois só mensagem de texto até o jogo começar
 		if (readTxtFromServer(msg) > 0) {
 			if (msg[0] > '0' && msg[0] <= '9') {
@@ -77,6 +74,10 @@ int main () {
 		if (mov.msg != -1)
 			sendMovToServer(mov);
 	}
+
+
+	//for (i = 0; i < qnt_clients; i++) // inicializa as cores de cada player
+	//	players[i].color = color(i);
 
 	// formatação e mensagem de start game
 	system("clear");
@@ -128,7 +129,8 @@ int main () {
 					system("clear");
 					if (!players[id].fight) {
 						drawall();
-						printf("%splayer %d\n", players[id].color, id);
+						//printf("%splayer %d\n", players[id].color, id);
+						printf("%splayer %d\n", color(id), id);
 						printf("HP:\t%d\n", players[id].hp);
 						//printf("SCORE:\t%d\n",);
 						printf("ATK:\t%d\n",players[id].atk);
@@ -137,17 +139,19 @@ int main () {
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
-						printf("%splayer %d\n", players[id].color, id);
+						//printf("%splayer %d\n", players[id].color, id);
+						printf("%splayer %d\n", color(id), id);
 						printf("HP:\t%d\n", players[id].hp);
 						printf("ATK:\t%d\n", players[id].atk);
 						printf("DEF:\t%d%s\n\n", players[id].def, KNRM);
 						if (players[id].fight == 1) {
-							printf("%smonster\n", monsters[players[id].whofight].color);
+							//printf("%smonster\n", monsters[players[id].whofight].color);
+							printf("%smonster\n", KWHT);
 							printf("HP:\t%d\n", monsters[players[id].whofight].hp);
 							printf("ATK:\t%d\n", monsters[players[id].whofight].atk);
 							printf("DEF:\t%d%s\n\n", monsters[players[id].whofight].def, KNRM);
 						} else {
-							printf("%splayer %d\n", players[players[id].whofight].color, players[id].whofight);
+							printf("%splayer %d\n", color(players[id].whofight), players[id].whofight);
 							printf("HP:\t%d\n", players[players[id].whofight].hp);
 							printf("ATK:\t%d\n", players[players[id].whofight].atk);
 							printf("DEF:\t%d%s\n\n", players[players[id].whofight].def, KNRM);
@@ -216,8 +220,8 @@ int main () {
 
 					fclose(fpmap);
 
-					for (i = 0; i < map.qnt_monsters; i++)
-						monsters[i].color = KWHT;
+					//for (i = 0; i < map.qnt_monsters; i++)
+					//	monsters[i].color = KWHT;
 
 					break;
 

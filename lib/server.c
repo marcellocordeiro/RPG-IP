@@ -4,7 +4,7 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 	upd_msg temp;
 
 	if (!ismonster) {
-		temp.type = -1;
+		//temp.type = -1;
 		temp.id = id;
 		temp.x = clients[id].x;
 		temp.y = clients[id].y;
@@ -16,7 +16,7 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 		temp.sprite = clients[id].sprite;
 	}
 	else {
-		temp.type = -1;
+		//temp.type = -1;
 		temp.id = id;
 		temp.x = monsters[id].x;
 		temp.y = monsters[id].y;
@@ -33,8 +33,36 @@ upd_msg buildUpd (int id, int ismonster) { // retorna uma struct de update a par
 	return temp;
 }
 
-int dmg (int atk, int def) { // fazer!!
-	return atk > def ? atk : atk/2;
+int dmg (int atk, int def) { // sugestão (não entendo muito disso, foi só pra sugerir um modelo)
+	srand(time(NULL));
+	int damage;
+	int chance = rand()%101;
+
+	if (def < atk) {
+		damage = atk - def;
+
+		if (chance < 5) // 5%
+			return damage*2;
+		else if (chance < 10) // 5%
+			return damage*0.5;
+		else if (chance < 50) // 40%
+			return damage*1.5;
+		else // 50%
+			return damage;
+	} else {
+		damage = def - atk;
+
+		if (chance < 30) // 30%
+			return damage*0.3;
+		else if (chance < 70) // 40%
+			return damage*0.5;
+		else if (chance < 80) // 10%
+			return damage*0.7;
+		else if (chance < 90) // 10%
+			return damage;
+		else // 10%
+			return 0;
+	}
 }
 
 void battleUpd (int id, char move) {
@@ -81,7 +109,13 @@ void battleUpd (int id, char move) {
 			clients[id].fight = 0;
 			monsters[opponent].fight = 0;
 
-			if (clients[id].hp <= 0)
+			if (clients[id].hp < 0)
+				clients[id].hp = 0;
+
+			if (monsters[opponent].hp < 0)
+				monsters[opponent].hp = 0;
+
+			if (clients[id].hp == 0)
 				disconnectClient(id);
 
 			qnt_total--;
