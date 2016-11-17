@@ -19,17 +19,17 @@ int main () {
 }
 
 void game (char battle[30][110], char lose[30][110], char win[30][110]) {
-	// VARIÁVEIS DO SERVER
+	// variáveis do servidor
 	clientInfo info;
 	char msg[BUFFER_SIZE];
 	upd_msg upd;
 	mov_msg mov;
 
-	//VARIÁVEIS DO CLIENT
+	// variáveis do cliente
 	int id = -1;
-	int i, error = 0, start = 0, playing = 1;
+	int i, start = 0, playing = 1;
 	long int newtime, oldtime;
-	char escolha;
+	char choice;
 	
 	// menu
 	menu(&info);
@@ -48,12 +48,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 				qnt_clients = msg[0] - '0';
 				start = 1;
 			}
-			else
-				error = 1;
 		}
-
-		if (error)
-			exit(1);
 
 		mov.msg = getch();
 		if (mov.msg != -1)
@@ -147,28 +142,16 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 					for (i = 0; i < 28; i++)
 						printf("%s\n", lose[i]);
 
-					do {
-						escolha = getch();
+					do
+						choice = getch();
+					while (choice != 'h' && choice != 'q');
 
-						/*switch (escolha) {
-							case 't':
-								return;
-
-								break;
-							case 'q':
-								exit(1);
-
-								break;
-						}*/
-
-						if (escolha == 't') {
-							playing = 0;
-							break;
-						}
-						else if (escolha == 'q')
-							exit(1);
-						
-					} while (escolha != 't' && escolha != 'q');
+					if (choice == 'h') {
+						playing = 0;
+						break;
+					}
+					else if (choice == 'q')
+						exit(1);
 
 					break;
 
@@ -177,28 +160,16 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 					for (i = 0; i < 28; i++)
 						printf("%s\n", win[i]);
 
-					do {
-						escolha = getch();
+					do
+						choice = getch();
+					while (choice != 'h' && choice != 'q');
 
-						/*switch (escolha) {
-							case 'h':
-								return;
-
-								break;
-							case 'q':
-								exit(1);
-
-								break;
-						}*/
-
-						if (escolha == 'h') {
-							playing = 0;
-							break;
-						}
-						else if (escolha == 'q')
-							exit(1);
-
-					} while (escolha != 'h' && escolha != 'q');
+					if (choice == 'h') {
+						playing = 0;
+						break;
+					}
+					else if (choice == 'q')
+						exit(1);
 
 					break;
 

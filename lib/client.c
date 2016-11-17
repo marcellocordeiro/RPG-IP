@@ -1,6 +1,6 @@
 #include "client.h"
 
-void loadFile (char *filename, char screen[30][110]) {
+void loadFile (char *filename, char frame[30][110]) {
 	FILE* fp = fopen(filename, "rt");
 	int i;
 
@@ -9,7 +9,7 @@ void loadFile (char *filename, char screen[30][110]) {
 		exit(1);
 	}
 
-	for (i = 0; fscanf(fp, " %[^\n]", screen[i]) > 0; i++);
+	for (i = 0; fscanf(fp, " %[^\n]", frame[i]) > 0; i++);
 
 	fclose(fp);
 }

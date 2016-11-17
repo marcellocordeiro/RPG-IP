@@ -52,12 +52,12 @@
 #define MAX_MONSTERS 10
 
 #define PLAYER_HP 150 // player lvl 1
-#define PLAYER_ATK 40
-#define PLAYER_DEF 30
+#define PLAYER_ATK 50
+#define PLAYER_DEF 40
 
 #define MONSTER_HP 100 // monstro lvl 1
-#define MONSTER_ATK 35
-#define MONSTER_DEF 20
+#define MONSTER_ATK 45
+#define MONSTER_DEF 35
 
 #define asteristico 1 // esses números são usados para proporção, exemplo asteristico 1 de 5 = 20%
 #define espaco 4 // espaco 4 de 5 = 80%

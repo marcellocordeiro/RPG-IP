@@ -21,7 +21,7 @@ int main () {
 		// se foi alguém se comunicando...
 		wasClient();
 
-		//broadcasting das modificações do mapa
+		// broadcast das modificações do mapa
 		if (game_status == 2)
 			broadcast();
 	}

@@ -29,15 +29,19 @@ void buildUpd (int id, int ismonster, int type) { // retorna uma struct de updat
 	pos_broad++;
 }
 
-int dmg (int atk, int def) { // sugestão 2
+int dmg (int atk, int def) { // sugestão 3
 	int chance = rand()%101;
 	int damage;
 
+	/*
 	if (def > atk)
 		damage = (def - atk)/3;
 	else
 		damage = atk - def;
-	
+	*/
+
+	damage = (20*atk)/def;
+
 	if (chance < 5) // 5%
 		return damage*2;
 	else if (chance < 10) // 5%
@@ -47,66 +51,6 @@ int dmg (int atk, int def) { // sugestão 2
 	else // 50%
 		return damage;
 }
-
-/*int dmg (int atk, int def) { // sugestão
-	srand(time(NULL));
-	int chance = rand()%101;
-	int damage, atk1;
-
-	if (chance < 25) // 25%
-		atk1 = atk*2;
-	else if (chance < 50) // 25%
-		atk1 = atk*0.5;
-	else // 50%
-		atk1 = atk;
-
-	damage = atk1 - def;
-
-	if (damage < 0)
-		damage = 0;
-
-	return damage;
-}*/
-
-/*
-int dmg (int atk, int def) { // sugestão
-	srand(time(NULL));
-	int chance = rand()%101;
-	int damage;
-
-	damage = atk/2 - def/4;
-
-	if (damage > 0)
-		return damage;
-	else
-		return 0;
-
-	if (def < atk) {
-		damage = atk - def;
-
-		if (chance < 5) // 5%
-			return damage*2;
-		else if (chance < 10) // 5%
-			return damage*0.5;
-		else if (chance < 50) // 40%
-			return damage*1.5;
-		else // 50%
-			return damage;
-	} else { // não faz muito sentido
-		damage = def - atk;
-
-		if (chance < 30) // 30%
-			return damage*0.3;
-		else if (chance < 70) // 40%
-			return damage*0.5;
-		else if (chance < 80) // 10%
-			return damage*0.7;
-		else if (chance < 90) // 10%
-			return damage;
-		else // 10%
-			return 0;
-	}
-}*/
 
 void battleUpd (int id, char move) {
 	int chance;
@@ -304,7 +248,6 @@ void initClients () {
 		clients[id].atk = PLAYER_ATK;
 		clients[id].def = PLAYER_DEF;
 		clients[id].sprite = '^';
-		//clients[id].sprite = id + '0';
 	}
 }
 
