@@ -38,7 +38,6 @@ void MyBroadcast(char *s); // um exemplo de como mandar uma mensagem para todos 
 
 void (*clientMoved)(int, mov_msg);
 void (*clientConnected)(int, clientInfo);
-void (*clientDisconnected)(int);
 void (*clientConfirmed)(void);
 
 void buildUpd(int id, int ismonster, int type);

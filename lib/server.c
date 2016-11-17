@@ -33,13 +33,6 @@ int dmg (int atk, int def) { // sugestão 3
 	int chance = rand()%101;
 	int damage;
 
-	/*
-	if (def > atk)
-		damage = (def - atk)/3;
-	else
-		damage = atk - def;
-	*/
-
 	damage = (20*atk)/def;
 
 	if (chance < 5) // 5%
@@ -80,8 +73,10 @@ void battleUpd (int id, char move) {
 	}
 
 	if (clients[id].fight == 1) { // se a batalha for contra monstro
-		clients[id].hp -= dmg(monsters[opponent].atk, clients[id].def); // dano calculado a partir do ataque do monstro e da defesa do player
 		monsters[opponent].hp -= dmg(clients[id].atk, monsters[opponent].def); // dano calculado a partir do ataque do player e da defesa do monstro
+		
+		if (monsters[opponent].hp > 0) // evita que os dois morram ao mesmo tempo
+			clients[id].hp -= dmg(monsters[opponent].atk, clients[id].def); // dano calculado a partir do ataque do monstro e da defesa do player
 
 		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) { // se alguém morreu, a batalha termina
 			clients[id].fight = 0;
@@ -303,35 +298,40 @@ void monsterMove () {
 	}
 }
 
-void init(){
+void init () {
 	clients_connected = 0;
 	pos_broad = 0;
 	game_status = 0;
 	sock = makeSocket (PORT);
-	if (listen (sock, 100) < 0){
+	
+	if (listen (sock, 100) < 0) {
 		perror ("listen");
 		exit (EXIT_FAILURE);
 	}
 
 	FD_ZERO (&active_fd_set);
 	FD_SET (sock, &active_fd_set);
+
 	memset(clients, 0, sizeof clients);
 	memset(monsters, 0, sizeof monsters);
 }
 
-int makeSocket (uint16_t port){
+int makeSocket (uint16_t port) {
 	int sock;
 	struct sockaddr_in name;
 
 	sock = socket (AF_INET, SOCK_STREAM, 0);
-	if (sock < 0){
+	
+	if (sock < 0) {
 		perror ("socket");
 		exit (EXIT_FAILURE);
 	}
+
 	name.sin_family = AF_INET;
 	name.sin_port = htons (port);
 	name.sin_addr.s_addr = htonl (INADDR_ANY);
-	if (bind (sock, (struct sockaddr *) &name, sizeof (name)) < 0){
+	
+	if (bind(sock, (struct sockaddr *) &name, sizeof (name)) < 0) {
 		perror ("bind");
 		exit (EXIT_FAILURE);
 	}
@@ -339,41 +339,48 @@ int makeSocket (uint16_t port){
 	return sock;
 }
 
-int readMovFromClient (int filedes, mov_msg *message){
+int readMovFromClient (int filedes, mov_msg *message) {
 	int nbytes = read (filedes, message, sizeof(mov_msg));
+	
 	if (nbytes <= 0)
 		return -1;
+
 	return 0;
 }
 
-int readClientInfo (int filedes, clientInfo *message){
+int readClientInfo (int filedes, clientInfo *message) {
 	int nbytes = read (filedes, message, sizeof(clientInfo));
+	
 	if (nbytes <= 0)
 		return -1;
+
 	return 0;
 }
 
-void sendTxtToClient(int filedes, const char msg[]){
+void sendTxtToClient (int filedes, const char msg[]) {
 	write (filedes, msg, BUFFER_SIZE);
 }
 
-void sendUpdToClient(int filedes, upd_msg change) {
+void sendUpdToClient (int filedes, upd_msg change) {
 	write (filedes, &change, sizeof(upd_msg));
 }
 
-void sleepServer() {
+void sleepServer () {
 	read_fd_set = active_fd_set;
-	if (select (FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0){
+	
+	if (select (FD_SETSIZE, &read_fd_set, NULL, NULL, NULL) < 0) {
 		perror ("select");
 		exit (EXIT_FAILURE);
 	}
 }
 
-void checkConn() {
+void checkConn () {
 	int i, sd;
-	if(FD_ISSET(sock, &read_fd_set)){//connect
+	
+	if (FD_ISSET(sock, &read_fd_set)) { //connect
 		int new;
 		new = accept (sock, NULL, NULL);
+		
 		if (new < 0){
 			perror ("accept");
 			exit (EXIT_FAILURE);
@@ -381,20 +388,22 @@ void checkConn() {
 
 		clientInfo startInfo;
 		char msg[BUFFER_SIZE];
-		if(readClientInfo(new, &startInfo) < 0)
+		
+		if (readClientInfo(new, &startInfo) < 0)
 			return;
 
-		if(clients_connected == MAX_CLIENTS || game_status == 2){
+		if (clients_connected == MAX_CLIENTS || game_status == 2) {
 			sendTxtToClient(new, "- O jogo já começou ou já temos muitos clientes conectados");
 			close(new);
 		}
-		else{
-			FD_SET (new, &active_fd_set);
-			for(i = 0; i < MAX_CLIENTS; ++i){
-				if(clients[i].sockid == 0){
+		else {
+			FD_SET(new, &active_fd_set);
+			
+			for (i = 0; i < MAX_CLIENTS; i++) {
+				if (clients[i].sockid == 0) {
 					clients[i].sockid = new;
 					clientConnected(i, startInfo);
-					++clients_connected;
+					clients_connected++;
 					break;
 				}
 			}
@@ -402,70 +411,64 @@ void checkConn() {
 	}
 }
 
-void wasClient() {
+void wasClient () {
 	int i, sd;
-	for (i = 0; i < MAX_CLIENTS; ++i){
+	
+	for (i = 0; i < MAX_CLIENTS; i++) {
 		sd = clients[i].sockid;
-		if (FD_ISSET (sd, &read_fd_set)){
+
+		if (FD_ISSET (sd, &read_fd_set)) {
 			mov_msg new_mov;
-			if (readMovFromClient (sd, &new_mov) < 0){ //o usuário de desconectou.
-				//printf("Client %d disconnected\n",  i);
-				//close (sd);
-				//FD_CLR (sd, &active_fd_set);
-				//clients[i].sockid = 0;
-				//--clients_connected;
-				if(clientDisconnected != NULL){
-					clientDisconnected(i);
-				}
-				if(clients_connected == 0)
-					game_status = 0;
-			}else{
-				if(game_status == 1 && i == 0){
+
+			if (readMovFromClient(sd, &new_mov) < 0) //o usuário de desconectou.
+				disconnectClient(i);
+			else {
+				if (game_status == 1 && i == 0)
 					clientConfirmed();
-				}
-				else if(game_status == 2){
+				else if (game_status == 2)
 					clientMoved(i, new_mov);
-				}
 			}
 		}
 	}
 }
 
-void broadcast() {
+void broadcast () {
 	assert(game_status == 2);
-	int i, sd, j = 0;
-	for (i = 0; i < MAX_CLIENTS; ++i){
+	int i, j, sd;
+
+	for (i = 0; i < MAX_CLIENTS; i++) {
 		sd = clients[i].sockid;
-		if (sd > 0){
-			for (j = 0; j < pos_broad; ++j) {
-				sendUpdToClient(sd, map_changes[j]);
-			}
-		}
+
+		for (j = 0; sd > 0 && j < pos_broad; j++)
+			sendUpdToClient(sd, map_changes[j]);
 	}
 
 	pos_broad = 0;
 }
 
-void broadcastTxt(const char msg[], int s){
+void broadcastTxt (const char msg[], int s) {
 	int i, sd;
-	for (i = 0; i < MAX_CLIENTS; ++i){
+
+	for (i = 0; i < MAX_CLIENTS; i++) {
 		sd = clients[i].sockid;
-		if (sd > 0 && i != s){
+		
+		if (sd > 0 && i != s)
 			sendTxtToClient(sd, msg);
-		}
 	}
 }
 
-void disconnectClient(int id){
-	printf("Client %d disconnected\n",  id);
+void disconnectClient (int id) {
+	printf("Client %d disconnected\n", id);
 	close (clients[id].sockid);
 	FD_CLR (clients[id].sockid, &active_fd_set);
 	clients[id].sockid = 0;
 	clients_connected--;
 
-	shutdown(clients[id].sockid, SHUT_RD);
-	clients[id].sockid = 0;
-
-	if(clients_connected == 0)
+	if (clients_connected == 0) {
 		game_status = 0;
+		pos_broad = 0;
+
+		memset(clients, 0, sizeof clients);
+		memset(monsters, 0, sizeof monsters);
+	}
 }

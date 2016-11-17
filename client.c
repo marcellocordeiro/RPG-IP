@@ -68,8 +68,6 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 	for (i = 0; i < 13; i++) 
 		printf("\n");
 
-	//delay(2);
-
 	newtime = time(NULL);
 	oldtime = time(NULL);
 

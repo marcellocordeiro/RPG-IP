@@ -7,7 +7,6 @@ int main () {
 	clientMoved = MyClientMoved;
 	clientConnected = MyClientConnected;
 	clientConfirmed = startGame;
-	clientDisconnected = disconnectClient;
 
 	init();
 
@@ -49,11 +48,11 @@ void MyClientConnected (int id, clientInfo startInfo) {
 		sprintf(map_name, "data/mapa%d.txt", startInfo.mapa);
 
 		fpmap = fopen(map_name, "rt");
-			if (fpmap == NULL) {
-				system("clear");
-				printf("ERRO: MAPA NÃO ENCONTRADO\n");
-				exit(1);
-			}
+		if (fpmap == NULL) {
+			system("clear");
+			printf("ERRO: MAPA NÃO ENCONTRADO\n");
+			exit(1);
+		}
 
 		fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
 
@@ -71,13 +70,11 @@ void MyClientMoved (int id, mov_msg mov) {
 
 	if (mov.upd_monsters == 1) { // update dos monstros
 		monsterMove();
-
 		return;
 	}
 
 	if (clients[id].fight && clients[id].turn) { // update da batalha
 		battleUpd(id, mov.msg);
-
 		return;
 	}
 

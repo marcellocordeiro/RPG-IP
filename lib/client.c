@@ -68,8 +68,7 @@ char* color (int id) {
 }
 
 void printcchar (char *color, char c) {	
-	printf("%s%c", color, c);
-	printf("%s", KNRM);
+	printf("%s%c%s", color, c, KNRM);
 }
 
 void drawall () {
@@ -87,16 +86,16 @@ void drawall () {
 
 			for (k = 0; k < map.qnt_monsters && !flag; k++) {
 				if((i == monsters[k].x && j == monsters[k].y) && monsters[k].hp > 0) {
-					printcchar(KWHT, monsters[k].sprite);
+					printcchar(CWHT, monsters[k].sprite);
 					flag = 1;
 				}
 			}
 
 			if (flag == 0) {
 				if ((i == 0 || j == 0) || (i == map.height - 1 || j == map.width - 1))
-					printcchar(KRED, map.map[i][j]);
+					printcchar(CRED, map.map[i][j]);
 				else
-					printcchar(KGRN, map.map[i][j]);
+					printcchar(CGRN, map.map[i][j]);
 			}
 			else
 				flag = 0;
@@ -112,13 +111,13 @@ void drawmenus (char menu[100][100], int height, int width) {
 	for(i = 0; i < height; i++) {
 		for(j = 0; j < width; j++) {
 			if (menu[i][j] != '*' && menu[i][j] != ' ')
-				printcchar(KWHT, menu[i][j]);
+				printcchar(CWHT, menu[i][j]);
 			else if ((i == 0 || j == 0) || (i == height - 1 || j == width - 1))
-				printcchar(KRED, menu[i][j]);
+				printcchar(CRED, menu[i][j]);
 			else if ((j + 1 < width && (menu[i][j] == '*' && menu[i][j + 1] == ' ')) || (i > 0 && (menu[i][j] == '*' && menu[i - 1][j] == ' ')) || (i + 1 < height && (menu[i][j] == '*' && menu[i + 1][j] == ' ')) || (j > 0 && (menu[i][j] == '*' && menu[i][j - 1] == ' ')))
-				printcchar(KBLU, menu[i][j]);
+				printcchar(CBLU, menu[i][j]);
 			else
-				printcchar(KGRN, menu[i][j]);
+				printcchar(CGRN, menu[i][j]);
 		}
 
 		printf("\n");
@@ -333,7 +332,7 @@ void createRandomMap (clientInfo *info) {
 	fclose(fpmap);
 }
 
-void connectToServer(const char *server_IP){
+void connectToServer (const char *server_IP) {
 	network_socket = socket(AF_INET, SOCK_STREAM, 0);
 	server_address.sin_family = AF_INET;
 	server_address.sin_port = htons(PORT);
@@ -341,32 +340,33 @@ void connectToServer(const char *server_IP){
 	if(server_IP == NULL)
 		server_address.sin_addr.s_addr = INADDR_ANY;
 	else
-		inet_aton(server_IP, &server_address.sin_addr); // lembra de tirar o .s_addr
+		inet_aton(server_IP, &server_address.sin_addr);
 
 	printf("Connecting...\n");
 	int connection_status = connect(network_socket, (struct sockaddr *) &server_address, sizeof(server_address));
-	if(connection_status==0){
+	
+	if (connection_status == 0)
 		printf("Connected\n");
-	}else if(connection_status==-1){
+	else if (connection_status == -1) {
 		printf("ERROR! Connection was not successful\n");
 		exit(1);
 	}
 
-	int flags = fcntl(network_socket, F_GETFL, 0); //<<< o read não vai parar o programa mais...
+	int flags = fcntl(network_socket, F_GETFL, 0);
 	fcntl(network_socket, F_SETFL, flags | O_NONBLOCK);
 }
 
-int sendMovToServer(mov_msg message){
+int sendMovToServer (mov_msg message) {
 	return write(network_socket, &message, sizeof(mov_msg));
 }
 
 
-int readTxtFromServer(char* message){
-	usleep(1000); // dar um tempinho, já que n para e fica esperando
+int readTxtFromServer (char* message) {
+	usleep(1000);
 	return read(network_socket, message, BUFFER_SIZE);
 }
 
-int getch() {
+int getch () {
 	struct termios oldt, newt;
 	int ch;
 	struct pollfd mypoll = { STDIN_FILENO, POLLIN|POLLPRI };
@@ -376,22 +376,23 @@ int getch() {
 
 	tcsetattr(STDIN_FILENO, TCSANOW, &newt);
 
-	if ( poll(&mypoll, 1, 100)){
+	if (poll(&mypoll, 1, 100)) {
 		ch = getchar();
 		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 	}
-	else{
+	else {
 		tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
 		return -1;
 	}
+
 	return ch;
 }
 
-int sendInfoToServer(clientInfo info){
+int sendInfoToServer (clientInfo info) {
 	return write(network_socket, &info, sizeof(clientInfo));
 }
 
-int readUpdFromServer(upd_msg* message){
-	usleep(100); // dar um tempinho, já que n para e fica esperando
+int readUpdFromServer (upd_msg* message) {
+	usleep(100);
 	return read(network_socket, message, sizeof(upd_msg));
 }
