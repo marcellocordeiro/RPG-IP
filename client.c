@@ -199,7 +199,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 			}
 		}
 
-		if (id == 0) {
+		if (id == firstAlive()) {
 			if (newtime - oldtime >= 1) {
 				mov.upd_monsters = 1;
 				sendMovToServer(mov);

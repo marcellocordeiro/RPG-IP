@@ -1,5 +1,15 @@
 #include "client.h"
 
+int firstAlive () {
+	int i;
+
+	for (i = 0; i < qnt_clients; i++)
+		if (players[i].hp > 0) 
+			return i;
+
+	return -1;
+}
+
 void loadFile (char *filename, char frame[30][110]) {
 	FILE* fp = fopen(filename, "rt");
 	int i;
