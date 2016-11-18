@@ -30,12 +30,11 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 	int i, start = 0, playing = 1;
 	long int newtime, oldtime;
 	char choice;
-	
+
 	// menu
 	menu(&info);
 
-	// mapa
-	FILE *fpmap; // ponteiro para o arquivo do mapa
+	// nome do mapa
 	char map_name[16];
 
 	while (id == -1) // receber o id do client
@@ -97,7 +96,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 						printf("monsters[%d].y: %d\n", i, monsters[i].y);
 					}
 					*/
-					
+
 					system("clear");
 					if (!players[id].fight) {
 						drawall();
@@ -174,19 +173,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 				case 6: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					// lê o arquivo do mapa escolhido e o salva na matriz
 					sprintf(map_name, "data/mapa%d.txt", upd.id);
-
-					fpmap = fopen(map_name, "rt");
-					if (fpmap == NULL) {
-						system("clear");
-						printf("ERRO: MAPA NÃO ENCONTRADO\n");
-						exit(1);
-					}
-					fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
-					
-					for(i = 0; i < map.height; i++)
-						fscanf(fpmap, " %[^\n]", map.map[i]);
-
-					fclose(fpmap);
+					loadMap(map_name);
 					
 					break;
 

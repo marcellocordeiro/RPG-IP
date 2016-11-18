@@ -24,6 +24,23 @@ void loadFile (char *filename, char frame[30][110]) {
 	fclose(fp);
 }
 
+void loadMap (char *filename) {
+	FILE *fp = fopen(filename, "rt");; // ponteiro para o arquivo do mapa
+	int i;
+
+	if (fp == NULL) {
+		system("clear");
+		printf("ERRO: MAPA NÃO ENCONTRADO\n");
+		exit(1);
+	}
+	fscanf(fp, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
+
+	for(i = 0; i < map.height; i++)
+		fscanf(fp, " %[^\n]", map.map[i]);
+
+	fclose(fp);
+}
+
 void readUpd (upd_msg upd) {
 	if (!upd.ismonster) {
 		players[upd.id].x = upd.x;
