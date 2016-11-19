@@ -123,7 +123,7 @@ void drawall () {
 }
 
 void drawmenus (char menu[100][100], int height, int width) {
-	int i, j, flag = 0;
+	int i, j;
 	
 	for(i = 0; i < height; i++) {
 		for(j = 0; j < width; j++) {
@@ -235,9 +235,9 @@ void menu (clientInfo *info) {
 			mainmenu[navm[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu
 		}
 		else if (draw == OPTIONS) { // menu de opcoes
-			for (i = 0; i < options_height; i++)
-				printf("%s\n", options[i]);
-			//drawmenus(options, options_height, strlen(options[0]));
+			//for (i = 0; i < options_height; i++)
+			//	printf("%s\n", options[i]);
+			drawmenus(options, options_height, strlen(options[0]));
 
 			do
 				dir = getch();

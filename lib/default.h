@@ -27,7 +27,7 @@
 #define qnt_menu 3 // quantidade de opcoes no menu principal
 #define menu_positions 23, 25, 27 // linhas de cada opcao do menu principal
 #define qnt_options 5 // quantidade de opcoes no menu de opcoes
-#define options_positions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
+#define options_positions 23, 25, 27, 29, 31 // linhas de cada opcao no menu de opcoes
 #define cursor_pos 22 // coluna da seta >
 
 #define KNRM  "\x1B[0m"
