@@ -25,7 +25,7 @@
 #define right 'd'
 
 #define qnt_menu 3 // quantidade de opcoes no menu principal
-#define menu_positions 20, 22, 24 // linhas de cada opcao do menu principal
+#define menu_positions 23, 25, 27 // linhas de cada opcao do menu principal
 #define qnt_options 5 // quantidade de opcoes no menu de opcoes
 #define options_positions 20, 22, 24, 26, 28 // linhas de cada opcao no menu de opcoes
 #define cursor_pos 22 // coluna da seta >
@@ -47,6 +47,15 @@
 #define CMAG  "\x1B[95m"
 #define CCYN  "\x1B[96m"
 #define CWHT  "\x1B[97m"
+
+#define FGRY  "\x1B[100m"
+#define FRED  "\x1B[101m"
+#define FGRN  "\x1B[102m"
+#define FYEL  "\x1B[103m"
+#define FBLU  "\x1B[104m"
+#define FMAG  "\x1B[105m"
+#define FCYN  "\x1B[106m"
+#define FWHT  "\x1B[107m"
 
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10

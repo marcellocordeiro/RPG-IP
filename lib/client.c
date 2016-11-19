@@ -127,14 +127,12 @@ void drawmenus (char menu[100][100], int height, int width) {
 	
 	for(i = 0; i < height; i++) {
 		for(j = 0; j < width; j++) {
-			if (menu[i][j] != '*' && menu[i][j] != ' ')
-				printcchar(CWHT, menu[i][j]);
-			else if ((i == 0 || j == 0) || (i == height - 1 || j == width - 1))
-				printcchar(CRED, menu[i][j]);
-			else if ((j + 1 < width && (menu[i][j] == '*' && menu[i][j + 1] == ' ')) || (i > 0 && (menu[i][j] == '*' && menu[i - 1][j] == ' ')) || (i + 1 < height && (menu[i][j] == '*' && menu[i + 1][j] == ' ')) || (j > 0 && (menu[i][j] == '*' && menu[i][j - 1] == ' ')))
+			if (menu[i][j] == '1')
+				menu[i][j] = ' ';
+			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_')
 				printcchar(CBLU, menu[i][j]);
 			else
-				printcchar(CGRN, menu[i][j]);
+				printcchar(KNRM, menu[i][j]);
 		}
 
 		printf("\n");
@@ -203,9 +201,9 @@ void menu (clientInfo *info) {
 		system("clear"); // limpa o terminal
 
 		if (draw == MAIN) { // menu principal
-			for (i = 0; i < main_height; i++)
-				printf("%s\n", mainmenu[i]); // mostra o menu
-			//drawmenus(mainmenu, main_height, strlen(mainmenu[0]));
+			//for (i = 0; i < main_height; i++)
+			//	printf("%s\n", mainmenu[i]); // mostra o menu
+			drawmenus(mainmenu, main_height, strlen(mainmenu[0]));
 
 			do
 				dir = getch();
