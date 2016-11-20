@@ -37,27 +37,32 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 	// nome do mapa
 	char map_name[16];
 
-	while (id == -1) // receber o id do client
-		if (readTxtFromServer(msg) > 0)
-			id = msg[0] - '0';
-
-	while (!start) { // espera o servidor começar o jogo
+	while (id == -1) { // receber o id do client
 		if (readTxtFromServer(msg) > 0) {
-			if (msg[0] > '0' && msg[0] <= '9') {
-				qnt_clients = msg[0] - '0';
-				start = 1;
+			if (msg[0] >= '0' && msg[0] <= '9') // se receber um número, é o id
+				id = msg[0] - '0';
+			else { // caso contrário, é uma mensagem de erro
+				printf("%s\n", msg);
+				exit(1);
 			}
 		}
+	}
 
-		mov.msg = getch();
+	while (!start) {
+		mov.msg = getch(); // espera uma confirmação do player 0
 		if (mov.msg != -1)
 			sendMovToServer(mov);
+
+		if (readTxtFromServer(msg) > 0) { // espera o servidor começar o jogo
+			qnt_clients = msg[0] - '0';
+			start = 1;
+		}
 	}
 
 	// formatação e mensagem de start game
 	system("clear");
 
-	for (i = 0; i < 13; i++) 
+	for (i = 0; i < 13; i++)
 		printf("\n");
 	for (i = 0; i < 3; i++)
 		printf("\t");
