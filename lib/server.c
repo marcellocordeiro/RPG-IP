@@ -393,7 +393,7 @@ void checkConn () {
 			return;
 
 		if (clients_connected == MAX_CLIENTS || game_status == 2) {
-			sendTxtToClient(new, "- O jogo já começou ou já temos muitos clientes conectados");
+			sendTxtToClient(new, "O jogo já começou ou já temos muitos clientes conectados");
 			close(new);
 		}
 		else {
@@ -424,7 +424,7 @@ void wasClient () {
 				disconnectClient(i);
 			else {
 				if (game_status == 1 && i == 0)
-					clientConfirmed();
+					startGame();
 				else if (game_status == 2)
 					clientMoved(i, new_mov);
 			}

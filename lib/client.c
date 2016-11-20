@@ -185,8 +185,8 @@ void menu (clientInfo *info) {
 	char dir; // tecla pressionada
 
 	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
-	strcpy((*info).nome, "default"); // nome padrao
-	(*info).mapa = 1; // mapa padrao
+	strcpy((*info).name, "default"); // nome padrao
+	(*info).map = 1; // mapa padrao
 
 	while (fscanf(fpm, " %[^\n]", mainmenu[main_height]) > 0) // preenche a matriz com o menu principal
 		main_height++;
@@ -251,11 +251,11 @@ void menu (clientInfo *info) {
 				cursor++;
 			else if (dir == right && cursor == 0) { // trocar o nome o player
 				printf("Digite seu nome: ");
-				scanf(" %[^\n]", (*info).nome);
+				scanf(" %[^\n]", (*info).name);
 			}
 			else if (dir == right && cursor == 1) { // trocar o mapa do player
 				printf("Digite o mapa que deseja utilizar: ");
-				scanf("%d", &(*info).mapa);				
+				scanf("%d", &(*info).map);				
 			}
 			else if (dir == right && cursor == 2) { // trocar o ip do servidor
 				printf("Digite o ip do servidor: ");
@@ -297,7 +297,7 @@ void createRandomMap (clientInfo *info) {
 
 		sprintf(map_name, "data/mapa%d.txt", i); // coloca o i na string
 		fpmap = fopen(map_name, "r"); // tenta abrir o mapa
-		(*info).mapa = i;
+		(*info).map = i;
 	}
 
 	fpmap = fopen(map_name, "w"); // abre o mapa com o número encontrado

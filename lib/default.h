@@ -78,12 +78,12 @@ enum {
 };
 
 struct clientInfo {
-	int mapa;
-	char nome[NAME_SIZE];
+	char name[NAME_SIZE];
+	int map;
 };
 
 struct player_data { // MUDAR NOME!! (ainda?)
-	char name[NAME_SIZE];
+	char *name;
 	int x, y;
 	int hp, max_hp, atk, def, turn; // int informações do game, hp, ataque, defesa, pontos...
 	int fight, whofight;
@@ -113,7 +113,7 @@ struct mov_msg {
 struct upd_msg { //Mensagem de atualização do jogo
 	int type;
 	int id;
-	char name[NAME_SIZE];
+	//char name[NAME_SIZE];
 	int x, y;
 	int ismonster;
 	int hp, atk, def;

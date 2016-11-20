@@ -4,10 +4,6 @@ int main () {
 	srand(time(NULL)); // seed pra usar o rand durante o jogo
 	rand();
 
-	clientMoved = MyClientMoved;
-	clientConnected = MyClientConnected;
-	clientConfirmed = startGame;
-
 	init();
 
 	while (1) {
@@ -26,13 +22,15 @@ int main () {
 	}
 }
 
-void MyClientConnected (int id, clientInfo startInfo) {
+void clientConnected (int id, clientInfo startInfo) {
 	FILE *fpmap;
 	int i;
 	char str[1];
 	char map_name[16];
 
-	printf("Client %s connected, id = %d, map = %d\n", startInfo.nome, id, startInfo.mapa);
+	clients[id].name = startInfo.name;
+
+	printf("Client %s connected, id = %d, map = %d\n", startInfo.name, id, startInfo.map);
 	game_status = 1;
 
 	str[0] = id + '0';
@@ -42,10 +40,10 @@ void MyClientConnected (int id, clientInfo startInfo) {
 	if (id == 0) {
 		// mandar o número do mapa para os clients
 		map_changes[pos_broad].type = 6;
-		map_changes[pos_broad].id = startInfo.mapa;
+		map_changes[pos_broad].id = startInfo.map;
 		pos_broad++;
 
-		sprintf(map_name, "data/mapa%d.txt", startInfo.mapa);
+		sprintf(map_name, "data/mapa%d.txt", startInfo.map);
 
 		fpmap = fopen(map_name, "rt");
 		if (fpmap == NULL) {
@@ -63,7 +61,7 @@ void MyClientConnected (int id, clientInfo startInfo) {
 	}
 }
 
-void MyClientMoved (int id, mov_msg mov) {
+void clientMoved (int id, mov_msg mov) {
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	int i, found = -1, found2 = -1;
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
@@ -213,6 +211,7 @@ void startGame(){
 		buildUpd(id, 1, 7);
 }
 
+/*
 void MyBroadcast(char *s){
 	int id;
 	
@@ -220,3 +219,4 @@ void MyBroadcast(char *s){
 		if(clients[id].sockid > 0)
 			sendTxtToClient(clients[id].sockid, s);
 }
+*/

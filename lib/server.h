@@ -31,14 +31,10 @@ fd_set active_fd_set, read_fd_set; // variáveis auxiliares do server
 struct sockaddr_in clientname;
 
 /// FUNÇÕES
-void MyClientConnected(int id, clientInfo startInfo); // função que é chamada quando um cliente é connectado
-void MyClientMoved(int id, mov_msg mov); // função que é chamada quando cleinte manda mensagem de movimento
-void startGame(void); // função que é chamada quando cliente 0 confirma o inicio do jogo
-void MyBroadcast(char *s); // um exemplo de como mandar uma mensagem para todos os usuários
-
-void (*clientMoved)(int, mov_msg);
-void (*clientConnected)(int, clientInfo);
-void (*clientConfirmed)(void);
+void clientConnected(int id, clientInfo startInfo); // função que é chamada quando um cliente é connectado
+void clientMoved(int id, mov_msg mov); // função que é chamada quando cleinte manda mensagem de movimento
+void startGame(); // função que é chamada quando cliente 0 confirma o inicio do jogo
+//void MyBroadcast(char *s); // um exemplo de como mandar uma mensagem para todos os usuários
 
 void buildUpd(int id, int ismonster, int type);
 int dmg(int atk, int def);

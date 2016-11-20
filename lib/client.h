@@ -12,8 +12,8 @@ int network_socket;
 struct sockaddr_in server_address;
 
 // FUNÇÕES
-int firstAlive();
 void game(char battle[30][110], char lose[30][110], char win[30][110]);
+int firstAlive();
 void loadFile(char *filename, char frame[30][110]);
 void loadMap(char *filename);
 void readUpd(upd_msg upd);
