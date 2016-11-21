@@ -340,7 +340,6 @@ void menu (int draw) {
 	}
 }
 
-// AS VEZES FUNCIONA, AS VEZES NÃO!!!!! --> consertado (?)
 void createRandomMap (clientInfo *info) {
 	srand(time(NULL));
 	rand();

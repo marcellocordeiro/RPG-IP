@@ -111,17 +111,6 @@ void battleUpd (int id, char move) {
 			clients[id].fight = 0;
 			clients[opponent].fight = 0;
 
-			if (clients[id].hp <= 0) {
-				map_changes[pos_broad].type = 1;
-				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
-				disconnectClient(id);
-			}
-			else {
-				map_changes[pos_broad].type = 1;
-				sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
-				disconnectClient(opponent);
-			}
-
 			qnt_total--;
 
 			if (qnt_total == 1) {
@@ -129,11 +118,27 @@ void battleUpd (int id, char move) {
 					map_changes[pos_broad].type = 1;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 					disconnectClient(opponent);
-				}
-				else {
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+				}
+				else {
+					map_changes[pos_broad].type = 1;
+					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 					disconnectClient(id);
+					map_changes[pos_broad].type = 2;
+					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
+				}
+			}
+			else {
+				if (clients[id].hp <= 0) {
+					map_changes[pos_broad].type = 1;
+					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+					disconnectClient(id);
+				}
+				else {
+					map_changes[pos_broad].type = 1;
+					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
+					disconnectClient(opponent);
 				}
 			}
 		}
