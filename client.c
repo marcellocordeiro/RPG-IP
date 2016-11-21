@@ -1,10 +1,11 @@
 #include "lib/client.h"
 
 int main () {
+	// ler as telas das telas do jogo (menu principal, menu de opções, batalha e game over)
 	loadAll();
 	
 	while (1)
-		game(); // sugestão (o nome tá ok?)
+		game();
 
 	return 0;
 }
@@ -21,7 +22,7 @@ void game () {
 	long int newtime, oldtime;
 	char choice;
 
-	// menu
+	// menu principal
 	menu(MAIN);
 
 	// nome do mapa
@@ -65,7 +66,7 @@ void game () {
 	newtime = time(NULL);
 	oldtime = time(NULL);
 
-	//receber informações iniciais do jogo(mapa, status inicial, etc...)
+	//receber informações iniciais do jogo (mapa, status inicial, etc...) e fazer as atualizações de movimento
 	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
 	while (playing) {
 		while (readUpdFromServer(&upd) > 0) { // recebe todas mensagens
@@ -74,68 +75,30 @@ void game () {
 					// atualizando os vetores players e monsters
 					readUpd(upd);
 
-					/*
-					for (i = 0; i < qnt_clients; i++) { // debug
-						printf("players[%d].sprite: %c\n", i, players[i].sprite);
-						printf("players[%d].color: %scolor%s\n", i, color(i), KNRM);
-						printf("players[%d].x: %d\n", i, players[i].x);
-						printf("players[%d].y: %d\n", i, players[i].y);
-					}
-					*/
-
-					/*
-					for (i = 0; i < map.qnt_monsters; i++) { // debug
-						printf("monsters[%d].sprite: %c\n", i, monsters[i].sprite);
-						printf("monsters[%d].color: %scolor%s\n", i, KWTH, KNRM);
-						printf("monsters[%d].x: %d\n", i, monsters[i].x);
-						printf("monsters[%d].y: %d\n", i, monsters[i].y);
-					}
-					*/
-
 					system("clear");
 					if (!players[id].fight) {
 						printMap();
 
-						printf("%splayer %d\n", color(id), id);
-						//printf("HP:\t%d\n", players[id].hp);
-						printf("ATK:\t%d\n",players[id].atk);
-						printf("DEF:\t%d%s\n", players[id].def, KNRM);
-						printHpBar(players[id].hp, players[id].max_hp);
+						printStats(id, 0);
 					}
 					else { // batalha
+						// imprime a tela de batalha
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
 						//printMenu(battle, battle_height); // lento
 
-						printf("%splayer %d\n", color(id), id);
-						//printf("HP:\t%d\n", players[id].hp);
-						printf("ATK:\t%d\n", players[id].atk);
-						printf("DEF:\t%d%s\n\n", players[id].def, KNRM);
-						printHpBar(players[id].hp, players[id].max_hp);
+						printStats(id, 0);
 						
-						if (players[id].fight == 1) {
-							printf("%smonster\n", KWHT);
-							//printf("HP:\t%d\n", monsters[players[id].whofight].hp);
-							printf("ATK:\t%d\n", monsters[players[id].whofight].atk);
-							printf("DEF:\t%d%s\n\n", monsters[players[id].whofight].def, KNRM);
-							printHpBar(monsters[players[id].whofight].hp, monsters[players[id].whofight].max_hp);
-						}
-						else {
-							printf("%splayer %d\n", color(players[id].whofight), players[id].whofight);
-							printf("HP:\t%d\n", players[players[id].whofight].hp);
-							printf("ATK:\t%d\n", players[players[id].whofight].atk);
-							printf("DEF:\t%d%s\n\n", players[players[id].whofight].def, KNRM);
-							printHpBar(players[players[id].whofight].hp, players[players[id].whofight].max_hp);
-						}
+						if (players[id].fight == 1)
+							printStats(players[id].whofight, 1);
+						else
+							printStats(players[id].whofight, 0);
 					}
 					break;
 
-				case 1: // em batalha
-
-					break;
-
-				case 4: // lose
+				case 1: // lose
+					// imprime a tela de game over
 					menu(LOSE);
 
 					do
@@ -151,7 +114,8 @@ void game () {
 
 					break;
 
-				case 5: // win
+				case 2: // win
+					// imprime a tela de game over
 					menu(WIN);
 
 					do
@@ -167,14 +131,14 @@ void game () {
 
 					break;
 
-				case 6: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
+				case 3: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					// lê o arquivo do mapa escolhido e o salva na matriz
 					sprintf(map_name, "data/mapa%d.txt", upd.id);
 					loadMap(map_name);
 					
 					break;
 
-				case 7:
+				case 4: // inicialização dos vetores players e monsters
 					readUpd(upd);
 
 					break;

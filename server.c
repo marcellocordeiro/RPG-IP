@@ -39,7 +39,7 @@ void clientConnected (int id, clientInfo startInfo) {
 
 	if (id == 0) {
 		// mandar o número do mapa para os clients
-		map_changes[pos_broad].type = 6;
+		map_changes[pos_broad].type = 3;
 		map_changes[pos_broad].id = startInfo.map;
 		pos_broad++;
 
@@ -203,12 +203,12 @@ void startGame(){
 	// status inicial dos clientes
 	initClients();
 	for (id = 0; id < clients_connected; id++) // broadcast dos stats dos players
-		buildUpd(id, 0, 7);
+		buildUpd(id, 0, 4);
 
 	// status inicial dos monstros
 	initMonsters();
 	for (id = 0; id < map.qnt_monsters; id++) // broadcast dos stats dos monstros
-		buildUpd(id, 1, 7);
+		buildUpd(id, 1, 4);
 }
 
 /*

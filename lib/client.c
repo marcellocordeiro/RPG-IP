@@ -88,6 +88,24 @@ char* color (int id) {
 	}
 }
 
+void printStats (int id, int ismonster) {
+	if (!ismonster) {
+		printf("%splayer %d\n", color(id), id);
+		printf("ATK:\t%d\n", players[id].atk);
+		printf("DEF:\t%d\n", players[id].def);
+		printf("HP:\t%s", KNRM);
+		printHpBar(players[id].hp, players[id].max_hp);
+		printf("\n");
+	}
+	else {
+		printf("%smonster\n", KWHT);
+		printf("ATK:\t%d\n", monsters[id].atk);
+		printf("DEF:\t%d\n", monsters[id].def);
+		printf("HP:\t%s", KNRM);
+		printHpBar(monsters[id].hp, monsters[id].max_hp);
+	}
+}
+
 void printHpBar (int hp, int max_hp) {
 	int i;
 

@@ -85,7 +85,7 @@ void battleUpd (int id, char move) {
 			monsters[opponent].fight = 0;
 
 			if (clients[id].hp <= 0) {
-				map_changes[pos_broad].type = 4;
+				map_changes[pos_broad].type = 1;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
 			}
@@ -93,7 +93,7 @@ void battleUpd (int id, char move) {
 			qnt_total--;
 
 			if (qnt_total == 1) {
-				map_changes[pos_broad].type = 5;
+				map_changes[pos_broad].type = 2;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
 			}
@@ -112,12 +112,12 @@ void battleUpd (int id, char move) {
 			clients[opponent].fight = 0;
 
 			if (clients[id].hp <= 0) {
-				map_changes[pos_broad].type = 4;
+				map_changes[pos_broad].type = 1;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
 			}
 			else {
-				map_changes[pos_broad].type = 4;
+				map_changes[pos_broad].type = 1;
 				sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 				disconnectClient(opponent);
 			}
@@ -126,12 +126,12 @@ void battleUpd (int id, char move) {
 
 			if (qnt_total == 1) {
 				if (clients[opponent].hp <= 0) {
-					map_changes[pos_broad].type = 4;
+					map_changes[pos_broad].type = 1;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 					disconnectClient(opponent);
 				}
 				else {
-					map_changes[pos_broad].type = 5;
+					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 					disconnectClient(id);
 				}

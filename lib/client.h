@@ -27,6 +27,7 @@ void loadMap(char *filename);
 void readUpd(upd_msg upd);
 void delay(unsigned int secs);
 char* color(int id);
+void printStats (int id, int ismonster);
 void printHpBar(int hp, int max_hp);
 void printChar(char *color, char c);
 void printMap();
