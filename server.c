@@ -39,6 +39,7 @@ void clientConnected (int id, clientInfo startInfo) {
 
 	if (id == 0) {
 		// mandar o número do mapa para os clients
+		pos_broad = 0;
 		map_changes[pos_broad].type = 3;
 		map_changes[pos_broad].id = startInfo.map;
 		pos_broad++;
@@ -193,13 +194,6 @@ void startGame(){
 	int id;
 	char startMsg[40];
 
-	qnt_total = clients_connected + map.qnt_monsters;
-	sprintf(startMsg, "%d players conectados, começando o jogo!", clients_connected);
-
-	printf("Client 0 confirmed, the game will start now...\n");
-	broadcastTxt(startMsg, -1); // avisar para os clientes que o jogo vai começar
-	game_status = 2;
-
 	// status inicial dos clientes
 	initClients();
 	for (id = 0; id < clients_connected; id++) // broadcast dos stats dos players
@@ -209,6 +203,13 @@ void startGame(){
 	initMonsters();
 	for (id = 0; id < map.qnt_monsters; id++) // broadcast dos stats dos monstros
 		buildUpd(id, 1, 4);
+
+	qnt_total = clients_connected + map.qnt_monsters;
+	sprintf(startMsg, "%d players conectados, começando o jogo!", clients_connected);
+
+	printf("Client 0 confirmed, the game will start now...\n");
+	broadcastTxt(startMsg, -1); // avisar para os clientes que o jogo vai começar
+	game_status = 2;
 }
 
 /*
