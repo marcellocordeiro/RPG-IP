@@ -1,26 +1,16 @@
 #include "lib/client.h"
 
 int main () {
-	char battle[30][110], lose[30][110], win[30][110];
-
-	// leitura da tela de batalha
-	loadFile("data/fight_frame.txt", battle);
-
-	// leitura da tela de game over
-	loadFile("data/lose_frame.txt", lose);
-
-	// leitura da tela de game over
-	loadFile("data/win_frame.txt", win);
-
+	loadAll();
+	
 	while (1)
-		game(battle, lose, win); // sugestão (o nome tá ok?)
+		game(); // sugestão (o nome tá ok?)
 
 	return 0;
 }
 
-void game (char battle[30][110], char lose[30][110], char win[30][110]) {
+void game () {
 	// variáveis do servidor
-	clientInfo info;
 	char msg[BUFFER_SIZE];
 	upd_msg upd;
 	mov_msg mov;
@@ -32,7 +22,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 	char choice;
 
 	// menu
-	menu(&info);
+	menu(MAIN);
 
 	// nome do mapa
 	char map_name[16];
@@ -116,6 +106,8 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
+						//printMenu(battle, battle_height); // lento
+
 						printf("%splayer %d\n", color(id), id);
 						//printf("HP:\t%d\n", players[id].hp);
 						printf("ATK:\t%d\n", players[id].atk);
@@ -144,9 +136,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 					break;
 
 				case 4: // lose
-					system("clear");
-					for (i = 0; i < 28; i++)
-						printf("%s\n", lose[i]);
+					menu(LOSE);
 
 					do
 						choice = getch();
@@ -162,9 +152,7 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 					break;
 
 				case 5: // win
-					system("clear");
-					for (i = 0; i < 28; i++)
-						printf("%s\n", win[i]);
+					menu(WIN);
 
 					do
 						choice = getch();

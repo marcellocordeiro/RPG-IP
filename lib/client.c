@@ -10,7 +10,7 @@ int firstAlive () {
 	return -1;
 }
 
-void loadFile (char *filename, char frame[30][110]) {
+int loadFile (char *filename, char frame[50][110]) {
 	FILE* fp = fopen(filename, "rt");
 	int i;
 
@@ -22,6 +22,8 @@ void loadFile (char *filename, char frame[30][110]) {
 	for (i = 0; fscanf(fp, " %[^\n]", frame[i]) > 0; i++);
 
 	fclose(fp);
+	
+	return i;
 }
 
 void loadMap (char *filename) {
@@ -144,11 +146,11 @@ void printMap () {
 	}
 }
 
-void printMenu (char menu[100][100], int height, int width) {
+void printMenu (char menu[50][110], int height) {
 	int i, j;
 	
 	for(i = 0; i < height; i++) {
-		for(j = 0; j < width; j++) {
+		for(j = 0; menu[i][j] != '\0'; j++) {
 			if (menu[i][j] == '1')
 				menu[i][j] = ' ';
 			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_')
@@ -196,103 +198,126 @@ int mod (int x, int m) { // calcula o mod corretamente
     return (x%m + m)%m;
 }
 
-void menu (clientInfo *info) {
-	FILE *fpm = fopen("data/tela_inicial.txt", "r");
-	FILE *fpop = fopen("data/options.txt", "r");
-	char ip[20];
+void loadAll () {
+	// leitura do menu principal
+	main_height = loadFile("data/tela_inicial.txt", mainmenu);
+	
+	// leitura do menu de opções
+	options_height = loadFile("data/options.txt", options);
 
-	int i, cursor = 0, main_height = 0, options_height = 0, draw = MAIN; // cursor: posicao da seta; main_height e options_height: quantidade de linhas de cada menu; draw: menu principal ou de opcoes
-	char mainmenu[100][100], options[100][100];
+	// leitura da tela de batalha
+	battle_height = loadFile("data/fight_frame.txt", battle);
+
+	// leitura da tela de game over
+	lose_height = loadFile("data/lose_frame.txt", lose);
+
+	// leitura da tela de game over
+	win_height = loadFile("data/win_frame.txt", win);
+}
+
+void menu (int draw) {
+	clientInfo info;
+	int i, cursor = 0; // cursor: posicao da seta; main_height e options_height: quantidade de linhas de cada menu; draw: menu principal ou de opcoes
 	char navm[] = {menu_positions}, navop[] = {options_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
+	char ip[20];
 
-	strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
-	strcpy((*info).name, "default"); // nome padrao
-	(*info).map = 1; // mapa padrao
-
-	while (fscanf(fpm, " %[^\n]", mainmenu[main_height]) > 0) // preenche a matriz com o menu principal
-		main_height++;
-	
-	while (fscanf(fpop, " %[^\n]", options[options_height]) > 0) // preenche a matriz com o menu de opcoes
-		options_height++;
-	
-	fclose(fpm);
-	fclose(fpop);
+	if (draw == MAIN) {
+		strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
+		strcpy(info.name, "default"); // nome padrao
+		info.map = 1; // mapa padrao
+	}
 
 	while (1) {
 		system("clear"); // limpa o terminal
+		
+		switch (draw) {
+			case MAIN: // menu principal
+				//for (i = 0; i < main_height; i++)
+				//	printf("%s\n", mainmenu[i]); // mostra o menu
+				printMenu(mainmenu, main_height);
+	
+				do
+					dir = getch();
+				while (dir == -1); // espera uma tecla ser pressionada
+	
+				mainmenu[navm[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
+	
+				if (dir == up) // cima
+					cursor--;
+				else if (dir == down) // baixo
+					cursor++;
+				else if (dir == right && cursor == 0) { // comecar o jogo e conectar ao servidor
+					connectToServer(ip);
+					sendInfoToServer(info);
+	
+					memset(players, 0, sizeof players); // incialização dos vetores
+					memset(monsters, 0, sizeof monsters);
+	
+					return; // sai do menu
+				}
+				else if (dir == right && cursor == 1) { // acessa o menu de opcoes
+					cursor = 0;
+					draw = OPTIONS;				
+				}
+				else if (dir == right && cursor == 2) // sai do jogo
+					exit(1);
+	
+				cursor = mod(cursor, qnt_menu); // calcula sempre um valor permitido pelo vetor
+				mainmenu[navm[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu	
+			break;
+	
+			case OPTIONS: // menu de opcoes
+				//for (i = 0; i < options_height; i++)
+				//	printf("%s\n", options[i]);
+				printMenu(options, options_height);
+	
+				do
+					dir = getch();
+				while (dir == -1); // espera uma tecla ser pressionada
+	
+				options[navop[cursor]][cursor_pos] = ' '; // limpa...
+	
+				if (dir == up) // cima
+					cursor--;
+				else if (dir == down) // baixo
+					cursor++;
+				else if (dir == right && cursor == 0) { // trocar o nome o player
+					printf("Digite seu nome: ");
+					scanf(" %[^\n]", info.name);
+				}
+				else if (dir == right && cursor == 1) { // trocar o mapa do player
+					printf("Digite o mapa que deseja utilizar: ");
+					scanf("%d", &info.map);				
+				}
+				else if (dir == right && cursor == 2) { // trocar o ip do servidor
+					printf("Digite o ip do servidor: ");
+					scanf("%s", ip);
+				}
+				else if (dir == right && cursor == 3) { // criar um mapa aleatorio
+					createRandomMap(&info);
+				}
+				else if (dir == right && cursor == 4) { // voltar para o menu principal
+					cursor = 0;
+					draw = MAIN;
+				}
+	
+				cursor = mod(cursor, qnt_options); // ...
+				options[navop[cursor]][cursor_pos] = '>'; // ...
+			break;
+	
+			case LOSE:
+				printMenu(lose, lose_height);
 
-		if (draw == MAIN) { // menu principal
-			//for (i = 0; i < main_height; i++)
-			//	printf("%s\n", mainmenu[i]); // mostra o menu
-			printMenu(mainmenu, main_height, strlen(mainmenu[0]));
+				return;
+			break;
+	
+			case WIN:
+				printMenu(win, win_height);
 
-			do
-				dir = getch();
-			while (dir == -1); // espera uma tecla ser pressionada
+				return;
 
-			mainmenu[navm[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
-
-			if (dir == up) // cima
-				cursor--;
-			else if (dir == down) // baixo
-				cursor++;
-			else if (dir == right && cursor == 0) { // comecar o jogo e conectar ao servidor
-				connectToServer(ip);
-				sendInfoToServer(*info);
-
-				memset(players, 0, sizeof players); // incialização dos vetores
-				memset(monsters, 0, sizeof monsters);
-
-				return; // sai do menu
-			}
-			else if (dir == right && cursor == 1) { // acessa o menu de opcoes
-				cursor = 0;
-				draw = OPTIONS;				
-			}
-			else if (dir == right && cursor == 2) // sai do jogo
-				exit(1);
-
-			cursor = mod(cursor, qnt_menu); // calcula sempre um valor permitido pelo vetor
-			mainmenu[navm[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu
-		}
-		else if (draw == OPTIONS) { // menu de opcoes
-			//for (i = 0; i < options_height; i++)
-			//	printf("%s\n", options[i]);
-			printMenu(options, options_height, strlen(options[0]));
-
-			do
-				dir = getch();
-			while (dir == -1); // espera uma tecla ser pressionada
-
-			options[navop[cursor]][cursor_pos] = ' '; // limpa...
-
-			if (dir == up) // cima
-				cursor--;
-			else if (dir == down) // baixo
-				cursor++;
-			else if (dir == right && cursor == 0) { // trocar o nome o player
-				printf("Digite seu nome: ");
-				scanf(" %[^\n]", (*info).name);
-			}
-			else if (dir == right && cursor == 1) { // trocar o mapa do player
-				printf("Digite o mapa que deseja utilizar: ");
-				scanf("%d", &(*info).map);				
-			}
-			else if (dir == right && cursor == 2) { // trocar o ip do servidor
-				printf("Digite o ip do servidor: ");
-				scanf("%s", ip);
-			}
-			else if (dir == right && cursor == 3) { // criar um mapa aleatorio
-				createRandomMap(info);
-			}
-			else if (dir == right && cursor == 4) { // voltar para o menu principal
-				cursor = 0;
-				draw = MAIN;
-			}
-
-			cursor = mod(cursor, qnt_options); // ...
-			options[navop[cursor]][cursor_pos] = '>'; // ...
+			break;
 		}
 	}
 }

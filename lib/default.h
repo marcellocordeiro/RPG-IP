@@ -74,7 +74,9 @@
 
 enum {
 	MAIN,
-	OPTIONS
+	OPTIONS,
+	LOSE,
+	WIN
 };
 
 struct clientInfo {
