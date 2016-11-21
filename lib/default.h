@@ -116,7 +116,7 @@ struct upd_msg { //Mensagem de atualização do jogo
 	//char name[NAME_SIZE];
 	int x, y;
 	int ismonster;
-	int hp, atk, def;
+	int hp, max_hp, atk, def;
 	int fight, whofight;
 	char sprite;
 };

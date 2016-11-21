@@ -46,6 +46,7 @@ void readUpd (upd_msg upd) {
 		players[upd.id].x = upd.x;
 		players[upd.id].y = upd.y;
 		players[upd.id].hp = upd.hp;
+		players[upd.id].max_hp = upd.max_hp;
 		players[upd.id].atk = upd.atk;
 		players[upd.id].def = upd.def;
 		players[upd.id].fight = upd.fight;
@@ -56,6 +57,7 @@ void readUpd (upd_msg upd) {
 		monsters[upd.id].x = upd.x;
 		monsters[upd.id].y = upd.y;
 		monsters[upd.id].hp = upd.hp;
+		monsters[upd.id].max_hp = upd.max_hp;
 		monsters[upd.id].atk = upd.atk;
 		monsters[upd.id].def = upd.def;
 		monsters[upd.id].fight = upd.fight;
@@ -84,18 +86,38 @@ char* color (int id) {
 	}
 }
 
-void printcchar (char *color, char c) {	
+void printHpBar (int hp, int max_hp) {
+	int i;
+
+	if ((hp*100)/max_hp > 70)
+		printf("%s", FGRN);
+	else if ((hp*100)/max_hp > 20)
+		printf("%s", FYEL);
+	else
+		printf("%s", FRED);
+	
+	for (i = 0; i <= 10; i++) {
+		if (i == (hp*10)/max_hp)
+			printf("%s", KNRM);
+		
+		printf(" ");
+	}
+
+	printf("%d%%\n", (hp*100)/max_hp);
+}
+
+void printChar (char *color, char c) {	
 	printf("%s%c%s", color, c, KNRM);
 }
 
-void drawall () {
+void printMap () {
 	int i, j, k, flag = 0;
 	
 	for(i = 0; i < map.height; i++) {
 		for(j = 0; j < map.width; j++) {
 			for (k = 0; k < qnt_clients && !flag; k++) {
 				if(i == players[k].x && j == players[k].y && players[k].hp > 0) {
-					printcchar(color(k), players[k].sprite);
+					printChar(color(k), players[k].sprite);
 					map.map[i][j] = ' ';
 					flag = 1;
 				}
@@ -103,16 +125,16 @@ void drawall () {
 
 			for (k = 0; k < map.qnt_monsters && !flag; k++) {
 				if((i == monsters[k].x && j == monsters[k].y) && monsters[k].hp > 0) {
-					printcchar(CWHT, monsters[k].sprite);
+					printChar(CWHT, monsters[k].sprite);
 					flag = 1;
 				}
 			}
 
 			if (flag == 0) {
 				if ((i == 0 || j == 0) || (i == map.height - 1 || j == map.width - 1))
-					printcchar(CRED, map.map[i][j]);
+					printChar(CRED, map.map[i][j]);
 				else
-					printcchar(CGRN, map.map[i][j]);
+					printChar(CGRN, map.map[i][j]);
 			}
 			else
 				flag = 0;
@@ -122,7 +144,7 @@ void drawall () {
 	}
 }
 
-void drawmenus (char menu[100][100], int height, int width) {
+void printMenu (char menu[100][100], int height, int width) {
 	int i, j;
 	
 	for(i = 0; i < height; i++) {
@@ -130,9 +152,9 @@ void drawmenus (char menu[100][100], int height, int width) {
 			if (menu[i][j] == '1')
 				menu[i][j] = ' ';
 			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_')
-				printcchar(CBLU, menu[i][j]);
+				printChar(CBLU, menu[i][j]);
 			else
-				printcchar(KNRM, menu[i][j]);
+				printChar(KNRM, menu[i][j]);
 		}
 
 		printf("\n");
@@ -203,7 +225,7 @@ void menu (clientInfo *info) {
 		if (draw == MAIN) { // menu principal
 			//for (i = 0; i < main_height; i++)
 			//	printf("%s\n", mainmenu[i]); // mostra o menu
-			drawmenus(mainmenu, main_height, strlen(mainmenu[0]));
+			printMenu(mainmenu, main_height, strlen(mainmenu[0]));
 
 			do
 				dir = getch();
@@ -237,7 +259,7 @@ void menu (clientInfo *info) {
 		else if (draw == OPTIONS) { // menu de opcoes
 			//for (i = 0; i < options_height; i++)
 			//	printf("%s\n", options[i]);
-			drawmenus(options, options_height, strlen(options[0]));
+			printMenu(options, options_height, strlen(options[0]));
 
 			do
 				dir = getch();

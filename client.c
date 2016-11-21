@@ -104,33 +104,37 @@ void game (char battle[30][110], char lose[30][110], char win[30][110]) {
 
 					system("clear");
 					if (!players[id].fight) {
-						drawall();
+						printMap();
 
 						printf("%splayer %d\n", color(id), id);
-						printf("HP:\t%d\n", players[id].hp);
+						//printf("HP:\t%d\n", players[id].hp);
 						printf("ATK:\t%d\n",players[id].atk);
 						printf("DEF:\t%d%s\n", players[id].def, KNRM);
+						printHpBar(players[id].hp, players[id].max_hp);
 					}
 					else { // batalha
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
 						printf("%splayer %d\n", color(id), id);
-						printf("HP:\t%d\n", players[id].hp);
+						//printf("HP:\t%d\n", players[id].hp);
 						printf("ATK:\t%d\n", players[id].atk);
 						printf("DEF:\t%d%s\n\n", players[id].def, KNRM);
+						printHpBar(players[id].hp, players[id].max_hp);
 						
 						if (players[id].fight == 1) {
 							printf("%smonster\n", KWHT);
-							printf("HP:\t%d\n", monsters[players[id].whofight].hp);
+							//printf("HP:\t%d\n", monsters[players[id].whofight].hp);
 							printf("ATK:\t%d\n", monsters[players[id].whofight].atk);
 							printf("DEF:\t%d%s\n\n", monsters[players[id].whofight].def, KNRM);
+							printHpBar(monsters[players[id].whofight].hp, monsters[players[id].whofight].max_hp);
 						}
 						else {
 							printf("%splayer %d\n", color(players[id].whofight), players[id].whofight);
 							printf("HP:\t%d\n", players[players[id].whofight].hp);
 							printf("ATK:\t%d\n", players[players[id].whofight].atk);
 							printf("DEF:\t%d%s\n\n", players[players[id].whofight].def, KNRM);
+							printHpBar(players[players[id].whofight].hp, players[players[id].whofight].max_hp);
 						}
 					}
 					break;

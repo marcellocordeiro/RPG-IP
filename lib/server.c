@@ -6,6 +6,7 @@ void buildUpd (int id, int ismonster, int type) { // retorna uma struct de updat
 		map_changes[pos_broad].x = clients[id].x;
 		map_changes[pos_broad].y = clients[id].y;
 		map_changes[pos_broad].hp = clients[id].hp;
+		map_changes[pos_broad].max_hp = clients[id].max_hp;
 		map_changes[pos_broad].atk = clients[id].atk;
 		map_changes[pos_broad].def = clients[id].def;
 		map_changes[pos_broad].fight = clients[id].fight;
@@ -17,6 +18,7 @@ void buildUpd (int id, int ismonster, int type) { // retorna uma struct de updat
 		map_changes[pos_broad].x = monsters[id].x;
 		map_changes[pos_broad].y = monsters[id].y;
 		map_changes[pos_broad].hp = monsters[id].hp;
+		map_changes[pos_broad].max_hp = monsters[id].max_hp;
 		map_changes[pos_broad].atk = monsters[id].atk;
 		map_changes[pos_broad].def = monsters[id].def;
 		map_changes[pos_broad].fight = monsters[id].fight;
