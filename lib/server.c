@@ -128,7 +128,7 @@ void battleUpd (int id, char move) {
 					disconnectClient(id);
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
-					disconnectClient(id);
+					disconnectClient(opponent);
 				}
 			}
 			else {
