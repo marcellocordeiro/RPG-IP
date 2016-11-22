@@ -39,7 +39,7 @@ void clientConnected (int id, clientInfo startInfo) {
 
 	if (id == 0) {
 		// mandar o número do mapa para os clients
-		pos_broad = 0;
+		//pos_broad = 0;
 		map_changes[pos_broad].type = 3;
 		map_changes[pos_broad].id = startInfo.map;
 		pos_broad++;

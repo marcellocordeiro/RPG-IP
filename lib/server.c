@@ -80,32 +80,37 @@ void battleUpd (int id, char move) {
 		if (monsters[opponent].hp > 0) // evita que os dois morram ao mesmo tempo
 			clients[id].hp -= dmg(monsters[opponent].atk, clients[id].def); // dano calculado a partir do ataque do monstro e da defesa do player
 
+
 		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) { // se alguém morreu, a batalha termina
 			clients[id].fight = 0;
 			monsters[opponent].fight = 0;
 
 			qnt_total--;
-
-			if (qnt_total == 1) {
+			
+			if (clients[id].hp <= 0) {
+				map_changes[pos_broad].type = 1;
+				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+				disconnectClient(id);
+			}
+			else if (qnt_total == 1) {
 				map_changes[pos_broad].type = 2;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
-			} else {
-				if (clients[id].hp <= 0) {
-					map_changes[pos_broad].type = 1;
-					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
-					disconnectClient(id);
-				}
 			}
-		}
 
+			if (qnt_total == 1 || clients_connected == 0)
+				return;
+		}
+		
 		buildUpd(id, 0, 0); // broadcast dos novos stats do player
 		buildUpd(opponent, 1, 0); // broadcast dos novos stats do monstro
+
 	}
 	else if (clients[id].fight == 2) { // se a batalha for contra player
 		clients[opponent].hp -= dmg(clients[id].atk, clients[opponent].def); // dano calculado a partir do ataque do player que atacou e defesa do outro player
 		clients[id].turn = 0; 
 		clients[opponent].turn = 1; // passa o turno para o oponente
+
 
 		if (clients[id].hp <= 0 || clients[opponent].hp <= 0) { // se alguém morreu, a batalha termina
 			clients[id].fight = 0;
@@ -118,6 +123,7 @@ void battleUpd (int id, char move) {
 					map_changes[pos_broad].type = 1;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 					disconnectClient(opponent);
+					
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 					disconnectClient(id);
@@ -126,6 +132,7 @@ void battleUpd (int id, char move) {
 					map_changes[pos_broad].type = 1;
 					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 					disconnectClient(id);
+					
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 					disconnectClient(opponent);
@@ -143,6 +150,9 @@ void battleUpd (int id, char move) {
 					disconnectClient(opponent);
 				}
 			}
+
+			if (qnt_total == 1 || clients_connected == 0)
+				return;
 		}
 
 		buildUpd(id, 0, 0); // broadcast dos novos stats do player
