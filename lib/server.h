@@ -45,6 +45,7 @@ int findMonster(int x, int y);
 int islegal(int x, int y, char sprite, char c);
 int islegalMonster(int x, int y, char c);
 void initClients();
+int monsterStat(int baseStat);
 void initMonsters();
 void monsterMove();
 

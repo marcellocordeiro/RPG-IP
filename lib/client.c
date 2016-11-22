@@ -35,7 +35,7 @@ void loadMap (char *filename) {
 		printf("ERRO: MAPA NÃO ENCONTRADO\n");
 		exit(1);
 	}
-	fscanf(fp, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
+	fscanf(fp, "%d %d %d %d", &map.height, &map.width, &map.qnt_monsters, &map.difficulty);
 
 	for(i = 0; i < map.height; i++)
 		fscanf(fp, " %[^\n]", map.map[i]);

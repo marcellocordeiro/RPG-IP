@@ -53,7 +53,7 @@ void clientConnected (int id, clientInfo startInfo) {
 			exit(1);
 		}
 
-		fscanf(fpmap, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
+		fscanf(fpmap, "%d %d %d %d", &map.height, &map.width, &map.qnt_monsters, &map.difficulty);
 
 		for(i = 0; i < map.height; i++)
 			fscanf(fpmap, " %[^\n]", map.map[i]);

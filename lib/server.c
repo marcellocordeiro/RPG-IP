@@ -279,6 +279,20 @@ void initClients () {
 	}
 }
 
+int monsterStat (int baseStat) {
+	float difMultiplier = map.difficulty/10.0 + 1;
+	float chance = rand()%101;
+
+	if (chance < 5)
+		return baseStat*difMultiplier*2;
+	else if (chance < 15)
+		return baseStat*difMultiplier*1.2;
+	else if (chance < 90)
+		return baseStat*difMultiplier;
+	else
+		return baseStat*difMultiplier*0.8;
+}
+
 // colocando os monstros no mapa, aleatoriamente
 void initMonsters () {
 	int id;
@@ -295,10 +309,10 @@ void initMonsters () {
 		// inicializar o jogador no vetor monsters!
 		monsters[id].x = posX;
 		monsters[id].y = posY;
-		monsters[id].hp = MONSTER_HP;
-		monsters[id].max_hp = MONSTER_HP;
-		monsters[id].atk = MONSTER_ATK;
-		monsters[id].def = MONSTER_DEF;
+		monsters[id].hp = monsterStat(MONSTER_HP);
+		monsters[id].max_hp = monsters[id].hp;
+		monsters[id].atk = monsterStat(MONSTER_ATK);
+		monsters[id].def = monsterStat(MONSTER_DEF);
 		monsters[id].sprite = 'm';
 	}
 }

@@ -104,6 +104,7 @@ struct map_data {
 	int height;
 	int width;
 	int qnt_monsters;
+	int difficulty;
 	char map[100][100];
 };
 
