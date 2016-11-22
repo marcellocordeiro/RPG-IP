@@ -84,18 +84,18 @@ void battleUpd (int id, char move) {
 			clients[id].fight = 0;
 			monsters[opponent].fight = 0;
 
-			if (clients[id].hp <= 0) {
-				map_changes[pos_broad].type = 1;
-				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
-				disconnectClient(id);
-			}
-
 			qnt_total--;
 
 			if (qnt_total == 1) {
 				map_changes[pos_broad].type = 2;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
+			} else {
+				if (clients[id].hp <= 0) {
+					map_changes[pos_broad].type = 1;
+					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
+					disconnectClient(id);
+				}
 			}
 		}
 
