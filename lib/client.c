@@ -240,6 +240,11 @@ void menu (int draw) {
 	char dir; // tecla pressionada
 	char ip[20];
 
+	// coloca a seta na primeira opção
+	mainmenu[navm[cursor]][cursor_pos] = '>';
+	options[navop[cursor]][cursor_pos] = '>';
+
+
 	if (draw == MAIN) {
 		strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
 		strcpy(info.name, "default"); // nome padrao
@@ -294,7 +299,7 @@ void menu (int draw) {
 					dir = getch();
 				while (dir == -1); // espera uma tecla ser pressionada
 	
-				options[navop[cursor]][cursor_pos] = ' '; // limpa...
+				options[navop[cursor]][cursor_pos] = ' '; // limpa a antiga posição da seta
 	
 				if (dir == up) // cima
 					cursor--;
