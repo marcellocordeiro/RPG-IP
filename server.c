@@ -10,7 +10,7 @@ int main () {
 		// espera alguma mensagem
 		sleepServer();
 
-		// verifando se foi uma conexão..
+		// verificando se foi uma conexão..
 		checkConn();
 
 		// se foi alguém se comunicando...
