@@ -1,5 +1,23 @@
 #include "server.h"
 
+void saveInfo (int id) {
+	FILE *fp;
+	char filename[NAME_SIZE+4];
+
+	sprintf(filename, "record/%s.txt", clients[id].name);
+
+	fp = fopen(filename, "wt");
+
+	if (fp == NULL) {
+		printf("ERRO AO ABRIR O ARQUIVO\n");
+		exit(1);
+	}
+
+	fprintf(fp, "%s\n%d\n%d\n%d\n%d\n", clients[id].name, clients[id].hp, clients[id].max_hp, clients[id].atk, clients[id].def);
+
+	fclose(fp);
+}
+
 void buildUpd (int id, int ismonster, int type) { // retorna uma struct de update a partir de uma struct de player/monstro
 	if (!ismonster) {
 		map_changes[pos_broad].id = id;
@@ -93,6 +111,8 @@ void battleUpd (int id, char move) {
 				disconnectClient(id);
 			}
 			else if (qnt_total == 1) {
+				saveInfo(id);
+
 				map_changes[pos_broad].type = 2;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
@@ -120,10 +140,12 @@ void battleUpd (int id, char move) {
 
 			if (clients[opponent].hp <= 0) {
 				map_changes[pos_broad].type = 1;
-				endUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
+				sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 				disconnectClient(opponent);
 					
 				if (qnt_total == 1) {
+					saveInfo(id);
+
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 					disconnectClient(id);
@@ -135,6 +157,8 @@ void battleUpd (int id, char move) {
 				disconnectClient(id);
 					
 				if (qnt_total == 1) {
+					saveInfo(opponent);
+
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 					disconnectClient(opponent);

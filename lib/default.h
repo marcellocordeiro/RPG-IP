@@ -85,7 +85,7 @@ struct clientInfo {
 };
 
 struct player_data { // MUDAR NOME!! (ainda?)
-	char *name;
+	char name[NAME_SIZE];
 	int x, y;
 	int hp, max_hp, atk, def, turn; // int informações do game, hp, ataque, defesa, pontos...
 	int fight, whofight;

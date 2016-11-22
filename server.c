@@ -28,7 +28,7 @@ void clientConnected (int id, clientInfo startInfo) {
 	char str[1];
 	char map_name[16];
 
-	clients[id].name = startInfo.name;
+	strcpy(clients[id].name, startInfo.name);
 
 	printf("Client %s connected, id = %d, map = %d\n", startInfo.name, id, startInfo.map);
 	game_status = 1;
