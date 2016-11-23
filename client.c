@@ -23,9 +23,7 @@ void game () {
 	char choice;
 
 	// menu principal
-	//menu(MAIN);
-
-	menu(LOSE);
+	menu(MAIN);
 
 	// nome do mapa
 	char map_name[16];
