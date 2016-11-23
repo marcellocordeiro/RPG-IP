@@ -31,42 +31,42 @@
 #define cursor_pos 22 // coluna da seta >
 
 #define KNRM  "\x1B[0m"
-#define KRED  "\x1B[31m"
-#define KGRN  "\x1B[32m"
-#define KYEL  "\x1B[33m"
-#define KBLU  "\x1B[34m"
-#define KMAG  "\x1B[35m"
-#define KCYN  "\x1B[36m"
-#define KWHT  "\x1B[37m"
+//#define KRED  "\x1B[31m"
+//#define KGRN  "\x1B[32m"
+//#define KYEL  "\x1B[33m"
+//#define KBLU  "\x1B[34m"
+//#define KMAG  "\x1B[35m"
+//#define KCYN  "\x1B[36m"
+//#define KWHT  "\x1B[37m"
 
-#define CGRY  "\x1B[90m"
+//#define CGRY  "\x1B[90m"
 #define CRED  "\x1B[91m"
 #define CGRN  "\x1B[92m"
 #define CYEL  "\x1B[93m"
 #define CBLU  "\x1B[94m"
 #define CMAG  "\x1B[95m"
-#define CCYN  "\x1B[96m"
+//#define CCYN  "\x1B[96m"
 #define CWHT  "\x1B[97m"
 
-#define FGRY  "\x1B[100m"
+//#define FGRY  "\x1B[100m"
 #define FRED  "\x1B[101m"
 #define FGRN  "\x1B[102m"
 #define FYEL  "\x1B[103m"
-#define FBLU  "\x1B[104m"
-#define FMAG  "\x1B[105m"
-#define FCYN  "\x1B[106m"
-#define FWHT  "\x1B[107m"
+//#define FBLU  "\x1B[104m"
+//#define FMAG  "\x1B[105m"
+//#define FCYN  "\x1B[106m"
+//#define FWHT  "\x1B[107m"
 
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10
 
-#define PLAYER_HP 150 // player lvl 1
+#define PLAYER_HP 150
 #define PLAYER_ATK 50
 #define PLAYER_DEF 40
 
-#define MONSTER_HP 100 // monstro lvl 1
-#define MONSTER_ATK 45
-#define MONSTER_DEF 35
+//#define MONSTER_HP 100
+//#define MONSTER_ATK 45
+//#define MONSTER_DEF 35
 
 #define asteristico 1 // esses números são usados para proporção, exemplo asteristico 1 de 5 = 20%
 #define espaco 4 // espaco 4 de 5 = 80%
@@ -84,7 +84,7 @@ struct clientInfo {
 	int map;
 };
 
-struct player_data { // MUDAR NOME!! (ainda?)
+struct player_data {
 	char name[NAME_SIZE];
 	int x, y;
 	int hp, max_hp, atk, def, turn; // int informações do game, hp, ataque, defesa, pontos...
@@ -104,7 +104,6 @@ struct map_data {
 	int height;
 	int width;
 	int qnt_monsters;
-	int difficulty;
 	char map[100][100];
 };
 
@@ -116,7 +115,6 @@ struct mov_msg {
 struct upd_msg { //Mensagem de atualização do jogo
 	int type;
 	int id;
-	//char name[NAME_SIZE];
 	int x, y;
 	int ismonster;
 	int hp, max_hp, atk, def;

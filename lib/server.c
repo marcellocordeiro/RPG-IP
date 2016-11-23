@@ -1,23 +1,5 @@
 #include "server.h"
 
-void saveInfo (int id) {
-	FILE *fp;
-	char filename[NAME_SIZE+4];
-
-	sprintf(filename, "record/%s.txt", clients[id].name);
-
-	fp = fopen(filename, "wt");
-
-	if (fp == NULL) {
-		printf("ERRO AO ABRIR O ARQUIVO\n");
-		exit(1);
-	}
-
-	fprintf(fp, "%s\n%d\n%d\n%d\n%d\n", clients[id].name, clients[id].hp, clients[id].max_hp, clients[id].atk, clients[id].def);
-
-	fclose(fp);
-}
-
 void buildUpd (int id, int ismonster, int type) { // retorna uma struct de update a partir de uma struct de player/monstro
 	if (!ismonster) {
 		map_changes[pos_broad].id = id;
@@ -111,8 +93,6 @@ void battleUpd (int id, char move) {
 				disconnectClient(id);
 			}
 			else if (qnt_total == 1) {
-				saveInfo(id);
-
 				map_changes[pos_broad].type = 2;
 				sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 				disconnectClient(id);
@@ -144,8 +124,6 @@ void battleUpd (int id, char move) {
 				disconnectClient(opponent);
 					
 				if (qnt_total == 1) {
-					saveInfo(id);
-
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[id].sockid, map_changes[pos_broad]);
 					disconnectClient(id);
@@ -157,8 +135,6 @@ void battleUpd (int id, char move) {
 				disconnectClient(id);
 					
 				if (qnt_total == 1) {
-					saveInfo(opponent);
-
 					map_changes[pos_broad].type = 2;
 					sendUpdToClient(clients[opponent].sockid, map_changes[pos_broad]);
 					disconnectClient(opponent);
@@ -279,27 +255,31 @@ void initClients () {
 	}
 }
 
+int monsterStat (int min, int max) {
+	return rand()%(max-min+1) + min; // número aleatório entre o mínimo e o máximo
+}
+
+/*
 int monsterStat (int baseStat) {
-	float difMultiplier = map.difficulty/10.0 + 1;
 	float chance = rand()%101;
 
 	if (chance < 5)
-		return baseStat*difMultiplier*2;
+		return baseStat*2;
 	else if (chance < 15)
-		return baseStat*difMultiplier*1.2;
+		return baseStat*1.2;
 	else if (chance < 90)
-		return baseStat*difMultiplier;
+		return baseStat;
 	else
-		return baseStat*difMultiplier*0.8;
+		return baseStat*0.8;
 }
+*/
 
 // colocando os monstros no mapa, aleatoriamente
 void initMonsters () {
 	int id;
-	int qnt_monsters = map.qnt_monsters; // quantidade de monstros a serem criados
 	int posX, posY;
 
-	for (id = 0; id < qnt_monsters; id++) {
+	for (id = 0; id < map.qnt_monsters; id++) {
 		do {
 			// gerar ints aleatorias para X e Y
 			posX = rand()%(map.height - 2) + 1;
@@ -309,11 +289,26 @@ void initMonsters () {
 		// inicializar o jogador no vetor monsters!
 		monsters[id].x = posX;
 		monsters[id].y = posY;
-		monsters[id].hp = monsterStat(MONSTER_HP);
-		monsters[id].max_hp = monsters[id].hp;
-		monsters[id].atk = monsterStat(MONSTER_ATK);
-		monsters[id].def = monsterStat(MONSTER_DEF);
 		monsters[id].sprite = 'm';
+		//monsters[id].hp = monsterStat(MONSTER_HP);
+		//monsters[id].atk = monsterStat(MONSTER_ATK);
+		//monsters[id].def = monsterStat(MONSTER_DEF);
+
+		if (id < map.qnt_monsters*0.2) { // 20% dos monstros são "fracos"
+			monsters[id].hp = monsterStat(50, 80);
+			monsters[id].atk = monsterStat(35, 40);
+			monsters[id].def = monsterStat(25, 30);
+		} else if (id < map.qnt_monsters*0.5) { // 30% dos monstros são "fortes"
+			monsters[id].hp = monsterStat(120, 150);
+			monsters[id].atk = monsterStat(45, 50);
+			monsters[id].def = monsterStat(35, 40);
+		} else  { // 50% dos monstros são "médios"
+			monsters[id].hp = monsterStat(80, 120);
+			monsters[id].atk = monsterStat(40, 45);
+			monsters[id].def = monsterStat(30, 35);
+		}
+
+		monsters[id].max_hp = monsters[id].hp;
 	}
 }
 

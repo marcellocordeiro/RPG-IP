@@ -66,8 +66,8 @@ void game () {
 	newtime = time(NULL);
 	oldtime = time(NULL);
 
-	//receber informações iniciais do jogo (mapa, status inicial, etc...) e fazer as atualizações de movimento
-	//depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
+	// receber informações iniciais do jogo (mapa, status inicial, etc...) e fazer as atualizações de movimento
+	// depois desse ponto, todas as mensagens recebidas serão de update, e as enviadas são de movimento.
 	while (playing) {
 		while (readUpdFromServer(&upd) > 0) { // recebe todas mensagens
 			switch (upd.type) { // tipo de update
@@ -86,8 +86,6 @@ void game () {
 						for (i = 0; i < 26; i++)
 							printf("%s\n", battle[i]);
 
-						//printMenu(battle, battle_height); // lento
-
 						printStats(id, 0);
 						
 						if (players[id].fight == 1)
@@ -95,21 +93,23 @@ void game () {
 						else
 							printStats(players[id].whofight, 0);
 					}
+
 					break;
 
 				case 1: // lose
 					// imprime a tela de game over
 					menu(LOSE);
 
+					// espera decisão do jogador
 					do
 						choice = getch();
 					while (choice != 'h' && choice != 'q');
 
-					if (choice == 'h') {
+					if (choice == 'h') { // sai dos dois laços e volta pro começo
 						playing = 0;
 						break;
 					}
-					else if (choice == 'q')
+					else if (choice == 'q') // sai do jogo
 						exit(1);
 
 					break;
@@ -118,15 +118,16 @@ void game () {
 					// imprime a tela de game over
 					menu(WIN);
 
+					// espera decisão do jogador
 					do
 						choice = getch();
 					while (choice != 'h' && choice != 'q');
 
-					if (choice == 'h') {
+					if (choice == 'h') { // sai dos dois laços e volta pro começo
 						playing = 0;
 						break;
 					}
-					else if (choice == 'q')
+					else if (choice == 'q') // sai do jogo
 						exit(1);
 
 					break;
@@ -145,6 +146,7 @@ void game () {
 			}
 		}
 
+		// se for o jogador vivo de menor id, controla o movimento dos monstros
 		if (id == firstAlive()) {
 			if (newtime - oldtime >= 1) {
 				mov.upd_monsters = 1;
@@ -156,6 +158,7 @@ void game () {
 				newtime = time(NULL);
 		}
 
+		// se o jogador se mover, mandar a informação para o servidor
 		mov.msg = getch();
 		if (mov.msg != -1 && ((!players[id].fight && islegal(players[id].x, players[id].y, players[id].sprite, mov.msg)) || (players[id].fight != 0 && (mov.msg == 'a' || mov.msg == 'r')))) // retorna -1 se demorou muito e nada foi digitado.
 			sendMovToServer(mov);

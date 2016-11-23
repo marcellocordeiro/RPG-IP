@@ -36,7 +36,6 @@ void clientMoved(int id, mov_msg mov); // função que é chamada quando cleinte
 void startGame(); // função que é chamada quando cliente 0 confirma o inicio do jogo
 //void MyBroadcast(char *s); // um exemplo de como mandar uma mensagem para todos os usuários
 
-void saveInfo(int id);
 void buildUpd(int id, int ismonster, int type);
 int dmg(int atk, int def);
 void battleUpd(int id, char move);
@@ -45,7 +44,8 @@ int findMonster(int x, int y);
 int islegal(int x, int y, char sprite, char c);
 int islegalMonster(int x, int y, char c);
 void initClients();
-int monsterStat(int baseStat);
+int monsterStat(int min, int max);
+//int monsterStat(int baseStat);
 void initMonsters();
 void monsterMove();
 

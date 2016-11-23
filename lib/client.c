@@ -35,7 +35,7 @@ void loadMap (char *filename) {
 		printf("ERRO: MAPA NÃO ENCONTRADO\n");
 		exit(1);
 	}
-	fscanf(fp, "%d %d %d %d", &map.height, &map.width, &map.qnt_monsters, &map.difficulty);
+	fscanf(fp, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
 
 	for(i = 0; i < map.height; i++)
 		fscanf(fp, " %[^\n]", map.map[i]);
@@ -43,6 +43,7 @@ void loadMap (char *filename) {
 	fclose(fp);
 }
 
+// pega as informações enviadas pelo servidor e atualiza o vetor players ou monsters
 void readUpd (upd_msg upd) {
 	if (!upd.ismonster) {
 		players[upd.id].x = upd.x;
@@ -72,6 +73,7 @@ void delay (unsigned int secs) {
     while (time(0) < secs);
 }
 
+// define as cores dos jogadores
 char* color (int id) {
 	switch (id) {
 		case 0:
@@ -98,7 +100,7 @@ void printStats (int id, int ismonster) {
 		printf("\n");
 	}
 	else {
-		printf("%smonster\n", KWHT);
+		printf("%smonster\n", CWHT);
 		printf("ATK:\t%d\n", monsters[id].atk);
 		printf("DEF:\t%d\n", monsters[id].def);
 		printf("HP:\t%s", KNRM);
@@ -123,7 +125,8 @@ void printHpBar (int hp, int max_hp) {
 		printf(" ");
 	}
 
-	printf("%d%%\n", (hp*100)/max_hp);
+	printf("%d%%", (hp*100)/max_hp);
+	printf(" (%d)\n", hp);
 }
 
 void printChar (char *color, char c) {	
