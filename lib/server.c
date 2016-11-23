@@ -247,10 +247,10 @@ void initClients () {
 		// inicializar o jogador no vetor clients!
 		clients[id].x = posX;
 		clients[id].y = posY;
-		clients[id].hp = PLAYER_HP;
-		clients[id].max_hp = PLAYER_HP;
-		clients[id].atk = PLAYER_ATK;
-		clients[id].def = PLAYER_DEF;
+		//clients[id].hp = PLAYER_HP;
+		//clients[id].max_hp = PLAYER_HP;
+		//clients[id].atk = PLAYER_ATK;
+		//clients[id].def = PLAYER_DEF;
 		clients[id].sprite = '^';
 	}
 }
@@ -296,16 +296,16 @@ void initMonsters () {
 
 		if (id < map.qnt_monsters*0.2) { // 20% dos monstros são "fracos"
 			monsters[id].hp = monsterStat(50, 80);
-			monsters[id].atk = monsterStat(35, 40);
-			monsters[id].def = monsterStat(25, 30);
-		} else if (id < map.qnt_monsters*0.5) { // 30% dos monstros são "fortes"
-			monsters[id].hp = monsterStat(120, 150);
-			monsters[id].atk = monsterStat(45, 50);
-			monsters[id].def = monsterStat(35, 40);
-		} else  { // 50% dos monstros são "médios"
-			monsters[id].hp = monsterStat(80, 120);
 			monsters[id].atk = monsterStat(40, 45);
 			monsters[id].def = monsterStat(30, 35);
+		} else if (id < map.qnt_monsters*0.5) { // 30% dos monstros são "fortes"
+			monsters[id].hp = monsterStat(120, 150);
+			monsters[id].atk = monsterStat(50, 55);
+			monsters[id].def = monsterStat(40, 45);
+		} else  { // 50% dos monstros são "médios"
+			monsters[id].hp = monsterStat(80, 120);
+			monsters[id].atk = monsterStat(45, 55);
+			monsters[id].def = monsterStat(35, 40);
 		}
 
 		monsters[id].max_hp = monsters[id].hp;
@@ -446,6 +446,12 @@ void checkConn () {
 					clients[i].sockid = new;
 					clientConnected(i, startInfo);
 					clients_connected++;
+
+					// recebe os stats do player que se conectou e coloca as informações no vetor de clients
+					clients[i].hp = startInfo.hp_max;
+					clients[i].max_hp = startInfo.hp_max;
+					clients[i].atk = startInfo.atk;
+					clients[i].def = startInfo.def;
 					break;
 				}
 			}

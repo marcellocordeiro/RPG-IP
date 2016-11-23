@@ -26,53 +26,40 @@
 
 #define qnt_menu 3 // quantidade de opcoes no menu principal
 #define menu_positions 23, 25, 27 // linhas de cada opcao do menu principal
-#define qnt_options 5 // quantidade de opcoes no menu de opcoes
-#define options_positions 23, 25, 27, 29, 31 // linhas de cada opcao no menu de opcoes
+#define qnt_options 6 // quantidade de opcoes no menu de opcoes
+#define options_positions 23, 25, 27, 29, 31, 33 // linhas de cada opcao no menu de opcoes
 
 #define qnt_lose 2 // quantidade de opcoes no menu principal
-#define lose_positions 23, 25 // linhas de cada opcao do menu principal
+#define lose_positions 15, 17 // linhas de cada opcao do menu principal
 #define qnt_win 2 // quantidade de opcoes no menu de opcoes
-#define win_positions 23, 25 // linhas de cada opcao no menu de opcoes
+#define win_positions 15, 17 // linhas de cada opcao no menu de opcoes
 
 #define cursor_pos 22 // coluna da seta >
 
-#define KNRM  "\x1B[0m"
-//#define KRED  "\x1B[31m"
-//#define KGRN  "\x1B[32m"
-//#define KYEL  "\x1B[33m"
-//#define KBLU  "\x1B[34m"
-//#define KMAG  "\x1B[35m"
-//#define KCYN  "\x1B[36m"
-//#define KWHT  "\x1B[37m"
-
-//#define CGRY  "\x1B[90m"
+#define CNRM  "\x1B[0m"
 #define CRED  "\x1B[91m"
 #define CGRN  "\x1B[92m"
 #define CYEL  "\x1B[93m"
 #define CBLU  "\x1B[94m"
 #define CMAG  "\x1B[95m"
-//#define CCYN  "\x1B[96m"
 #define CWHT  "\x1B[97m"
 
-//#define FGRY  "\x1B[100m"
 #define FRED  "\x1B[101m"
 #define FGRN  "\x1B[102m"
 #define FYEL  "\x1B[103m"
-//#define FBLU  "\x1B[104m"
-//#define FMAG  "\x1B[105m"
-//#define FCYN  "\x1B[106m"
-//#define FWHT  "\x1B[107m"
+#define FBLU  "\x1B[104m"
+#define FMAG  "\x1B[105m"
+#define FCYN  "\x1B[106m"
+#define FWHT  "\x1B[107m"
 
 #define MAX_CLIENTS 3
 #define MAX_MONSTERS 10
 
-#define PLAYER_HP 150
-#define PLAYER_ATK 50
-#define PLAYER_DEF 40
+#define STATSMAX 250
 
-//#define MONSTER_HP 100
-//#define MONSTER_ATK 45
-//#define MONSTER_DEF 35
+#define PLAYER_HP 150
+#define PLAYER_ATK 55
+#define PLAYER_DEF 45
 
 #define asteristico 1 // esses números são usados para proporção, exemplo asteristico 1 de 5 = 20%
 #define espaco 4 // espaco 4 de 5 = 80%
@@ -88,6 +75,9 @@ enum {
 struct clientInfo {
 	char name[NAME_SIZE];
 	int map;
+	int hp_max;
+	int atk;
+	int def;
 };
 
 struct player_data {

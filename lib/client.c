@@ -95,7 +95,7 @@ void printStats (int id, int ismonster) {
 		printf("%splayer %d\n", color(id), id);
 		printf("ATK:\t%d\n", players[id].atk);
 		printf("DEF:\t%d\n", players[id].def);
-		printf("HP:\t%s", KNRM);
+		printf("HP:\t%s", CNRM);
 		printHpBar(players[id].hp, players[id].max_hp);
 		printf("\n");
 	}
@@ -103,7 +103,7 @@ void printStats (int id, int ismonster) {
 		printf("%smonster\n", CWHT);
 		printf("ATK:\t%d\n", monsters[id].atk);
 		printf("DEF:\t%d\n", monsters[id].def);
-		printf("HP:\t%s", KNRM);
+		printf("HP:\t%s", CNRM);
 		printHpBar(monsters[id].hp, monsters[id].max_hp);
 	}
 }
@@ -120,7 +120,7 @@ void printHpBar (int hp, int max_hp) {
 	
 	for (i = 0; i <= 10; i++) {
 		if (i == (hp*10)/max_hp)
-			printf("%s", KNRM);
+			printf("%s", CNRM);
 		
 		printf(" ");
 	}
@@ -129,8 +129,21 @@ void printHpBar (int hp, int max_hp) {
 	printf(" (%d)\n", hp);
 }
 
+void printBar (char *color, int number) {
+	int i;
+
+	printf("%s", color);
+	
+	for (i = 0; i < number/10; i++) {		
+		printf(" ");
+	}
+	printf("%s\t", CNRM);
+
+	printf("%d\n", number);
+}
+
 void printChar (char *color, char c) {	
-	printf("%s%c%s", color, c, KNRM);
+	printf("%s%c%s", color, c, CNRM);
 }
 
 void printMap () {
@@ -177,7 +190,7 @@ void printMenu (char menu[50][110], int height) {
 			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_')
 				printChar(CBLU, menu[i][j]);
 			else
-				printChar(KNRM, menu[i][j]);
+				printChar(CNRM, menu[i][j]);
 		}
 
 		printf("\n");
@@ -236,12 +249,134 @@ void loadAll () {
 	win_height = loadFile("data/win_frame.txt", win);
 }
 
+void stats (clientInfo *info, int *disponivel) {
+	int i, hp, atk, def, confirmed = 0;
+	int ind = 0; // índice do vetor seta;
+	char seta[4] = {'>', ' ', ' ', ' '};
+	char mov;
+
+	hp = info->hp_max;
+	atk = info->atk;
+	def = info->def;
+
+	while (confirmed == 0) {
+		system("clear");
+
+		printf("  Disponível:\n  ");
+		printBar(FGRN, *disponivel);
+
+		printf("\n%c HP:\n  ", seta[0]);
+		printBar(FRED, hp);
+
+		printf("\n%c ATK:\n  ", seta[1]);
+		printBar(FMAG, atk);
+
+		printf("\n%c DEF:\n  ", seta[2]);
+		printBar(FYEL, def);
+
+		printf("\n%c Confirm\n", seta[3]);
+
+		do
+			mov = getch();
+		while(mov == -1);
+
+		switch (mov) {
+			case up:
+				seta[ind] = ' ';
+				ind--;
+				if (ind < 0)
+					ind = 3;
+				seta[ind] = '>';
+
+				break;
+
+			case down:
+				seta[ind] = ' ';
+				ind++;
+				if (ind > 3)
+					ind = 0;
+				seta[ind] = '>';
+
+				break;
+
+			case right:
+				switch (ind) {
+					case 0:
+						if (hp != STATSMAX && *disponivel != 0) {
+							hp += 5;
+							*disponivel -= 5;
+						}
+
+						break;
+
+					case 1:
+						if (atk != STATSMAX && *disponivel != 0) {
+							atk += 5;
+							*disponivel -= 5;
+						}
+
+						break;
+
+					case 2:
+						if (def != STATSMAX && *disponivel != 0) {
+							def += 5;
+							*disponivel -= 5;
+						}
+
+						break;
+
+					case 3:
+						if (hp != 0)
+							confirmed = 1;
+
+						break;
+				}
+
+				break;
+
+			case left:
+				switch (ind) {
+					case 0:
+						if (hp != 0 && *disponivel != STATSMAX) {
+							hp -= 5;
+							*disponivel += 5;
+						}
+
+						break;
+
+					case 1:
+						if (atk != 0 && *disponivel != STATSMAX) {
+							atk -= 5;
+							*disponivel += 5;
+						}
+
+						break;
+
+					case 2:
+						if (def != 0 && *disponivel != STATSMAX) {
+							def -= 5;
+							*disponivel += 5;
+						}
+
+						break;
+				}
+
+			break;
+		}
+	}
+
+	info->hp_max = hp;
+	info->atk = atk;
+	info->def = def;
+}
+
 void menu (int draw) {
 	clientInfo info;
 	int i, cursor = 0; // cursor: posicao da seta; main_height e options_height: quantidade de linhas de cada menu; draw: menu principal ou de opcoes
 	int navm[] = {menu_positions}, navop[] = {options_positions}, navl[] = {lose_positions}, navw[] = {win_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
 	char ip[20];
+	int disponivel = 0; // quantidade disponível para destribuir entre hp, atk e def
 
 	// coloca a seta na primeira opção
 	mainmenu[navm[cursor]][cursor_pos] = '>';
@@ -254,6 +389,9 @@ void menu (int draw) {
 		strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
 		strcpy(info.name, "default"); // nome padrao
 		info.map = 1; // mapa padrao
+		info.hp_max = PLAYER_HP;
+		info.atk = PLAYER_ATK;
+		info.def = PLAYER_DEF;
 	}
 
 	while (1) {
@@ -314,18 +452,21 @@ void menu (int draw) {
 					printf("Digite seu nome: ");
 					scanf(" %[^\n]", info.name);
 				}
-				else if (dir == right && cursor == 1) { // trocar o mapa do player
+				else if (dir == right && cursor == 1) { // trocar os stats do player
+					stats(&info, &disponivel);			
+				}
+				else if (dir == right && cursor == 2) { // trocar o mapa do player
 					printf("Digite o mapa que deseja utilizar: ");
 					scanf("%d", &info.map);				
 				}
-				else if (dir == right && cursor == 2) { // trocar o ip do servidor
+				else if (dir == right && cursor == 3) { // trocar o ip do servidor
 					printf("Digite o ip do servidor: ");
 					scanf("%s", ip);
 				}
-				else if (dir == right && cursor == 3) { // criar um mapa aleatorio
+				else if (dir == right && cursor == 4) { // criar um mapa aleatorio
 					createRandomMap(&info);
 				}
-				else if (dir == right && cursor == 4) { // voltar para o menu principal
+				else if (dir == right && cursor == 5) { // voltar para o menu principal
 					cursor = 0;
 					draw = MAIN;
 				}
