@@ -23,7 +23,9 @@ void game () {
 	char choice;
 
 	// menu principal
-	menu(MAIN);
+	//menu(MAIN);
+
+	menu(LOSE);
 
 	// nome do mapa
 	char map_name[16];
@@ -99,36 +101,14 @@ void game () {
 				case 1: // lose
 					// imprime a tela de game over
 					menu(LOSE);
-
-					// espera decisão do jogador
-					do
-						choice = getch();
-					while (choice != 'h' && choice != 'q');
-
-					if (choice == 'h') { // sai dos dois laços e volta pro começo
-						playing = 0;
-						break;
-					}
-					else if (choice == 'q') // sai do jogo
-						exit(1);
+					playing = 0;
 
 					break;
 
 				case 2: // win
 					// imprime a tela de game over
 					menu(WIN);
-
-					// espera decisão do jogador
-					do
-						choice = getch();
-					while (choice != 'h' && choice != 'q');
-
-					if (choice == 'h') { // sai dos dois laços e volta pro começo
-						playing = 0;
-						break;
-					}
-					else if (choice == 'q') // sai do jogo
-						exit(1);
+					playing = 0;
 
 					break;
 

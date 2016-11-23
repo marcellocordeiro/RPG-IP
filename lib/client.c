@@ -239,13 +239,15 @@ void loadAll () {
 void menu (int draw) {
 	clientInfo info;
 	int i, cursor = 0; // cursor: posicao da seta; main_height e options_height: quantidade de linhas de cada menu; draw: menu principal ou de opcoes
-	char navm[] = {menu_positions}, navop[] = {options_positions}; // armazenam as linhas de cada opcao
+	int navm[] = {menu_positions}, navop[] = {options_positions}, navl[] = {lose_positions}, navw[] = {win_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
 	char ip[20];
 
 	// coloca a seta na primeira opção
 	mainmenu[navm[cursor]][cursor_pos] = '>';
 	options[navop[cursor]][cursor_pos] = '>';
+	lose[navl[cursor]][cursor_pos] = '>';
+	win[navw[cursor]][cursor_pos] = '>';
 
 
 	if (draw == MAIN) {
@@ -335,14 +337,45 @@ void menu (int draw) {
 			case LOSE:
 				printMenu(lose, lose_height);
 
-				return;
+				do
+					dir = getch();
+				while (dir == -1); // espera uma tecla ser pressionada
+	
+				lose[navl[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
+	
+				if (dir == up) // cima
+					cursor--;
+				else if (dir == down) // baixo
+					cursor++;
+				else if (dir == right && cursor == 0) // comecar o jogo e conectar ao servidor
+					return;
+				else if (dir == right && cursor == 1) // sai do jogo
+					exit(1);
+	
+				cursor = mod(cursor, qnt_lose); // calcula sempre um valor permitido pelo vetor
+				lose[navl[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu	
 			break;
 	
 			case WIN:
 				printMenu(win, win_height);
 
-				return;
-
+				do
+					dir = getch();
+				while (dir == -1); // espera uma tecla ser pressionada
+	
+				win[navw[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
+	
+				if (dir == up) // cima
+					cursor--;
+				else if (dir == down) // baixo
+					cursor++;
+				else if (dir == right && cursor == 0) // comecar o jogo e conectar ao servidor
+					return;
+				else if (dir == right && cursor == 1) // sai do jogo
+					exit(1);
+	
+				cursor = mod(cursor, qnt_win); // calcula sempre um valor permitido pelo vetor
+				win[navw[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu	
 			break;
 		}
 	}
