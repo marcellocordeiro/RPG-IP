@@ -189,8 +189,8 @@ void printMenu (char menu[50][110], int height, int draw) {
 		for(j = 0; menu[i][j] != '\0'; j++) {
 			if (menu[i][j] == '1')
 				menu[i][j] = ' ';
-			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_') {
-				if (draw == MAIN || draw == OPTIONS) 
+			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_' || menu[i][j] == '(' || menu[i][j] == ')' || menu[i][j] == 'V' || menu[i][j] == '\'' || menu[i][j] == ',') {
+				if (draw == MAIN || draw == OPTIONS)
 					printChar(CBLU, menu[i][j]);
 				else if (draw == WIN)
 					printChar(CYEL, menu[i][j]);
