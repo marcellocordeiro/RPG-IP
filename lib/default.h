@@ -16,7 +16,7 @@
 #include <arpa/inet.h>
 
 #define BUFFER_SIZE 512
-#define PORT 9003
+#define PORT 9004
 #define NAME_SIZE 40
 
 #define up 'w'
