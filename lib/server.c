@@ -1,6 +1,7 @@
 #include "server.h"
 
-void buildUpd (int id, int ismonster, int type) { // retorna uma struct de update a partir de uma struct de player/monstro
+// retorna uma struct de update a partir de uma struct de player/monstro
+void buildUpd (int id, int ismonster, int type) {
 	if (!ismonster) {
 		map_changes[pos_broad].id = id;
 		map_changes[pos_broad].x = clients[id].x;
@@ -31,7 +32,8 @@ void buildUpd (int id, int ismonster, int type) { // retorna uma struct de updat
 	pos_broad++;
 }
 
-int dmg (int atk, int def) { // sugestão 3
+// cálculo do dano
+int dmg (int atk, int def) {
 	int chance = rand()%101;
 	int damage;
 
@@ -47,6 +49,7 @@ int dmg (int atk, int def) { // sugestão 3
 		return damage;
 }
 
+// atualização da batalha
 void battleUpd (int id, char move) {
 	int chance;
 	int opponent = clients[id].whofight; // id do oponente é o whofight do player que atacou
@@ -149,6 +152,7 @@ void battleUpd (int id, char move) {
 	}
 }
 
+// procura player em uma posição do mapa
 int findPlayer (int x, int y) {
 	int i;
 
@@ -159,6 +163,7 @@ int findPlayer (int x, int y) {
 	return -1;
 }
 
+// procura mosntro em uma posição do mapa
 int findMonster (int x, int y) {
 	int i;
 
@@ -169,6 +174,7 @@ int findMonster (int x, int y) {
 	return -1;
 }
 
+// verifica se o movimento do player é legal
 int islegal (int x, int y, char sprite, char c) {
 	switch (c) {
 		case up:
@@ -200,6 +206,7 @@ int islegal (int x, int y, char sprite, char c) {
 	return 1;
 }
 
+// verifica se o movimento do monstro é legal
 int islegalMonster (int x, int y, char c) {
 	switch (c) {
 		case up:

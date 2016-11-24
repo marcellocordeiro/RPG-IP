@@ -24,15 +24,15 @@
 #define left 'a'
 #define right 'd'
 
-#define qnt_menu 3 // quantidade de opcoes no menu principal
-#define menu_positions 23, 25, 27 // linhas de cada opcao do menu principal
-#define qnt_options 6 // quantidade de opcoes no menu de opcoes
-#define options_positions 23, 25, 27, 29, 31, 33 // linhas de cada opcao no menu de opcoes
+#define qnt_menu 3 // quantidade de opções no menu principal
+#define menu_positions 17, 19, 21 // linhas de cada opção do menu principal
+#define qnt_options 6 // quantidade de opções no menu de opções
+#define options_positions 17, 19, 21, 23, 25, 27 // linhas de cada opção no menu de opções
 
-#define qnt_lose 2 // quantidade de opcoes no menu principal
-#define lose_positions 15, 17 // linhas de cada opcao do menu principal
-#define qnt_win 2 // quantidade de opcoes no menu de opcoes
-#define win_positions 15, 17 // linhas de cada opcao no menu de opcoes
+#define qnt_lose 2 // quantidade de opções da tela de game over
+#define lose_positions 15, 17 // linhas de cada opção da tela de game over
+#define qnt_win 2 // quantidade de opções da tela de you won
+#define win_positions 15, 17 // linhas de cada opção da tela de you won
 
 #define cursor_pos 22 // coluna da seta >
 
@@ -108,7 +108,8 @@ struct mov_msg {
 	int upd_monsters;
 };
 
-struct upd_msg { //Mensagem de atualização do jogo
+// mensagem de atualização do jogo
+struct upd_msg {
 	int type;
 	int id;
 	int x, y;

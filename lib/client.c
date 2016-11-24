@@ -389,7 +389,7 @@ void stats (clientInfo *info, int *disponivel) {
 			case left:
 				switch (ind) {
 					case 0:
-						if (hp != 0 && *disponivel != STATSMAX) {
+						if (hp != 5 && *disponivel != STATSMAX) {
 							hp -= 5;
 							*disponivel += 5;
 						}
@@ -397,7 +397,7 @@ void stats (clientInfo *info, int *disponivel) {
 						break;
 
 					case 1:
-						if (atk != 0 && *disponivel != STATSMAX) {
+						if (atk != 5 && *disponivel != STATSMAX) {
 							atk -= 5;
 							*disponivel += 5;
 						}
@@ -405,7 +405,7 @@ void stats (clientInfo *info, int *disponivel) {
 						break;
 
 					case 2:
-						if (def != 0 && *disponivel != STATSMAX) {
+						if (def != 5 && *disponivel != STATSMAX) {
 							def -= 5;
 							*disponivel += 5;
 						}
@@ -424,7 +424,7 @@ void stats (clientInfo *info, int *disponivel) {
 
 void menu (int draw) {
 	clientInfo info;
-	int i, cursor = 0; // cursor: posicao da seta; main_height e options_height: quantidade de linhas de cada menu; draw: menu principal ou de opcoes
+	int i, cursor = 0; // cursor: posição da seta; main_height e options_height: quantidade de linhas de cada menu; draw: menu principal ou de opcoes
 	int navm[] = {menu_positions}, navop[] = {options_positions}, navl[] = {lose_positions}, navw[] = {win_positions}; // armazenam as linhas de cada opcao
 	char dir; // tecla pressionada
 	char ip[20];
@@ -459,13 +459,13 @@ void menu (int draw) {
 					dir = getch();
 				while (dir == -1); // espera uma tecla ser pressionada
 	
-				mainmenu[navm[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
+				mainmenu[navm[cursor]][cursor_pos] = ' '; // limpa a antiga posição da seta
 	
 				if (dir == up) // cima
 					cursor--;
 				else if (dir == down) // baixo
 					cursor++;
-				else if (dir == right && cursor == 0) { // comecar o jogo e conectar ao servidor
+				else if (dir == right && cursor == 0) { // começa o jogo e conecta ao servidor
 					connectToServer(ip);
 					sendInfoToServer(info);
 	
@@ -474,7 +474,7 @@ void menu (int draw) {
 	
 					return; // sai do menu
 				}
-				else if (dir == right && cursor == 1) { // acessa o menu de opcoes
+				else if (dir == right && cursor == 1) { // acessa o menu de opções
 					cursor = 0;
 					draw = OPTIONS;				
 				}
@@ -482,7 +482,7 @@ void menu (int draw) {
 					exit(1);
 	
 				cursor = mod(cursor, qnt_menu); // calcula sempre um valor permitido pelo vetor
-				mainmenu[navm[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu	
+				mainmenu[navm[cursor]][cursor_pos] = '>'; // coloca a seta na nova posição do menu	
 			break;
 	
 			case OPTIONS: // menu de opcoes
@@ -498,25 +498,25 @@ void menu (int draw) {
 					cursor--;
 				else if (dir == down) // baixo
 					cursor++;
-				else if (dir == right && cursor == 0) { // trocar o nome o player
+				else if (dir == right && cursor == 0) { // troca o nome o player
 					printf("Digite seu nome: ");
 					scanf(" %[^\n]", info.name);
 				}
-				else if (dir == right && cursor == 1) { // trocar os stats do player
+				else if (dir == right && cursor == 1) { // troca os stats do player
 					stats(&info, &disponivel);			
 				}
-				else if (dir == right && cursor == 2) { // trocar o mapa do player
+				else if (dir == right && cursor == 2) { // troca o mapa do player
 					printf("Digite o mapa que deseja utilizar: ");
 					scanf("%d", &info.map);				
 				}
-				else if (dir == right && cursor == 3) { // trocar o ip do servidor
+				else if (dir == right && cursor == 3) { // troca o ip do servidor
 					printf("Digite o ip do servidor: ");
 					scanf("%s", ip);
 				}
-				else if (dir == right && cursor == 4) { // criar um mapa aleatorio
+				else if (dir == right && cursor == 4) { // cria um mapa aleatório
 					createRandomMap(&info);
 				}
-				else if (dir == right && cursor == 5) { // voltar para o menu principal
+				else if (dir == right && cursor == 5) { // volta para o menu principal
 					cursor = 0;
 					draw = MAIN;
 				}
@@ -532,7 +532,7 @@ void menu (int draw) {
 					dir = getch();
 				while (dir == -1); // espera uma tecla ser pressionada
 	
-				lose[navl[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
+				lose[navl[cursor]][cursor_pos] = ' '; // limpa a antiga posição da seta
 	
 				if (dir == up) // cima
 					cursor--;
@@ -544,7 +544,7 @@ void menu (int draw) {
 					exit(1);
 	
 				cursor = mod(cursor, qnt_lose); // calcula sempre um valor permitido pelo vetor
-				lose[navl[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu	
+				lose[navl[cursor]][cursor_pos] = '>'; // coloca a seta na nova posição do menu	
 			break;
 	
 			case WIN:
@@ -554,7 +554,7 @@ void menu (int draw) {
 					dir = getch();
 				while (dir == -1); // espera uma tecla ser pressionada
 	
-				win[navw[cursor]][cursor_pos] = ' '; // limpa a antiga posicao da seta
+				win[navw[cursor]][cursor_pos] = ' '; // limpa a antiga posição da seta
 	
 				if (dir == up) // cima
 					cursor--;
@@ -566,7 +566,7 @@ void menu (int draw) {
 					exit(1);
 	
 				cursor = mod(cursor, qnt_win); // calcula sempre um valor permitido pelo vetor
-				win[navw[cursor]][cursor_pos] = '>'; // coloca a seta na nova posicao do menu	
+				win[navw[cursor]][cursor_pos] = '>'; // coloca a seta na nova posição do menu	
 			break;
 		}
 	}

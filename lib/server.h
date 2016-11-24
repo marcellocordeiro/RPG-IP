@@ -17,9 +17,9 @@ int game_status;
 
 /* 
 	game status 
-	= 0 se ngm conectou
-	= 1 se esperando confirmação do "criador do game" 
-	= 2 se jogo rodando
+	= 0 nenhum player conectado
+	= 1 esperando confirmação do player de id == 0
+	= 2 o jogo está em andamento
 */
 
 int pos_broad; // posição livre no vetor do broadcast declarado abaixo
@@ -32,7 +32,7 @@ struct sockaddr_in clientname;
 
 /// FUNÇÕES
 void clientConnected(int id, clientInfo startInfo); // função que é chamada quando um cliente é connectado
-void clientMoved(int id, mov_msg mov); // função que é chamada quando cleinte manda mensagem de movimento
+void clientMoved(int id, mov_msg mov); // função que é chamada quando um cliente manda mensagem de movimento
 void startGame(); // função que é chamada quando cliente 0 confirma o inicio do jogo
 
 void buildUpd(int id, int ismonster, int type);

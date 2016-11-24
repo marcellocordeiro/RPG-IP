@@ -39,7 +39,6 @@ void clientConnected (int id, clientInfo startInfo) {
 
 	if (id == 0) {
 		// mandar o número do mapa para os clients
-		//pos_broad = 0;
 		map_changes[pos_broad].type = 3;
 		map_changes[pos_broad].id = startInfo.map;
 		pos_broad++;
@@ -72,18 +71,21 @@ void clientMoved (int id, mov_msg mov) {
 	usleep(100); // verificado experimentalmente que melhora a dinâmica do jogo
 	int i, found = -1, found2 = -1;
 	//printf("Client %d moved: %c\n", id, mov.msg); // debug
-
-	if (mov.upd_monsters == 1) { // update dos monstros
+	
+	// update dos monstros
+	if (mov.upd_monsters == 1) {
 		monsterMove();
 		return;
 	}
 
-	if (clients[id].fight && clients[id].turn) { // update da batalha
+	// update da batalha
+	if (clients[id].fight && clients[id].turn) {
 		battleUpd(id, mov.msg);
 		return;
 	}
 
-	if (islegal(clients[id].x, clients[id].y, clients[id].sprite, mov.msg) == 0) // verificar se o movimento é legal
+	// verifica se o movimento é legal
+	if (islegal(clients[id].x, clients[id].y, clients[id].sprite, mov.msg) == 0)
 		return;
 
 	// update dos players
@@ -214,6 +216,6 @@ void startGame(){
 	sprintf(startMsg, "%d players conectados, começando o jogo!", clients_connected);
 
 	printf("Client 0 confirmed, the game will start now...\n");
-	broadcastTxt(startMsg, -1); // avisar para os clientes que o jogo vai começar
+	broadcastTxt(startMsg, -1); // avisa para os clientes que o jogo vai começar
 	game_status = 2;
 }

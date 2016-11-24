@@ -85,16 +85,12 @@ void game () {
 					}
 					else { // imprime a tela de batalha
 						if (players[id].fight == 1) { // contra monstros
-							//for (i = 0; i < battlem_height; i++)
-							//	printf("%s\n", battlem[i]);
 							printBattle(battlem, battlem_height, id, players[id].whofight, 1);
 
 							printStats(id, 0);
 							printStats(players[id].whofight, 1);
 						}
 						else { // contra players
-							//for (i = 0; i < battlep_height; i++)
-							//	printf("%s\n", battlep[i]);
 							printBattle(battlep, battlep_height, id, players[id].whofight, 2);
 
 							printStats(id, 0);
