@@ -32,6 +32,7 @@ void printHpBar(int hp, int max_hp);
 void printChar(char *color, char c);
 void printMap();
 void printMenu(char menu[50][110], int height, int draw);
+void printBattle (char battle[50][110], int height, int id, int whofight, int fight);
 int islegal(int x, int y, char sprite, char c);
 int mod(int x, int m);
 void loadAll ();

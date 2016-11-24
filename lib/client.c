@@ -196,6 +196,7 @@ void printMenu (char menu[50][110], int height, int draw) {
 		for(j = 0; menu[i][j] != '\0'; j++) {
 			if (menu[i][j] == '1')
 				menu[i][j] = ' ';
+
 			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_' || menu[i][j] == '(' || menu[i][j] == ')' || menu[i][j] == 'V' || menu[i][j] == '\'' || menu[i][j] == ',') {
 				if (draw == MAIN || draw == OPTIONS)
 					printChar(CBLU, menu[i][j]);
@@ -212,6 +213,29 @@ void printMenu (char menu[50][110], int height, int draw) {
 			}
 			else
 				printChar(CNRM, menu[i][j]);
+		}
+
+		printf("\n");
+	}
+}
+
+// mostra a tela de batalha
+void printBattle (char battle[50][110], int height, int id, int whofight, int fight) {
+	int i, j;
+	
+	for(i = 0; i < height; i++) {
+		for(j = 0; battle[i][j] != '\0'; j++) {
+			if (battle[i][j] == '1')
+				battle[i][j] = ' ';
+
+			if (j < 42)
+				printChar(color(id), battle[i][j]);
+			else {
+				if (fight == 1)
+					printChar(CWHT, battle[i][j]);
+				else
+					printChar(color(whofight), battle[i][j]);
+			}
 		}
 
 		printf("\n");
@@ -429,8 +453,6 @@ void menu (int draw) {
 		
 		switch (draw) {
 			case MAIN: // menu principal
-				//for (i = 0; i < main_height; i++)
-				//	printf("%s\n", mainmenu[i]); // mostra o menu
 				printMenu(mainmenu, main_height, MAIN);
 	
 				do
@@ -464,8 +486,6 @@ void menu (int draw) {
 			break;
 	
 			case OPTIONS: // menu de opcoes
-				//for (i = 0; i < options_height; i++)
-				//	printf("%s\n", options[i]);
 				printMenu(options, options_height, OPTIONS);
 	
 				do

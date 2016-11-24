@@ -246,10 +246,6 @@ void initClients () {
 		// inicializar o jogador no vetor clients!
 		clients[id].x = posX;
 		clients[id].y = posY;
-		//clients[id].hp = PLAYER_HP;
-		//clients[id].max_hp = PLAYER_HP;
-		//clients[id].atk = PLAYER_ATK;
-		//clients[id].def = PLAYER_DEF;
 		clients[id].sprite = '^';
 	}
 }
@@ -274,9 +270,6 @@ void initMonsters () {
 		monsters[id].x = posX;
 		monsters[id].y = posY;
 		monsters[id].sprite = 'm';
-		//monsters[id].hp = monsterStat(MONSTER_HP);
-		//monsters[id].atk = monsterStat(MONSTER_ATK);
-		//monsters[id].def = monsterStat(MONSTER_DEF);
 
 		if (id < map.qnt_monsters*0.2) { // 20% dos monstros são "fracos"
 			monsters[id].hp = monsterStat(50, 80);
@@ -286,7 +279,7 @@ void initMonsters () {
 			monsters[id].hp = monsterStat(120, 150);
 			monsters[id].atk = monsterStat(50, 55);
 			monsters[id].def = monsterStat(40, 45);
-			monsters[id].sprite = 'M'; // boss (?) [sugestão]
+			monsters[id].sprite = 'M';
 		} else { // 50% dos monstros são "médios"
 			monsters[id].hp = monsterStat(80, 120);
 			monsters[id].atk = monsterStat(45, 55);
