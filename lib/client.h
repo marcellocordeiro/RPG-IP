@@ -13,10 +13,10 @@ struct sockaddr_in server_address;
 
 // INTERFACES
 char mainmenu[50][110], options[50][110];
-char battle[50][110], lose[50][110], win[50][110];
+char battlem[50][110], battlep[50][110], lose[50][110], win[50][110];
 
 int main_height, options_height;
-int battle_height, lose_height, win_height;
+int battlem_height, battlep_height, lose_height, win_height;
 
 
 // FUNÇÕES

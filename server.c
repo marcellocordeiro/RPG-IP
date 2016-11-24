@@ -44,7 +44,7 @@ void clientConnected (int id, clientInfo startInfo) {
 		map_changes[pos_broad].id = startInfo.map;
 		pos_broad++;
 
-		sprintf(map_name, "data/mapa%d.txt", startInfo.map);
+		sprintf(map_name, "data/map%d.txt", startInfo.map);
 
 		fpmap = fopen(map_name, "rt");
 		if (fpmap == NULL) {

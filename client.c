@@ -83,15 +83,20 @@ void game () {
 					}
 					else { // batalha
 						// imprime a tela de batalha
-						for (i = 0; i < 26; i++)
-							printf("%s\n", battle[i]);
+						if (players[id].fight == 1) {
+							for (i = 0; i < battlem_height; i++)
+								printf("%s\n", battlem[i]);
 
-						printStats(id, 0);
-						
-						if (players[id].fight == 1)
+							printStats(id, 0);
 							printStats(players[id].whofight, 1);
-						else
+						}
+						else {
+							for (i = 0; i < battlep_height; i++)
+								printf("%s\n", battlep[i]);
+
+							printStats(id, 0);
 							printStats(players[id].whofight, 0);
+						}
 					}
 
 					break;
@@ -112,7 +117,7 @@ void game () {
 
 				case 3: // primeira informação lida (só vai entrar 1 vez, ao começar o jogo)
 					// lê o arquivo do mapa escolhido e o salva na matriz
-					sprintf(map_name, "data/mapa%d.txt", upd.id);
+					sprintf(map_name, "data/map%d.txt", upd.id);
 					loadMap(map_name);
 					
 					break;

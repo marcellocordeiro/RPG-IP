@@ -248,19 +248,22 @@ int mod (int x, int m) { // calcula o mod corretamente
 
 void loadAll () {
 	// leitura do menu principal
-	main_height = loadFile("data/tela_inicial.txt", mainmenu);
+	main_height = loadFile("data/main.txt", mainmenu);
 	
 	// leitura do menu de opções
 	options_height = loadFile("data/options.txt", options);
 
 	// leitura da tela de batalha
-	battle_height = loadFile("data/fight_frame.txt", battle);
+	battlem_height = loadFile("data/battle_monster.txt", battlem);
+
+	// leitura da tela de batalha
+	battlep_height = loadFile("data/battle_player.txt", battlep);
 
 	// leitura da tela de game over
-	lose_height = loadFile("data/lose_frame.txt", lose);
+	lose_height = loadFile("data/lose.txt", lose);
 
 	// leitura da tela de game over
-	win_height = loadFile("data/win_frame.txt", win);
+	win_height = loadFile("data/win.txt", win);
 }
 
 void stats (clientInfo *info, int *disponivel) {
@@ -403,6 +406,7 @@ void menu (int draw) {
 		strcpy(ip, "127.0.0.1"); // ip padrao. 127.0.0.1 = localhost
 		strcpy(info.name, "default"); // nome padrao
 		info.map = 1; // mapa padrao
+		
 		info.hp_max = PLAYER_HP;
 		info.atk = PLAYER_ATK;
 		info.def = PLAYER_DEF;
@@ -555,7 +559,7 @@ void createRandomMap (clientInfo *info) {
 		if (fpmap != NULL) // se o anterior já existia, fecha o arquivo
 			fclose(fpmap);
 
-		sprintf(map_name, "data/mapa%d.txt", i); // coloca o i na string
+		sprintf(map_name, "data/map%d.txt", i); // coloca o i na string
 		fpmap = fopen(map_name, "r"); // tenta abrir o mapa
 		(*info).map = i;
 	}

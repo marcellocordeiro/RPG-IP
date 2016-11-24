@@ -80,7 +80,6 @@ void battleUpd (int id, char move) {
 		if (monsters[opponent].hp > 0) // evita que os dois morram ao mesmo tempo
 			clients[id].hp -= dmg(monsters[opponent].atk, clients[id].def); // dano calculado a partir do ataque do monstro e da defesa do player
 
-
 		if (clients[id].hp <= 0 || monsters[opponent].hp <= 0) { // se alguém morreu, a batalha termina
 			clients[id].fight = 0;
 			monsters[opponent].fight = 0;
