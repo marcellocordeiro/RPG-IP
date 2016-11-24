@@ -446,12 +446,6 @@ void checkConn () {
 					clients[i].sockid = new;
 					clientConnected(i, startInfo);
 					clients_connected++;
-
-					// recebe os stats do player que se conectou e coloca as informações no vetor de clients
-					clients[i].hp = startInfo.hp_max;
-					clients[i].max_hp = startInfo.hp_max;
-					clients[i].atk = startInfo.atk;
-					clients[i].def = startInfo.def;
 					break;
 				}
 			}

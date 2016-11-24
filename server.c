@@ -60,6 +60,12 @@ void clientConnected (int id, clientInfo startInfo) {
 
 		fclose(fpmap);
 	}
+
+	// recebe os stats do player que se conectou e coloca as informações no vetor de clients
+	clients[id].hp = startInfo.hp_max;
+	clients[id].max_hp = startInfo.hp_max;
+	clients[id].atk = startInfo.atk;
+	clients[id].def = startInfo.def;
 }
 
 void clientMoved (int id, mov_msg mov) {

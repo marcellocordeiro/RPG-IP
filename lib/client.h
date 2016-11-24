@@ -31,7 +31,7 @@ void printStats (int id, int ismonster);
 void printHpBar(int hp, int max_hp);
 void printChar(char *color, char c);
 void printMap();
-void printMenu(char menu[50][110], int height);
+void printMenu(char menu[50][110], int height, int draw);
 int islegal(int x, int y, char sprite, char c);
 int mod(int x, int m);
 void loadAll ();

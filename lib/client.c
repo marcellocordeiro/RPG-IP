@@ -134,10 +134,12 @@ void printBar (char *color, int number) {
 
 	printf("%s", color);
 	
-	for (i = 0; i < number/10; i++) {		
+	for (i = 0; i <= 20; i++) {
+		if (i == (number*20)/STATSMAX)
+			printf("%s", CNRM);
+
 		printf(" ");
 	}
-	printf("%s\t", CNRM);
 
 	printf("%d\n", number);
 }
@@ -180,15 +182,27 @@ void printMap () {
 	}
 }
 
-void printMenu (char menu[50][110], int height) {
+void printMenu (char menu[50][110], int height, int draw) {
 	int i, j;
 	
 	for(i = 0; i < height; i++) {
 		for(j = 0; menu[i][j] != '\0'; j++) {
 			if (menu[i][j] == '1')
 				menu[i][j] = ' ';
-			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_')
-				printChar(CBLU, menu[i][j]);
+			if (menu[i][j] == '/' || menu[i][j] == '\\' || menu[i][j] == '|' || menu[i][j] == '_') {
+				if (draw == MAIN || draw == OPTIONS) 
+					printChar(CBLU, menu[i][j]);
+				else if (draw == WIN)
+					printChar(CYEL, menu[i][j]);
+				else if (draw == LOSE)
+					printChar(CRED, menu[i][j]);
+			}
+			else if (menu[i][j] == '@' || menu[i][j] == '!' || menu[i][j] == ':' || menu[i][j] == '.') {
+				if (draw == WIN)
+					printChar(CYEL, menu[i][j]);
+				else if (draw == LOSE)
+					printChar(CRED, menu[i][j]);
+			}
 			else
 				printChar(CNRM, menu[i][j]);
 		}
@@ -326,7 +340,7 @@ void stats (clientInfo *info, int *disponivel) {
 						break;
 
 					case 3:
-						if (hp != 0)
+						if (hp != 0 && atk != 0 && def != 0)
 							confirmed = 1;
 
 						break;
@@ -401,7 +415,7 @@ void menu (int draw) {
 			case MAIN: // menu principal
 				//for (i = 0; i < main_height; i++)
 				//	printf("%s\n", mainmenu[i]); // mostra o menu
-				printMenu(mainmenu, main_height);
+				printMenu(mainmenu, main_height, MAIN);
 	
 				do
 					dir = getch();
@@ -436,7 +450,7 @@ void menu (int draw) {
 			case OPTIONS: // menu de opcoes
 				//for (i = 0; i < options_height; i++)
 				//	printf("%s\n", options[i]);
-				printMenu(options, options_height);
+				printMenu(options, options_height, OPTIONS);
 	
 				do
 					dir = getch();
@@ -476,7 +490,7 @@ void menu (int draw) {
 			break;
 	
 			case LOSE:
-				printMenu(lose, lose_height);
+				printMenu(lose, lose_height, LOSE);
 
 				do
 					dir = getch();
@@ -498,7 +512,7 @@ void menu (int draw) {
 			break;
 	
 			case WIN:
-				printMenu(win, win_height);
+				printMenu(win, win_height, WIN);
 
 				do
 					dir = getch();
