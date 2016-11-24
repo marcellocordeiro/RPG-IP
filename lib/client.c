@@ -129,7 +129,6 @@ void printHpBar (int hp, int max_hp) {
 	}
 
 	printf("%d%%", (hp*100)/max_hp);
-	printf(" (%d)\n", hp);
 }
 
 // mostra uma a barra de algum stat
