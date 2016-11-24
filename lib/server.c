@@ -258,21 +258,6 @@ int monsterStat (int min, int max) {
 	return rand()%(max-min+1) + min; // número aleatório entre o mínimo e o máximo
 }
 
-/*
-int monsterStat (int baseStat) {
-	float chance = rand()%101;
-
-	if (chance < 5)
-		return baseStat*2;
-	else if (chance < 15)
-		return baseStat*1.2;
-	else if (chance < 90)
-		return baseStat;
-	else
-		return baseStat*0.8;
-}
-*/
-
 // colocando os monstros no mapa, aleatoriamente
 void initMonsters () {
 	int id;
@@ -301,7 +286,8 @@ void initMonsters () {
 			monsters[id].hp = monsterStat(120, 150);
 			monsters[id].atk = monsterStat(50, 55);
 			monsters[id].def = monsterStat(40, 45);
-		} else  { // 50% dos monstros são "médios"
+			monsters[id].sprite = 'M'; // boss (?) [sugestão]
+		} else { // 50% dos monstros são "médios"
 			monsters[id].hp = monsterStat(80, 120);
 			monsters[id].atk = monsterStat(45, 55);
 			monsters[id].def = monsterStat(35, 40);
@@ -317,6 +303,14 @@ void monsterMove () {
 	for (i = 0; i < map.qnt_monsters; i++) {
 		if (monsters[i].hp > 0 && !monsters[i].fight) {
 			chance = rand()%101;
+
+			// regenera a vida dos monstros
+			if (monsters[i].hp < monsters[i].max_hp) {
+				monsters[i].hp += 5;
+
+				if (monsters[i].hp > monsters[i].max_hp)
+					monsters[i].hp = monsters[i].max_hp;
+			}
 	
 			// chances iguais de escolher a direcao
 			if (chance < 25 && islegalMonster(monsters[i].x, monsters[i].y, up)) {

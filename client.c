@@ -28,7 +28,8 @@ void game () {
 	// nome do mapa
 	char map_name[16];
 
-	while (id == -1) { // receber o id do client
+	// receber o id do client
+	while (id == -1) {
 		if (readTxtFromServer(msg) > 0) {
 			if (msg[0] >= '0' && msg[0] <= '9') // se receber um número, é o id
 				id = msg[0] - '0';
@@ -39,6 +40,7 @@ void game () {
 		}
 	}
 
+	// espera o servidor começar o jogo
 	while (!start) {
 		mov.msg = getch(); // espera uma confirmação do player 0
 		if (mov.msg != -1)
@@ -81,16 +83,15 @@ void game () {
 
 						printStats(id, 0);
 					}
-					else { // batalha
-						// imprime a tela de batalha
-						if (players[id].fight == 1) {
+					else { // imprime a tela de batalha
+						if (players[id].fight == 1) { // contra monstros
 							for (i = 0; i < battlem_height; i++)
 								printf("%s\n", battlem[i]);
 
 							printStats(id, 0);
 							printStats(players[id].whofight, 1);
 						}
-						else {
+						else { // contra players
 							for (i = 0; i < battlep_height; i++)
 								printf("%s\n", battlep[i]);
 

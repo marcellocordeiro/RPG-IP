@@ -34,7 +34,6 @@ struct sockaddr_in clientname;
 void clientConnected(int id, clientInfo startInfo); // função que é chamada quando um cliente é connectado
 void clientMoved(int id, mov_msg mov); // função que é chamada quando cleinte manda mensagem de movimento
 void startGame(); // função que é chamada quando cliente 0 confirma o inicio do jogo
-//void MyBroadcast(char *s); // um exemplo de como mandar uma mensagem para todos os usuários
 
 void buildUpd(int id, int ismonster, int type);
 int dmg(int atk, int def);
@@ -45,7 +44,6 @@ int islegal(int x, int y, char sprite, char c);
 int islegalMonster(int x, int y, char c);
 void initClients();
 int monsterStat(int min, int max);
-//int monsterStat(int baseStat);
 void initMonsters();
 void monsterMove();
 

@@ -217,13 +217,3 @@ void startGame(){
 	broadcastTxt(startMsg, -1); // avisar para os clientes que o jogo vai começar
 	game_status = 2;
 }
-
-/*
-void MyBroadcast(char *s){
-	int id;
-	
-	for(id = 0; id < MAX_CLIENTS; id++)
-		if(clients[id].sockid > 0)
-			sendTxtToClient(clients[id].sockid, s);
-}
-*/

@@ -35,6 +35,7 @@ void loadMap (char *filename) {
 		printf("ERRO: MAPA NÃO ENCONTRADO\n");
 		exit(1);
 	}
+
 	fscanf(fp, "%d %d %d", &map.height, &map.width, &map.qnt_monsters);
 
 	for(i = 0; i < map.height; i++)
@@ -90,6 +91,7 @@ char* color (int id) {
 	}
 }
 
+// mostra os stats do player ou do monstro
 void printStats (int id, int ismonster) {
 	if (!ismonster) {
 		printf("%splayer %d\n", color(id), id);
@@ -108,6 +110,7 @@ void printStats (int id, int ismonster) {
 	}
 }
 
+// mostra a barra de hp
 void printHpBar (int hp, int max_hp) {
 	int i;
 
@@ -129,6 +132,7 @@ void printHpBar (int hp, int max_hp) {
 	printf(" (%d)\n", hp);
 }
 
+// mostra uma a barra de algum stat
 void printBar (char *color, int number) {
 	int i;
 
@@ -144,10 +148,12 @@ void printBar (char *color, int number) {
 	printf("%d\n", number);
 }
 
+// imprime um caractere colorido
 void printChar (char *color, char c) {	
 	printf("%s%c%s", color, c, CNRM);
 }
 
+// mostra o mapa com os players e monstros
 void printMap () {
 	int i, j, k, flag = 0;
 	
@@ -182,6 +188,7 @@ void printMap () {
 	}
 }
 
+// mostra o menu
 void printMenu (char menu[50][110], int height, int draw) {
 	int i, j;
 	
@@ -211,6 +218,7 @@ void printMenu (char menu[50][110], int height, int draw) {
 	}
 }
 
+// verifica se o movimento foi legal
 int islegal (int x, int y, char sprite, char c) {
 	switch (c) {
 		case up:
@@ -242,10 +250,12 @@ int islegal (int x, int y, char sprite, char c) {
 	return 1;
 }
 
-int mod (int x, int m) { // calcula o mod corretamente
+// calcula o mod corretamente
+int mod (int x, int m) {
     return (x%m + m)%m;
 }
 
+// carrega todos os arquivos de interface
 void loadAll () {
 	// leitura do menu principal
 	main_height = loadFile("data/main.txt", mainmenu);
@@ -266,6 +276,7 @@ void loadAll () {
 	win_height = loadFile("data/win.txt", win);
 }
 
+// permite ao player alocar seus stats
 void stats (clientInfo *info, int *disponivel) {
 	int i, hp, atk, def, confirmed = 0;
 	int ind = 0; // índice do vetor seta;
@@ -407,6 +418,7 @@ void menu (int draw) {
 		strcpy(info.name, "default"); // nome padrao
 		info.map = 1; // mapa padrao
 		
+		// stats padrões
 		info.hp_max = PLAYER_HP;
 		info.atk = PLAYER_ATK;
 		info.def = PLAYER_DEF;
@@ -506,7 +518,7 @@ void menu (int draw) {
 					cursor--;
 				else if (dir == down) // baixo
 					cursor++;
-				else if (dir == right && cursor == 0) // comecar o jogo e conectar ao servidor
+				else if (dir == right && cursor == 0) // home
 					return;
 				else if (dir == right && cursor == 1) // sai do jogo
 					exit(1);
@@ -528,7 +540,7 @@ void menu (int draw) {
 					cursor--;
 				else if (dir == down) // baixo
 					cursor++;
-				else if (dir == right && cursor == 0) // comecar o jogo e conectar ao servidor
+				else if (dir == right && cursor == 0) // home
 					return;
 				else if (dir == right && cursor == 1) // sai do jogo
 					exit(1);
@@ -540,6 +552,7 @@ void menu (int draw) {
 	}
 }
 
+// cria um mapa aleatório
 void createRandomMap (clientInfo *info) {
 	srand(time(NULL));
 	rand();
